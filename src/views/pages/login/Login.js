@@ -1,5 +1,7 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react'
+import useAxios from 'axios-hooks'
+import { AppContext } from '../../../App'
+
 import {
   CButton,
   CCard,
@@ -17,6 +19,50 @@ import {
 import CIcon from '@coreui/icons-react'
 
 const Login = () => {
+  const { setToken } = useContext(AppContext)
+
+  const [
+    { data, loading, error },
+    executePost
+  ] = useAxios(
+    {
+      url: 'https://app.aloropivetcenter.com/api/authentication/login',
+      method: 'POST'
+    },
+    { manual: true }
+  )
+
+  const [creds, setCreds] = useState({
+    username: '',
+    password: ''
+  })
+
+  const updateCred = (e) => {
+    setCreds((oldCreds) => {
+      return {
+        ...oldCreds,
+        [e.target.name]: e.target.value
+      }
+    })
+  }
+
+  const loginUser = (e) => {
+    if (!loading) {
+      executePost({
+        data: {
+          ...creds
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (data && data.token) {
+      console.log(data.token)
+      setToken(data.token)
+    }
+  }, [data, setToken])
+
   return (
     <div className="c-app c-default-layout flex-row align-items-center">
       <CContainer>
@@ -34,7 +80,7 @@ const Login = () => {
                           <CIcon name="cil-user" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="text" placeholder="Username" autoComplete="username" />
+                      <CInput name="username" type="text" placeholder="Username" autoComplete="username" value={creds.username} onChange={updateCred} />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupPrepend>
@@ -42,14 +88,13 @@ const Login = () => {
                           <CIcon name="cil-lock-locked" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="password" placeholder="Password" autoComplete="current-password" />
+                      <CInput name="password" type="password" placeholder="Password" autoComplete="current-password"  value={creds.password} onChange={updateCred} />
                     </CInputGroup>
                     <CRow>
                       <CCol xs="6">
-                        <CButton color="primary" className="px-4">Login</CButton>
-                      </CCol>
-                      <CCol xs="6" className="text-right">
-                        <CButton color="link" className="px-0">Forgot password?</CButton>
+                        <CButton onClick={loginUser} color="primary" className="px-4">
+                          { loading ? 'Loading' : 'Login' }
+                        </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
@@ -58,12 +103,8 @@ const Login = () => {
               <CCard className="text-white bg-primary py-5 d-md-down-none" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.</p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>Register Now!</CButton>
-                    </Link>
+                    <h2>Sign In</h2>
+                    <p>Sign in to access the admin panel.</p>
                   </div>
                 </CCardBody>
               </CCard>
