@@ -13,6 +13,18 @@ const _nav =  [
     name: 'Visitors',
     to: '/visitors',
     icon: 'cil-address-book',
+  },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Pet Types',
+    to: '/pet-types',
+    icon: 'cil-address-book',
+  },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Users',
+    to: '/users',
+    icon: 'cil-address-book',
   }
 ]
 

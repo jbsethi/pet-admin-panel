@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import React from 'react'
+import { useHistory } from 'react-router-dom'
+import useAxios from 'axios-hooks'
+import TableHeader from '../base/tableHeader/TableHeader'
+
 import {
   CBadge,
   CCard,
@@ -8,73 +11,103 @@ import {
   CCol,
   CDataTable,
   CRow,
-  CPagination
+  CPagination,
+  CButton
 } from '@coreui/react'
 
-import usersData from './UsersData'
+const fields = [
+  { key: 'name', _classes: 'font-weight-bold' },
+  'email',
+  'username',
+  'role',
+  {
+    key: 'createdAt',
+    label: 'Registered'
+  },
+  'active'
+]
 
 const getBadge = status => {
-  switch (status) {
-    case 'Active': return 'success'
-    case 'Inactive': return 'secondary'
-    case 'Pending': return 'warning'
-    case 'Banned': return 'danger'
-    default: return 'primary'
+  if (status) {
+    return 'success'
+  } else {
+    return 'danger'
   }
 }
 
 const Users = () => {
   const history = useHistory()
-  const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
-  const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
-  const [page, setPage] = useState(currentPage)
+  const [totalPages, setTotalPages] = React.useState(1)
+  const [currentPage, setActivePage] = React.useState(1)
 
-  const pageChange = newPage => {
-    currentPage !== newPage && history.push(`/users?page=${newPage}`)
-  }
+  const [{ data, loading, error }, refetch] = useAxios(
+    {
+      url: 'https://app.aloropivetcenter.com/api/users',
+      method: 'GET',
+      params: {
+        pageNo: currentPage
+      }
+    },
+    {
+      manual: true
+    }
+  )
 
-  useEffect(() => {
-    currentPage !== page && setPage(currentPage)
-  }, [currentPage, page])
+  React.useEffect(() => {
+    if (data?.totalPages) {
+      setTotalPages(data.totalPages)
+    }
+  }, [data])
+
+  React.useEffect(() => {
+    refetch()
+  }, [])
 
   return (
     <CRow>
-      <CCol xl={6}>
+      <CCol xl={12}>
         <CCard>
           <CCardHeader>
             Users
-            <small className="text-muted"> example</small>
           </CCardHeader>
           <CCardBody>
           <CDataTable
-            items={usersData}
-            fields={[
-              { key: 'name', _classes: 'font-weight-bold' },
-              'registered', 'role', 'status'
-            ]}
-            hover
+            items={loading ? [] : (error ? [] : data?.rows || [])}
+            fields={fields}
             striped
-            itemsPerPage={5}
-            activePage={page}
+            itemsPerPage={10}
+            loading={loading}
             clickableRows
             onRowClick={(item) => history.push(`/users/${item.id}`)}
+            overTableSlot={
+              <TableHeader>
+                <CButton
+                  color="primary"
+                  variant="outline"
+                    className="m-2 pl-3 pr-4"
+                    onClick={() => history.push('/users/add')}
+                  >
+                    <span className="ml-1">Add New User</span>
+                  </CButton>
+              </TableHeader>
+            }
+            underTableSlot={
+              <CPagination
+                activePage={currentPage}
+                pages={totalPages}
+                onActivePageChange={(i) => setActivePage(i)}
+              ></CPagination>
+            }
             scopedSlots = {{
-              'status':
+              'active':
                 (item)=>(
                   <td>
-                    <CBadge color={getBadge(item.status)}>
-                      {item.status}
+                    <CBadge color={getBadge(item.active)}>
+                      {item.active  ? 'Active' : 'Inactive'}
                     </CBadge>
                   </td>
                 )
             }}
-          />
-          <CPagination
-            activePage={page}
-            onActivePageChange={pageChange}
-            pages={5}
-            doubleArrows={false} 
-            align="center"
           />
           </CCardBody>
         </CCard>
