@@ -9,20 +9,21 @@ import {
 } from '@coreui/react'
 
 
-const TableHeader = ({ children }) => {
+const TableHeader = ({ keyword = '', changeKeyword = null, children }) => {
   return (
     <CRow className="align-items-center justify-content-between">
       <CCol sm="4">
-        <CForm action="" method="post">
-          <CFormGroup className="mb-0">
-            <CInput
-              type="email"
-              name="nf-email"
-              placeholder="Search Here.."
-              autoComplete="off"
-            />
-          </CFormGroup>
-        </CForm>
+        <CFormGroup className="mb-0">
+          <CInput
+            type="text"
+            name="nf-text"
+            placeholder="Search Here.."
+            autoComplete="off"
+            value={keyword}
+            onChange={changeKeyword}
+            onKeyPress={changeKeyword}
+          />
+        </CFormGroup>
       </CCol>
       <CCol sm="4" className="d-flex justify-content-end">
         { children }

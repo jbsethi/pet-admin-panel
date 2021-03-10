@@ -1,7 +1,6 @@
 import React from 'react'
 import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
-import AddPetRecord from './AddPetRecord'
 
 import {
   CCard,
@@ -15,28 +14,26 @@ import {
 } from '@coreui/react'
 
 const fields = [
-    'name',
+    {
+      key: 'displayName',
+      label: 'Name'
+    },
     {
       key: 'createdAt',
       label: 'Registered'
     },
     'description',
-    'actions'
   ]
 
-const PetTypes = () => {
-  const [show, setShow] = React.useState(false)
-
+const Services = () => {
   const [keyword, setKeyword] = React.useState('')
 
   const [totalPages, setTotalPages] = React.useState(1)
   const [currentPage, setActivePage] = React.useState(1)
 
-  const [editId, setEditId] = React.useState(null)
-
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/pet-types',
+      url: 'https://app.aloropivetcenter.com/api/services',
       method: 'GET',
       params: {
         pageNo: currentPage
@@ -59,21 +56,10 @@ const PetTypes = () => {
     }
   }
 
-  const editModal = (id) => {
-    setEditId(id)
-    setShow(true)
-  }
-
-  const deleteItem = (id) => {
-    fetch({
-      url: `https://app.aloropivetcenter.com/api/pet-types/${id}`,
-      method: 'DELETE'
-    })
-  }
-
   React.useEffect(() => {
     fetch()
       .then(resp => {
+        console.log(resp)
         setTotalPages(resp.data.totalPages)
       })
   }, [])
@@ -84,7 +70,7 @@ const PetTypes = () => {
         <CCol xs="12" lg="12">
           <CCard>
             <CCardHeader>
-              Pet Types
+              Pet Services
             </CCardHeader>
             <CCardBody>
             <CDataTable
@@ -95,14 +81,6 @@ const PetTypes = () => {
               loading={loading}
               overTableSlot={
                 <TableHeader keyword={keyword} changeKeyword={changeKeyword}>
-                  <CButton
-                    color="primary"
-                    variant="outline"
-                      className="m-2 pl-3 pr-4"
-                      onClick={() => setShow(true)}
-                    >
-                      <span className="ml-1">Add Pet Type</span>
-                    </CButton>
                 </TableHeader>
               }
               underTableSlot={
@@ -112,24 +90,13 @@ const PetTypes = () => {
                   onActivePageChange={(i) => setActivePage(i)}
                 ></CPagination>
               }
-              scopedSlots={{
-                'actions':
-                  (item) => (
-                    <td>
-                      <CButton onClick={() => editModal(item.id)} color="primary" size="sm" className="mr-1">Edit</CButton>
-                      <CButton onClick={() => deleteItem(item.id)} color="danger" size="sm">Delete</CButton>
-                    </td>
-                  )
-              }}
             />
             </CCardBody>
           </CCard>
         </CCol>
       </CRow>
-
-      <AddPetRecord show={show} setShow={setShow} refetch={fetch} petTypeId={editId} setEditId={setEditId}/>
     </>
   )
 }
 
-export default PetTypes
+export default Services

@@ -24,31 +24,18 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
   })
 
   const [
-    { data, loading, error },
-    executePost
+    { loading, error },
+    fetch
   ] = useAxios(
     {
-      url: `https://app.aloropivetcenter.com/api/pet-types${petTypeId ? '/' + petTypeId : ''}`,
-      method: petTypeId ? 'PUT' : 'POST'
+      url: 'https://app.aloropivetcenter.com/api/pet-types',
+      method: 'POST'
     },
     { manual: true }
   )
 
-  const [{ data: singleData, loading: singleLoading, error: singleError }, getSingleData] = useAxios(
-    {
-      url: `https://app.aloropivetcenter.com/api/pet-types/${petTypeId}`,
-      method: 'GET'
-    },
-    {
-      manual: true
-    }
-  )
-
-  const toggle = () => {
-    setShow(!show)
-  }
-
   const resetAndCancel = () => {
+    setShow(false)
     setPetRecord({
       name: '',
       description: '',
@@ -56,11 +43,9 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
     })
 
     setEditId(null)
-
-    toggle()
   }
 
-  const confirmClose = React.useCallback(() => {
+  const confirmClose = () => {
     setShow(false)
     setPetRecord({
       name: '',
@@ -69,7 +54,7 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
     })
     setEditId(null)
     refetch()
-  }, [])
+  }
 
   const handleChange = (e) => {
     setPetRecord((oldState) => {
@@ -89,46 +74,49 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
 
   const storePetType = () => {
     if (!loading) {
-      executePost({
+      const config = {
         data: {
           ...petRecord
         }
+      }
+
+      if (petTypeId) {
+        config.url = `https://app.aloropivetcenter.com/api/pet-types/${petTypeId}`
+        config.method = 'PUT'
+      }
+
+      fetch(config).then(resp => {
+        confirmClose()
       })
     }
   }
 
   React.useEffect(() => {
-    if (data) {
-      confirmClose()
-    }
-  }, [data, confirmClose])
-
-  React.useEffect(() => {
     if (petTypeId && show) {
-      getSingleData()
+      fetch({
+        url: `https://app.aloropivetcenter.com/api/pet-types/${petTypeId}`,
+        method: 'GET'
+      })
+        .then(resp => {
+          setPetRecord({
+            name: resp.data.name,
+            description: resp.data.description,
+            active: resp.data.active
+          })
+        })
     }
   }, [petTypeId])
-
-  React.useEffect(() => {
-    if (singleData) {
-      setPetRecord({
-        name: singleData.name,
-        description: singleData.description,
-        active: singleData.active
-      })
-    }
-  }, [singleData])
 
   return (
     <>
       <CModal
         show={show}
-        onClose={toggle}
+        onClose={() => setShow(false)}
       >
         <CModalHeader closeButton>Add Pet Type</CModalHeader>
         <CModalBody>
           {
-            singleLoading?
+            loading?
             <div className="py-5 text-center">Loading Details ...</div> :
             <CRow>
               <CCol className="px-5 pt-4">

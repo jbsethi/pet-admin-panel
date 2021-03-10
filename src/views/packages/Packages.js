@@ -1,7 +1,7 @@
 import React from 'react'
 import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
-import AddPetRecord from './AddPetRecord'
+import AddPackage from './AddPackage'
 
 import {
   CCard,
@@ -16,6 +16,7 @@ import {
 
 const fields = [
     'name',
+    'price',
     {
       key: 'createdAt',
       label: 'Registered'
@@ -24,7 +25,7 @@ const fields = [
     'actions'
   ]
 
-const PetTypes = () => {
+const Packages = () => {
   const [show, setShow] = React.useState(false)
 
   const [keyword, setKeyword] = React.useState('')
@@ -36,7 +37,7 @@ const PetTypes = () => {
 
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/pet-types',
+      url: 'https://app.aloropivetcenter.com/api/packages',
       method: 'GET',
       params: {
         pageNo: currentPage
@@ -66,7 +67,7 @@ const PetTypes = () => {
 
   const deleteItem = (id) => {
     fetch({
-      url: `https://app.aloropivetcenter.com/api/pet-types/${id}`,
+      url: `https://app.aloropivetcenter.com/api/packages/${id}`,
       method: 'DELETE'
     })
   }
@@ -84,7 +85,7 @@ const PetTypes = () => {
         <CCol xs="12" lg="12">
           <CCard>
             <CCardHeader>
-              Pet Types
+              Packages
             </CCardHeader>
             <CCardBody>
             <CDataTable
@@ -101,7 +102,7 @@ const PetTypes = () => {
                       className="m-2 pl-3 pr-4"
                       onClick={() => setShow(true)}
                     >
-                      <span className="ml-1">Add Pet Type</span>
+                      <span className="ml-1">Add Package</span>
                     </CButton>
                 </TableHeader>
               }
@@ -127,9 +128,9 @@ const PetTypes = () => {
         </CCol>
       </CRow>
 
-      <AddPetRecord show={show} setShow={setShow} refetch={fetch} petTypeId={editId} setEditId={setEditId}/>
+      <AddPackage show={show} setShow={setShow} refetch={fetch} itemId={editId} setEditId={setEditId}/>
     </>
   )
 }
 
-export default PetTypes
+export default Packages
