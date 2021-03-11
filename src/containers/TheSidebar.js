@@ -12,10 +12,10 @@ import {
   CSidebarNavItem,
 } from '@coreui/react'
 
-import CIcon from '@coreui/icons-react'
-
 // sidebar nav config
 import navigation from './_nav'
+
+import LogoImage from '../assets/logo/logo.png'
 
 const TheSidebar = () => {
   const dispatch = useDispatch()
@@ -24,19 +24,17 @@ const TheSidebar = () => {
   return (
     <CSidebar
       show={show}
+      colorScheme="light"
       onShowChange={(val) => dispatch({type: 'set', sidebarShow: val })}
     >
       <CSidebarBrand className="d-md-down-none" to="/">
-        <CIcon
-          className="c-sidebar-brand-full"
-          name="logo-negative"
-          height={35}
-        />
-        <CIcon
-          className="c-sidebar-brand-minimized"
-          name="sygnet"
-          height={35}
-        />
+        <div>
+          <img src={LogoImage} height="50"/>
+        </div>
+        <div className="ml-2">
+          <p className="mb-0 text-primary font-bold font-xl">Aloropi</p>
+          <p className="mb-0 font-sm">Veterinary Center</p>
+        </div>
       </CSidebarBrand>
       <CSidebarNav>
 

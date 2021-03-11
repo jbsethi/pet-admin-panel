@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import useAxios from 'axios-hooks'
 import { AppContext } from '../../../App'
 
+import LogoImage from '../../../assets/logo/logo.jpg'
+
 import {
   CButton,
   CCard,
@@ -58,7 +60,6 @@ const Login = () => {
 
   useEffect(() => {
     if (data && data.token) {
-      console.log(data.token)
       setToken(data.token)
     }
   }, [data, setToken])
@@ -100,12 +101,9 @@ const Login = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5 d-md-down-none" style={{ width: '44%' }}>
+              <CCard className="text-white bg-primary d-md-down-none" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign In</h2>
-                    <p>Sign in to access the admin panel.</p>
-                  </div>
+                  <img src={LogoImage} alt="Vet" style={{ width: '100%' }} />
                 </CCardBody>
               </CCard>
             </CCardGroup>

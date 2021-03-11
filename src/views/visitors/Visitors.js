@@ -11,6 +11,7 @@ import {
   CDataTable,
   CRow,
   CButton,
+  CCardFooter,
 } from '@coreui/react'
 
 const fields = [
@@ -61,7 +62,7 @@ const Visitors = () => {
                       className="m-2 pl-3 pr-4"
                       onClick={handleClick}
                     >
-                      <span className="ml-1">Add New Visit</span>
+                      <span className="ml-1">Add Visit</span>
                     </CButton>
                 </TableHeader>
               }

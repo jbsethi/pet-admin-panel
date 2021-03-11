@@ -1,1 +1,99 @@
 // Here you can add other styles
+// colors
+:root {
+  --c-primary: #D1076D;
+  --c-primary-light: #f6cde2;
+  --c-primary-dark: #a70656;
+  --c-lighter: #fae6f0;
+  --c-darker: #2a0116;
+}
+
+// text colors
+.text-primary {
+  color: var(--c-primary) !important;
+}
+
+
+// typography
+.font-bold {
+  font-weight: bold;
+}
+
+// background
+.bg-primary {
+  background: var(--c-primary) !important;
+}
+
+// btn
+.btn-primary {
+  background-color: var(--c-primary) !important;
+  border-color: var(--c-primary) !important;
+}
+
+.btn-outline-primary {
+  color: var(--c-primary) !important;
+  border-color: var(--c-primary) !important;
+}
+
+@media (hover: hover), not all {
+  .btn-outline-primary:hover {
+    color: #fff !important;
+    background-color:var(--c-primary) !important;
+    border-color: var(--c-primary) !important;
+  }
+}
+
+.c-switch-opposite-primary .c-switch-input:checked + .c-switch-slider::before {
+  background-color: var(--c-primary) !important;
+  border-color: var(--c-primary) !important;
+}
+
+.c-switch-opposite-primary .c-switch-input:checked + .c-switch-slider {
+  border-color: var(--c-primary) !important;
+}
+
+// Theme
+// .c-sidebar {
+//   background: var(--c-primary-light) !important;
+// }
+
+.c-sidebar .c-sidebar-brand {
+  background: var(--c-darker) !important;
+}
+
+// .c-sidebar .c-sidebar-minimizer {
+//   background: var(--c-primary-light) !important;
+// }
+
+.page-item.active .page-link {
+  color: #fff !important;
+  background-color: var(--c-primary) !important;
+  border-color: var(--c-primary) !important;
+}
+
+.page-link {
+  color: var(--c-primary) !important;
+}
+
+.c-sidebar.c-sidebar-light .c-sidebar-nav-link.c-active .c-sidebar-nav-icon, .c-sidebar.c-sidebar-light .c-active.c-sidebar-nav-dropdown-toggle .c-sidebar-nav-icon {
+  color: var(--c-primary);
+}
+
+.c-sidebar.c-sidebar-light .c-sidebar-nav-link.c-active:hover .c-sidebar-nav-icon, .c-sidebar.c-sidebar-light .c-active.c-sidebar-nav-dropdown-toggle .c-sidebar-nav-icon {
+  color: #fff !important;
+}
+
+@media (hover: hover), not all {
+  .c-sidebar.c-sidebar-light .c-sidebar-nav-link:hover, .c-sidebar.c-sidebar-light .c-sidebar-nav-dropdown-toggle:hover {
+    color: #fff !important;
+    background: var(--c-primary) !important;
+  }
+}
+
+a {
+  color: var(--c-primary);
+}
+
+a:hover {
+  color: var(--c-primary-dark);
+}

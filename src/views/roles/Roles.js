@@ -9,7 +9,6 @@ import {
   CCol,
   CDataTable,
   CRow,
-  CButton,
   CPagination
 } from '@coreui/react'
 
