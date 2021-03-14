@@ -31,7 +31,7 @@ const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
   })
 
   const [
-    { loading, error },
+    { loading },
     fetch
   ] = useAxios(
     {
@@ -104,7 +104,7 @@ const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
     }
   }
 
-  const initializeRecord = async () => {
+  const initializeRecord = React.useCallback(async () => {
     let result = await fetch({
       url: `https://app.aloropivetcenter.com/api/services`,
       method: 'GET'
@@ -134,13 +134,13 @@ const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
         active: result.data.active
       })
     }
-  }
+  }, [fetch, itemId])
 
   React.useEffect(() => {
     if (show) {
       initializeRecord()
     }
-  }, [show])
+  }, [show, initializeRecord])
 
   return (
     <>

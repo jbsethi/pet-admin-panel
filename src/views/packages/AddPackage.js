@@ -36,7 +36,7 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
   })
 
   const [
-    { loading, error },
+    { loading },
     fetchData
   ] = useAxios(
     {
@@ -47,7 +47,7 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
   )
 
   const [
-    _,
+    ,
     fetchRecord
   ] = useAxios(
     {
@@ -127,7 +127,7 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
     }
   }
 
-  const initializeRecord = async () => {
+  const initializeRecord = React.useCallback(async () => {
     let result = await fetchData({
       url: `https://app.aloropivetcenter.com/api/services`,
       method: 'GET'
@@ -167,13 +167,13 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
         active: result.data.active
       })
     }
-  }
+  }, [fetchData, itemId])
 
   React.useEffect(() => {
     if (show) {
       initializeRecord()
     }
-  }, [show])
+  }, [show, initializeRecord])
 
   React.useEffect(() => {
     if (show) {
@@ -190,7 +190,7 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
         }))
       })
     }
-  }, [keyword])
+  }, [keyword, fetchRecord, show])
 
   return (
     <>

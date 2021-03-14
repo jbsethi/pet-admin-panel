@@ -24,7 +24,7 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
   })
 
   const [
-    { loading, error },
+    { loading },
     fetch
   ] = useAxios(
     {
@@ -105,7 +105,7 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
           })
         })
     }
-  }, [petTypeId])
+  }, [petTypeId, fetch, show])
 
   return (
     <>

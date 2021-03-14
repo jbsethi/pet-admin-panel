@@ -11,7 +11,6 @@ import {
   CDataTable,
   CRow,
   CButton,
-  CCardFooter,
 } from '@coreui/react'
 
 const fields = [
@@ -31,7 +30,7 @@ const Visitors = () => {
     history.push("/visitors/add")
   }
 
-  const [{ data, loading, error }, refetch] = useAxios(
+  const [{ data, loading, error }] = useAxios(
     {
       url: 'https://app.aloropivetcenter.com/api/patients',
       method: 'GET',

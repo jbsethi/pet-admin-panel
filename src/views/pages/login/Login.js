@@ -24,7 +24,7 @@ const Login = () => {
   const { setToken } = useContext(AppContext)
 
   const [
-    { data, loading, error },
+    { data, loading },
     executePost
   ] = useAxios(
     {

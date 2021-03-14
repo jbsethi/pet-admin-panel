@@ -3,7 +3,6 @@ import React from 'react'
 import {
   CRow,
   CCol,
-  CForm,
   CFormGroup,
   CInput,
 } from '@coreui/react'

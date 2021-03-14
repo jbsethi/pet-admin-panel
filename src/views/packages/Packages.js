@@ -77,7 +77,7 @@ const Packages = () => {
       .then(resp => {
         setTotalPages(resp.data.totalPages)
       })
-  }, [])
+  }, [fetch])
 
   return (
     <>

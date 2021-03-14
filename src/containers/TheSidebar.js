@@ -29,7 +29,7 @@ const TheSidebar = () => {
     >
       <CSidebarBrand className="d-md-down-none" to="/">
         <div>
-          <img src={LogoImage} height="50"/>
+          <img src={LogoImage} alt="logo" height="50"/>
         </div>
         <div className="ml-2">
           <p className="mb-0 text-primary font-bold font-xl">Aloropi</p>

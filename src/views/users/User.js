@@ -58,10 +58,9 @@ const User = ({ match }) => {
 
   React.useEffect(() => {
     if (error) {
-      console.log(error)
       history.push('/users')
     }
-  }, [error])
+  }, [error, history])
 
   return (
     <>

@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import useAxios from 'axios-hooks'
 
-import { PUBLIC_API, PUBLIC_PATH } from '../../config/index'
+import { PUBLIC_API } from '../../config/index'
 
 import {
   CCard,
@@ -34,7 +34,7 @@ const AddUser = ({ match }) => {
   const history = useHistory()
 
   const [
-    { data, loading, error },
+    { data, loading },
     executePost
   ] = useAxios(
     {
@@ -45,7 +45,7 @@ const AddUser = ({ match }) => {
   )
 
   const [
-    { data: userData, loading: userDataLoading, error: userDataError },
+    { data: userData },
     getUserDetails
   ] = useAxios({
     url: `${PUBLIC_API}/users/${match.params.id}`,
@@ -137,7 +137,7 @@ const AddUser = ({ match }) => {
     if (data) {
       history.push('/users')
     }
-  }, [data])
+  }, [data, history])
 
   React.useEffect(() => {
     if (userData) {
@@ -158,7 +158,7 @@ const AddUser = ({ match }) => {
         getUserDetails()
       }
     }
-  }, [userData])
+  }, [userData, setUserRecord, getUserDetails, match])
 
   return (
     <CRow>

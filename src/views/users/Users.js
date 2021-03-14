@@ -61,7 +61,7 @@ const Users = () => {
 
   React.useEffect(() => {
     refetch()
-  }, [])
+  }, [refetch])
 
   return (
     <CRow>

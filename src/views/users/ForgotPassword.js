@@ -21,7 +21,7 @@ const ForgotPassword = ({ id, show, setShow }) => {
   })
 
   const [
-    { data, loading, error },
+    { data, loading },
     executePost
   ] = useAxios(
     {
@@ -41,7 +41,7 @@ const ForgotPassword = ({ id, show, setShow }) => {
       password: '',
       confirmPassword: ''
     })
-  }, [])
+  }, [setShow])
 
   const handleChange = (e) => {
     setUserData((oldState) => {

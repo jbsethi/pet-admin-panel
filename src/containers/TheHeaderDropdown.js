@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import {
-  CBadge,
   CDropdown,
   CDropdownItem,
   CDropdownMenu,

@@ -9,7 +9,6 @@ import {
   CCol,
   CDataTable,
   CRow,
-  CButton,
   CPagination
 } from '@coreui/react'
 
@@ -62,7 +61,7 @@ const Services = () => {
         console.log(resp)
         setTotalPages(resp.data.totalPages)
       })
-  }, [])
+  }, [fetch])
 
   return (
     <>

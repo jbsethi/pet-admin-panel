@@ -76,7 +76,7 @@ const PetTypes = () => {
       .then(resp => {
         setTotalPages(resp.data.totalPages)
       })
-  }, [])
+  }, [fetch])
 
   return (
     <>

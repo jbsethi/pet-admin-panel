@@ -77,7 +77,7 @@ const Items = () => {
       .then(resp => {
         setTotalPages(resp.data.totalPages)
       })
-  }, [])
+  }, [fetch])
 
   return (
     <>

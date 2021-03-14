@@ -60,7 +60,7 @@ const Roles = () => {
       .then(resp => {
         setTotalPages(resp.data.totalPages)
       })
-  }, [])
+  }, [fetch])
 
   return (
     <>

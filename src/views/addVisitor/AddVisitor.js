@@ -14,6 +14,8 @@ import {
   CDataTable
 } from '@coreui/react'
 
+import AddReceiptForm from './AddReceiptForm.js'
+
 const receiptTableFields = [
   'id',
   'name',
@@ -25,6 +27,8 @@ const receiptTableFields = [
 
 const AddVisitor = () => {
   const [receiptFormVisibility, setReceiptFormVisibility] = React.useState(false)
+  const [showAddReceiptForm, setShowAddReceiptForm] = React.useState(false)
+
   return (
     <>
       <CRow>
@@ -85,6 +89,7 @@ const AddVisitor = () => {
                                 color="primary"
                                 variant="outline"
                                 className="m-2 pl-3 pr-4"
+                                onClick={() => setShowAddReceiptForm(true)}
                               >
                                   <span className="ml-1">Add Item</span>
                               </CButton>
@@ -121,6 +126,8 @@ const AddVisitor = () => {
           </CCard>
         </CCol>
       </CRow>
+
+      <AddReceiptForm show={showAddReceiptForm} setShow={setShowAddReceiptForm} />
     </>
   )
 }
