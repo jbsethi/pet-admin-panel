@@ -16,15 +16,17 @@ import {
 
 import useAxios from 'axios-hooks'
 
-const AddReceiptForm = ({ show, setShow }) => {
+const AddReceiptForm = ({ show, setShow, dispatch }) => {
   const [addReceiptRecord, setAddReceiptRecord] = React.useState({
     categoryId: null,
     itemId: null,
+    packageId: null,
     quantity: 1
   })
 
   const [categories, setCategories] = React.useState([])
   const [items, setItems] = React.useState([])
+  const [packages, setPackages] = React.useState([])
 
   const [
     ,
@@ -75,14 +77,25 @@ const AddReceiptForm = ({ show, setShow }) => {
     }
   }, [fetchRecord])
 
-  const getItems = React.useCallback(async () => {
+  const getPackageItems = React.useCallback(async () => {
     try {
-      const record = await fetchRecord({
-        url: 'https://app.aloropivetcenter.com/api/items',
-        method: 'GET'
+      setAddReceiptRecord(oldState => {
+        return {
+          ...oldState,
+          itemId: null,
+          packageId: null,
+        }
       })
 
-      const options = (record?.data?.rows || []).map(item => {
+      const record = await fetchRecord({
+        url: 'https://app.aloropivetcenter.com/api/packages/records/all',
+        method: 'GET',
+        params: {
+          serviceId: addReceiptRecord.categoryId?.value || null
+        }
+      })
+
+      const options = (record?.data || []).map(item => {
         return {
           label: item.name,
           value: item.id,
@@ -90,14 +103,39 @@ const AddReceiptForm = ({ show, setShow }) => {
         }
       })
 
-      setItems(options)
+      setPackages(options)
+
+      const record2 = await fetchRecord({
+        url: 'https://app.aloropivetcenter.com/api/items/records/all',
+        method: 'GET',
+        params: {
+          serviceId: addReceiptRecord.categoryId?.value || null
+        }
+      })
+
+      const options2 = (record2?.data || []).map(item => {
+        return {
+          label: item.name,
+          value: item.id,
+          price: item.price
+        }
+      })
+
+      setItems(options2)
     } catch (err) {
       console.log(err)
     }
-  }, [fetchRecord])
+  }, [fetchRecord, addReceiptRecord?.categoryId?.value])
 
   const submitRecord = () => {
-    console.log(addReceiptRecord)
+    dispatch({ type: 'addItemInReceipt', payload: addReceiptRecord })
+    setAddReceiptRecord({
+      categoryId: null,
+      itemId: null,
+      packageId: null,
+      quantity: 1
+    })
+    setShow(false)
   }
 
   React.useEffect(() => {
@@ -109,9 +147,10 @@ const AddReceiptForm = ({ show, setShow }) => {
   React.useEffect(() => {
     if (show && addReceiptRecord.categoryId) {
       setItems([])
-      getItems()
+      setPackages([])
+      getPackageItems()
     }
-  }, [show, getItems, addReceiptRecord.categoryId])
+  }, [show, getPackageItems, addReceiptRecord.categoryId])
 
   return (
     <CModal
@@ -132,7 +171,15 @@ const AddReceiptForm = ({ show, setShow }) => {
         </CFormGroup>
         <CFormGroup row>
           <CCol>
-            <CLabel className="pt-2" htmlFor="text-package-item">Package or Item</CLabel>
+            <CLabel className="pt-2" htmlFor="text-package">Package</CLabel>
+          </CCol>
+          <CCol xs="12">
+            <RSelect value={addReceiptRecord.packageId} name="packageItem" options={packages} onChange={(e) => handleChange({isSelect: true, valueFor: 'packageId', option: e})}/>
+          </CCol>
+        </CFormGroup>
+        <CFormGroup row>
+          <CCol>
+            <CLabel className="pt-2" htmlFor="text-package-item">Item</CLabel>
           </CCol>
           <CCol xs="12">
             <RSelect value={addReceiptRecord.itemId} name="packageItem" options={items} onChange={(e) => handleChange({isSelect: true, valueFor: 'itemId', option: e})}/>
