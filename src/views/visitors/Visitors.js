@@ -53,6 +53,7 @@ const Visitors = () => {
               itemsPerPage={5}
               pagination
               loading={loading}
+              onRowClick={(item) => history.push(`/visitors/${item.id}/details`)}
               overTableSlot={
                 <TableHeader>
                   <CButton

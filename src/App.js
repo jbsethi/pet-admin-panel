@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import useToken from './useToken';
 import './scss/style.scss';
 
@@ -26,7 +26,7 @@ const App = () => {
 
   return (
     <AppContext.Provider value={{ setToken }}>
-      <HashRouter>
+      <BrowserRouter>
         <React.Suspense fallback={loading}>
           <Switch>
             <Route exact path="/login" name="Login Page" render={props => {
@@ -47,7 +47,7 @@ const App = () => {
             }} />
           </Switch>
         </React.Suspense>
-      </HashRouter>
+      </BrowserRouter>
     </AppContext.Provider>
   )
 }

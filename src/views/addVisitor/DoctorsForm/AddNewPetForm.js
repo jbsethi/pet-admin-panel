@@ -25,7 +25,7 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
   const [petInfo, setPetInfo] = React.useState({
     id: '',
     name: '',
-    type: '',
+    pet: '',
     age: '',
     color: ''
   })
@@ -43,8 +43,6 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
     const data = {...petInfo, patientId: visitorId}
 
     delete data.id;
-
-    delete data.type
 
     fetchRecord({
       url: 'https://app.aloropivetcenter.com/api/pets',
@@ -86,7 +84,7 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
         </CFormGroup>
         <CFormGroup>
           <CLabel htmlFor="type">Pet Type</CLabel>
-          <CInput value={petInfo.type} name="type" onChange={handleChangePetInfo} id="type" placeholder="Enter type" />
+          <CInput value={petInfo.pet} name="pet" onChange={handleChangePetInfo} id="type" placeholder="Enter type" />
         </CFormGroup>
         <CFormGroup>
           <CLabel htmlFor="age">Pet Age</CLabel>
