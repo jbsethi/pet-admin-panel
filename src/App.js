@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import useToken from './useToken';
+import useRole from './useRole';
 import './scss/style.scss';
 
 const loading = (
@@ -23,9 +24,10 @@ export const AppContext = React.createContext()
 const App = () => {
 
   const {token, setToken} = useToken()
+  const {role, setRole} = useRole()
 
   return (
-    <AppContext.Provider value={{ setToken }}>
+    <AppContext.Provider value={{ role, setToken, setRole }}>
       <BrowserRouter>
         <React.Suspense fallback={loading}>
           <Switch>

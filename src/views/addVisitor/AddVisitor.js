@@ -57,6 +57,7 @@ const AddVisitor = () => {
       appointment: state.isDoctorVisitAdded,
       checkUpPrice: state.doctorsReceipt.fee,
       description: 'Order Receipt',
+      followUp: state.doctorsReceipt.isFollowUp,
       itemIds: state.receiptItems.filter(item => item.id !== null).map(item => item.id),
       packageIds: state.receiptItems.filter(item => item.packageId !== null).map(item => item.packageId)
     }

@@ -21,7 +21,7 @@ import {
 import CIcon from '@coreui/icons-react'
 
 const Login = () => {
-  const { setToken } = useContext(AppContext)
+  const { setToken, setRole } = useContext(AppContext)
 
   const [
     { data, loading },
@@ -60,9 +60,13 @@ const Login = () => {
 
   useEffect(() => {
     if (data && data.token) {
+      const temp = data.token.split('.')[1]
+      const tokenData = JSON.parse(atob(temp))
+
+      setRole(tokenData.role.name)
       setToken(data.token)
     }
-  }, [data, setToken])
+  }, [data, setRole, setToken])
 
   return (
     <div className="c-app c-default-layout flex-row align-items-center">

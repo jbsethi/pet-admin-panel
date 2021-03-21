@@ -13,6 +13,8 @@ import {
   CButton,
 } from '@coreui/react'
 
+import { AppContext } from '../../App.js'
+
 const fields = [
     'name',
     {
@@ -24,18 +26,27 @@ const fields = [
   ]
 
 const Visitors = () => {
+  const { role } = React.useContext(AppContext)
+
   const history = useHistory()
 
   const handleClick = () => {
     history.push("/visitors/add")
   }
 
-  const [{ data, loading, error }] = useAxios(
+  const [{ data, loading, error }, fetch] = useAxios(
     {
       url: 'https://app.aloropivetcenter.com/api/patients',
       method: 'GET',
     },
+    {
+      manual: true
+    }
   )
+
+  React.useEffect(() => {
+    fetch()
+  }, [fetch])
 
   return (
     <>
@@ -47,7 +58,7 @@ const Visitors = () => {
             </CCardHeader>
             <CCardBody>
             <CDataTable
-              items={loading ? [] : (error ? [] : data.rows)}
+              items={loading ? [] : (error ? [] : data?.rows || [])}
               fields={fields}
               striped
               itemsPerPage={5}
@@ -55,6 +66,7 @@ const Visitors = () => {
               loading={loading}
               onRowClick={(item) => history.push(`/visitors/${item.id}/details`)}
               overTableSlot={
+                role !== 'doctor' &&
                 <TableHeader>
                   <CButton
                     color="primary"

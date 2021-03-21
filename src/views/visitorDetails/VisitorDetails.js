@@ -17,10 +17,9 @@ import { Switch, Route } from 'react-router-dom'
 const VisitorsDetail = React.lazy(() => import('./VisitorsDetail.js'));
 const PetRecords = React.lazy(() => import('./PetRecords.js'));
 const Orders = React.lazy(() => import('./Orders.js'));
+const Treatment = React.lazy(() => import('./Treatments.js'));
 
 const VisitorDetails = ({ match }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
   return (
     <>
     <CRow>
@@ -28,12 +27,12 @@ const VisitorDetails = ({ match }) => {
         <CCard>
           <CCardHeader className="p-0">
             <CNavbar expandable="sm" color="primary">
-              <CCollapse show={isOpen} navbar>
+              <CCollapse show={true} navbar>
                 <CNavbarNav>
                   <CNavLink to={'/visitors/' + match.params.id + '/details'}>Visitor's Details</CNavLink>
                   <CNavLink to={'/visitors/' + match.params.id + '/pets'}>Pets</CNavLink>
                   <CNavLink to={'/visitors/' + match.params.id + '/orders'}>Orders</CNavLink>
-                  <CNavLink to={'/visitors/' + match.params.id + '/doctors-prescription'}>Doctor's Prescriptions</CNavLink>
+                  <CNavLink to={'/visitors/' + match.params.id + '/treatments'}>Doctor's Prescriptions</CNavLink>
                 </CNavbarNav>
               </CCollapse>
             </CNavbar>
@@ -53,6 +52,10 @@ const VisitorDetails = ({ match }) => {
               <Route
                 path={'/visitors/' + match.params.id + '/orders'}
                 render={() => <Orders id={match.params.id} />}
+              />
+              <Route
+                path={'/visitors/' + match.params.id + '/treatments'}
+                render={() => <Treatment id={match.params.id} match={{ params: match.params }}/>}
               />
               </Switch>
             </React.Suspense>

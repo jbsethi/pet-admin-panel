@@ -8,6 +8,8 @@ import { CContainer, CFade } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
+
+import { AppContext } from '../App.js'
   
 const loading = (
   <div className="pt-3 text-center">
@@ -16,12 +18,14 @@ const loading = (
 )
 
 const TheContent = () => {
+  const { role } = React.useContext(AppContext)
+  
   return (
     <main className="c-main">
       <CContainer fluid>
         <Suspense fallback={loading}>
           <Switch>
-            {routes.map((route, idx) => {
+            {routes.filter(route => route.roles.includes(role)).map((route, idx) => {
               return route.component && (
                 <Route
                   key={idx}
@@ -35,7 +39,11 @@ const TheContent = () => {
                   )} />
               )
             })}
-            <Redirect from="/" to="/dashboard" />
+            {
+              ['superman', 'admin'].includes(role) ?
+              <Redirect from="/" to="/dashboard" /> :
+              <Redirect from="/" to="/visitors" /> 
+            }
           </Switch>
         </Suspense>
       </CContainer>

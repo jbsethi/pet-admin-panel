@@ -17,9 +17,19 @@ import navigation from './_nav'
 
 import LogoImage from '../assets/logo/logo.png'
 
+import { AppContext } from '../App.js'
+
 const TheSidebar = () => {
+  const [navigations, setNavigations] = React.useState([])
+  const { role } = React.useContext(AppContext)
+
   const dispatch = useDispatch()
   const show = useSelector(state => state.sidebarShow)
+
+
+  React.useEffect(() => {
+    setNavigations(navigation.filter(nav => nav.roles.includes(role)))
+  }, [role])
 
   return (
     <CSidebar
@@ -37,16 +47,18 @@ const TheSidebar = () => {
         </div>
       </CSidebarBrand>
       <CSidebarNav>
-
-        <CCreateElement
-          items={navigation}
-          components={{
-            CSidebarNavDivider,
-            CSidebarNavDropdown,
-            CSidebarNavItem,
-            CSidebarNavTitle
-          }}
-        />
+        {
+          navigations.length > 0 &&
+          <CCreateElement
+            items={navigations}
+            components={{
+              CSidebarNavDivider,
+              CSidebarNavDropdown,
+              CSidebarNavItem,
+              CSidebarNavTitle
+            }}
+          />
+        }
       </CSidebarNav>
       <CSidebarMinimizer className="c-d-md-down-none"/>
     </CSidebar>

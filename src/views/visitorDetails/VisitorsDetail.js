@@ -4,7 +4,7 @@ import React from 'react'
 import useAxios from 'axios-hooks'
 
 const VisitorsDetail = ({ id }) => {
-  const [{ data, loading, error }, fetch] = useAxios(
+  const [{ data, loading }, fetch] = useAxios(
     {
       url: 'https://app.aloropivetcenter.com/api/patients',
       method: 'GET',

@@ -41,22 +41,16 @@ const PetRecords = ({ id }) => {
             <CCol md="4">
               <CCard>
                 <CCardBody>
-                  {
-                    <>
-                      
-                          <CDataTable
-                            items={loading ? [] : (error ? [] : data?.rows || [])}
-                            fields={fields}
-                            striped
-                            pagination
-                            loading={loading}
-                            overTableSlot={
-                              <p>All Pets</p>
-                            }
-                          />
-                        
-                    </>
-                  }
+                  <CDataTable
+                    items={loading ? [] : (error ? [] : data?.rows || [])}
+                    fields={fields}
+                    striped
+                    pagination
+                    loading={loading}
+                    overTableSlot={
+                      <p>All Pets</p>
+                    }
+                  />
                 </CCardBody>
               </CCard>
             </CCol>

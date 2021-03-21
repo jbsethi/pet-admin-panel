@@ -1,0 +1,4 @@
+.petTab .active > div {
+  background-color: var(--c-primary);
+  color: white;
+}

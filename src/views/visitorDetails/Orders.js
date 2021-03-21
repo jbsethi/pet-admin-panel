@@ -8,7 +8,7 @@ import {
   CRow,
   CCardHeader,
   CCardBody,
-  CDataTable
+  CDataTable,
 } from '@coreui/react'
 
 const fields = [
@@ -73,7 +73,7 @@ const Orders = ({ id }) => {
                     <td>
                       { `${item.price} AED` }
                     </td>
-                  ),
+                  )
               }}
             />
           </CCardBody>
