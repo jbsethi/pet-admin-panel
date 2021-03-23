@@ -38,12 +38,21 @@ const TheSidebar = () => {
       onShowChange={(val) => dispatch({type: 'set', sidebarShow: val })}
     >
       <CSidebarBrand className="d-md-down-none" to="/">
-        <div>
-          <img src={LogoImage} alt="logo" height="50"/>
+        <div className="c-sidebar-brand-full">
+          <div className="d-flex">
+            <div>
+              <img src={LogoImage} alt="logo" height="50"/>
+            </div>
+            <div className="ml-2">
+              <p className="mb-0 text-primary font-bold font-xl">Aloropi</p>
+              <p className="mb-0 font-sm">Veterinary Center</p>
+            </div>
+          </div>
         </div>
-        <div className="ml-2">
-          <p className="mb-0 text-primary font-bold font-xl">Aloropi</p>
-          <p className="mb-0 font-sm">Veterinary Center</p>
+        <div className="c-sidebar-brand-minimized">
+          <div>
+            <img src={LogoImage} alt="logo" height="50"/>
+          </div>
         </div>
       </CSidebarBrand>
       <CSidebarNav>
