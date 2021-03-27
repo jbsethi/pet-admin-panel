@@ -15,7 +15,7 @@ const DoctorReceipt = ({ doctorsReceipt }) => {
         </CCol>
       </CRow>
       <CRow className="my-2">
-        <CCol md="4" className="font-weight-bold">Appointment Date</CCol>
+        <CCol md="4" className="font-weight-bold">Check up Date</CCol>
         <CCol>
           {
             doctorsReceipt.appointmentDate.getDate() + '/' +

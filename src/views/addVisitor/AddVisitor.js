@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   CButton,
   CCard,
@@ -24,8 +24,11 @@ import DoctorsForm from './DoctorsForm/DoctorsForm.js'
 import reducer from './addVisitorReducer'
 import initialState from './addVisitorState'
 
+import { AppContext } from '../../App.js'
+
 const AddVisitor = () => {
   const history = useHistory()
+  const { addToast } = useContext(AppContext)
 
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
@@ -48,6 +51,10 @@ const AddVisitor = () => {
     }).then(resp => {
       dispatch({ type: 'setVisitorsId', payload: resp.data.id })
       dispatch({ type: 'setIsVisitorRecordAdded', payload: true })
+    }).catch(err => {
+      addToast({
+        message: err.response.data.message
+      })
     })
   }
 
@@ -80,6 +87,17 @@ const AddVisitor = () => {
     }
   }
 
+  const resetForm = () => {
+    dispatch({ type: 'setVisitorsRecord', payload: {
+      emiratesId: '',
+      name: '',
+      email: '',
+      contact: ''
+    }})
+    dispatch({ type: 'setVisitorsId', payload: null })
+    dispatch({ type: 'setIsVisitorRecordAdded', payload: false })
+  }
+
   const handleUserChange = ({ value }) => {
     dispatch({ type: 'setVisitorsRecord', payload: {
       emiratesId: value.emiratesId,
@@ -89,6 +107,7 @@ const AddVisitor = () => {
     }})
     dispatch({ type: 'setVisitorsId', payload: value.id })
     dispatch({ type: 'setIsVisitorRecordAdded', payload: true })
+    dispatch({ type: 'setKeyword', payload: {} })
   }
 
   React.useEffect(() => {
@@ -163,7 +182,7 @@ const AddVisitor = () => {
             <CCardFooter>
               <div className="d-flex">
                 <div className="w-50 ml-auto text-right">
-                  <CButton className="w-25 mr-1" color="danger">Clear</CButton>
+                  <CButton onClick={resetForm} className="w-25 mr-1" color="danger">Clear</CButton>
                   <CButton onClick={handleSubmit} className="w-25" color="primary">Submit</CButton>
                 </div>
               </div>

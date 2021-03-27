@@ -68,7 +68,7 @@ const Visitors = ({ match }) => {
               itemsPerPage={5}
               pagination
               loading={loading}
-              onRowClick={(item) => history.push(`/appointments/${item.id}/treatment-${item.orderId}`)}
+              onRowClick={(item) => history.push(`/check-up/${item.id}/treatment-${item.orderId}`)}
             />
             </CCardBody>
           </CCard>

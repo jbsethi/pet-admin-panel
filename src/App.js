@@ -1,7 +1,12 @@
 import React from 'react';
 import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+
 import useToken from './useToken';
 import useRole from './useRole';
+import useToaster from './useToaster';
+
+import Toaster from './components/Toaster.js'
+
 import './scss/style.scss';
 
 const loading = (
@@ -22,12 +27,12 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
 export const AppContext = React.createContext()
 
 const App = () => {
-
   const {token, setToken} = useToken()
   const {role, setRole} = useRole()
+  const {toasts, addToast} = useToaster()
 
   return (
-    <AppContext.Provider value={{ role, setToken, setRole }}>
+    <AppContext.Provider value={{ role, setToken, setRole, addToast }}>
       <HashRouter>
         <React.Suspense fallback={loading}>
           <Switch>
@@ -50,6 +55,8 @@ const App = () => {
           </Switch>
         </React.Suspense>
       </HashRouter>
+
+      <Toaster toasters={toasts} />
     </AppContext.Provider>
   )
 }

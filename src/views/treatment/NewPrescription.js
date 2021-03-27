@@ -1,11 +1,16 @@
-import { CModal, CModalBody, CModalFooter, CModalHeader, CFormGroup, CLabel, CInput, CButton } from '@coreui/react'
+import { CModal, CModalBody, CModalFooter, CModalHeader, CFormGroup, CLabel, CInput, CButton, CTextarea, CRow, CCol } from '@coreui/react'
 import React from 'react'
+
+import RSelect from 'react-select';
 
 import { withRouter } from 'react-router-dom'
 
 import useAxios from 'axios-hooks'
 
 const NewPrescription = ({ match, show, setShow, details, refetch }) => {
+  const [recommendations, setRecommendations] = React.useState([])
+  const [treatments, setTreatments] = React.useState([])
+
   const [, fetch] = useAxios(
     {
       url: 'https://app.aloropivetcenter.com/api/treatments',
@@ -78,6 +83,50 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
     }
   }, [details, show])
 
+  const recommendationElem = recommendations.map((r, i) => {
+    return (
+      <CRow key={i} className="align-items-center px-3 py-2">
+        <CCol md="1">{i+1}</CCol>
+        <CCol>
+          <RSelect options={treatments} ></RSelect>
+        </CCol>
+        <CCol md="2">
+          <CButton onClick={() => removeRecommendation(i)} size="sm">Remove</CButton>
+        </CCol>
+      </CRow>
+    )
+  })
+
+  const addNewRecommendation = () => {
+    setRecommendations((oldState) => {
+      return [...oldState, {
+        serviceId: ''
+      }]
+    })
+  }
+
+  const removeRecommendation = (i) => {
+    setRecommendations((oldState) => {
+      return oldState.filter((r, idx) => idx !== i)
+    })
+  }
+
+  React.useEffect(() => {
+    if (show && treatments.length === 0) {
+      fetch({
+        url: 'https://app.aloropivetcenter.com/api/items/records/all?serviceId=3',
+        method: 'GET'
+      }).then(resp => {
+        setTreatments(resp.data.map(r => {
+          return {
+            label: r.name,
+            value: r.id
+          }
+        }))
+      })
+    }
+  }, [show, treatments, fetch])
+
   return (
     <CModal show={show} onClose={() => setShow(false)}>
       <CModalHeader>
@@ -96,13 +145,40 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
         <CLabel htmlFor="prescription">Prescription</CLabel>
         <CInput disabled={details} value={treatmentRecord.prescription} name="prescription" onChange={handleChange} id="prescription" placeholder="Enter Prescription" />
       </CFormGroup>
-      <CFormGroup>
-        <CLabel htmlFor="recomendation">Recomendation</CLabel>
-        <CInput disabled={details} value={treatmentRecord.recomendation} name="recomendation" onChange={handleChange} id="recomendation" placeholder="Enter Recomendation" />
+      
+      <CFormGroup className="py-3 m-0">
+        <CRow className="px-3 justify-content-between align-items-center">
+          <CLabel htmlFor="recomendation">Recomendation</CLabel>
+          <CButton onClick={addNewRecommendation} size="sm" color="primary">Add Recommendation</CButton>
+        </CRow>
+        {
+          recommendationElem.length > 0 &&
+          <section className="py-2">
+            {recommendationElem}
+          </section>
+        }
+        {/* <CRow className="align-items-center px-3 py-4">
+          <CCol md="1">1</CCol>
+          <CCol>
+            <CInput></CInput>
+          </CCol>
+          <CCol md="2">
+            <CButton size="sm">Remove</CButton>
+          </CCol>
+        </CRow> */}
+        {/* <CInput disabled={details} value={treatmentRecord.recomendation} name="recomendation" onChange={handleChange} id="recomendation" placeholder="Enter Recomendation" /> */}
       </CFormGroup>
+
       <CFormGroup>
         <CLabel htmlFor="description">Description</CLabel>
-        <CInput disabled={details} value={treatmentRecord.description} name="description" onChange={handleChange} id="description" placeholder="Enter Description" />
+        <CTextarea 
+          disabled={details}
+          value={treatmentRecord.description}
+          onChange={handleChange}
+          name="description"
+          id="description" 
+          placeholder="Enter Description"
+        />
       </CFormGroup>
       <CFormGroup>
         <CLabel htmlFor="followUp">Follow up ?</CLabel>

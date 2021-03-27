@@ -15,7 +15,7 @@ const DoctorsForm = ({ visitorId, doctorFormVisibility, isDoctorVisitAdded, doct
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between align-items-center">
-          <div>Doctor's Visit</div>
+          <div><strong>Doctor's Visit</strong></div>
           <CSwitch
             className="mr-1"
             color="dark"

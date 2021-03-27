@@ -34,7 +34,7 @@ const Treatment = ({ match }) => {
       }))
 
       if (resp?.data?.rows?.length  > 0)
-        history.replace(`/appointments/${match.params.id}/${match.params.slug}/${resp?.data?.rows[0].id}`)
+        history.replace(`/check-up/${match.params.id}/${match.params.slug}/${resp?.data?.rows[0].id}`)
     })
 
   }, [fetch, match.params.id, match.params.slug, history])
@@ -58,10 +58,10 @@ const Treatment = ({ match }) => {
           </CCard>
         </CCol>
         <CCol>
-          <Route path="/appointments/:id/:slug" exact render={() => (
+          <Route path="/check-up/:id/:slug" exact render={() => (
             <p className="p-5 text-center">Please select Pet to view details.</p>
           )} />
-          <Route path="/appointments/:id/:slug/:petId" component={PetHistory} />
+          <Route path="/check-up/:id/:slug/:petId" component={PetHistory} />
         </CCol>
       </CRow>
     </>

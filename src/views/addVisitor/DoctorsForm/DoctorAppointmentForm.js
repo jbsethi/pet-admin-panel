@@ -59,20 +59,23 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
         url: 'https://app.aloropivetcenter.com/api/pets',
         method: 'GET',
         params: {
+          patientId: visitorId,
           search: keyword
         }
       }).then(resp => {
         console.log(resp)
       })
     }
-  }, [keyword, fetchRecord])
+  }, [keyword, fetchRecord, visitorId])
 
   React.useEffect(() => {
     fetchRecord({
-      url: 'https://app.aloropivetcenter.com/api/pets',
-      method: 'GET'
+      url: `https://app.aloropivetcenter.com/api/pets/all/patients`,
+      method: 'POST',
+      data: {
+        patientId: visitorId
+      }
     }).then(resp => {
-      
       setItems(resp?.data?.rows.map(o => {
         return {
           label: o.name,
@@ -80,19 +83,19 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
         }
       }) || [])
     })
-  }, [fetchRecord])
+  }, [fetchRecord, visitorId])
 
 
   return (
     <div>
-      <p onClick={() => setShowAddAppointmentModal(true)} className="my-5 text-center">Add Doctors appointment</p>
+      <p onClick={() => setShowAddAppointmentModal(true)} className="my-5 text-center">Add Doctors check up</p>
 
       <CModal
         show={showAddAppointmentModal}
         onClose={() => setShowAddAppointmentModal(false)}
       >
         <CModalHeader>
-          Create Appointment
+          Create check up
         </CModalHeader>
         <CModalBody>
           <CFormGroup row>

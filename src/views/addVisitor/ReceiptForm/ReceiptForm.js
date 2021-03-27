@@ -28,7 +28,7 @@ const ReceiptForm = ({ receiptFormVisibility, showAddReceiptFormModal, receiptIt
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between align-items-center">
-          <div>Receipt Form</div>
+          <div><strong>Shopping, Grooming and Others</strong></div>
           <CSwitch
             className="mr-1"
             color="dark"

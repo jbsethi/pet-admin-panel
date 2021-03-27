@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom'
 const PetTab = ({ match, pet }) => {
   return (
     <NavLink to={{
-      pathname: `/appointments/${match.params.id}/${match.params.slug}/${pet.id}`
+      pathname: `/check-up/${match.params.id}/${match.params.slug}/${pet.id}`
     }}>
       <CCard className="m-0">
         <CCardBody className="p-3">
