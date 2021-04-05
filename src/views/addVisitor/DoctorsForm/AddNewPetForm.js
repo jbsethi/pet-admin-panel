@@ -27,9 +27,11 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
   const [petInfo, setPetInfo] = React.useState({
     id: '',
     name: '',
-    pet: '',
+    breed: '',
     age: '',
     color: '',
+    specie: '',
+    gender: '',
     microchip: false
   })
 
@@ -67,6 +69,7 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
           id: resp.data.id
         }
       })
+    
 
       setItems(oldState => {
         return [...oldState, resp.data]
@@ -78,6 +81,8 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
       })
 
       setShow(false)
+    }).catch(err => {
+      console.log(err.response)
     })
   }
 
@@ -96,7 +101,7 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
         </CFormGroup>
         <CFormGroup>
           <CLabel htmlFor="type">Breed</CLabel>
-          <CInput value={petInfo.pet} name="pet" onChange={handleChangePetInfo} id="type" placeholder="Enter type" />
+          <CInput value={petInfo.breed} name="breed" onChange={handleChangePetInfo} id="type" placeholder="Enter breed" />
         </CFormGroup>
         <CFormGroup>
           <CLabel htmlFor="age">Pet Age</CLabel>
@@ -107,12 +112,12 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
           <CInput value={petInfo.color} name="color" onChange={handleChangePetInfo} id="color" placeholder="Enter color" />
         </CFormGroup>
         <CFormGroup>
-          <CLabel htmlFor="species">Species</CLabel>
-          <CInput value={petInfo.species} name="species" onChange={handleChangePetInfo} id="species" placeholder="Enter species" />
+          <CLabel htmlFor="specie">Specie</CLabel>
+          <CInput value={petInfo.specie} name="specie" onChange={handleChangePetInfo} id="specie" placeholder="Enter specie" />
         </CFormGroup>
         <CFormGroup>
-          <CLabel htmlFor="sex">Sex</CLabel>
-          <CInput value={petInfo.sex} name="sex" onChange={handleChangePetInfo} id="sex" placeholder="Enter sex" />
+          <CLabel htmlFor="gender">Sex</CLabel>
+          <CInput value={petInfo.gender} name="gender" onChange={handleChangePetInfo} id="gender" placeholder="Enter gender" />
         </CFormGroup>
       </CModalBody>
       <CFormGroup row className="align-items-center px-3">

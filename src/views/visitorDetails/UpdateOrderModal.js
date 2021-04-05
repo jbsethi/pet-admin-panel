@@ -83,12 +83,14 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
   }
 
   React.useEffect(() => {
-    console.log(order)
     if (order) {
       const items = order.Items.map((item, idx) => {
         return {
           ...item,
           idx: `i-${idx}`,
+          name: item.Item.name,
+          qty: item.quantity,
+          total: item.quantity * item.price,
           isLocked: true
         }
       })
@@ -104,6 +106,11 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
       setTotal(order.price)
     }
   }, [order, show])
+
+
+  const printInvoice = () => {
+    alert('printing invoice')
+  }
 
   return (
     <CModal
@@ -150,9 +157,14 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
 
         <AddReceiptForm  show={showAddItem} setShow={setShowAddItem}  dispatch={handleAction}></AddReceiptForm>
       </CModalBody>
-      <CModalFooter>
-        <CButton size="sm" color="danger" onClick={() => setShow(false)}>Cancel</CButton>
+      <CModalFooter className="d-flex justify-content-between">
+        <div>
+        <CButton size="sm" color="info" onClick={printInvoice}>Print Invoice</CButton>
+        </div>
+        <div>
+        <CButton className="mr-1" size="sm" color="danger" onClick={() => setShow(false)}>Cancel</CButton>
         <CButton size="sm" color="primary" onClick={() => handleAction({ type: 'updateReceipt' })}>Update</CButton>
+        </div>
       </CModalFooter>
     </CModal>
   )

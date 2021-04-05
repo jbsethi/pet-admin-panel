@@ -45,12 +45,16 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
   }
 
   const addDoctorReceipt = () => {
-    dispatch({ type: 'addDoctorReceipt', payload: {
-      pet: selectedPet,
-      fee,
-      appointmentDate: new Date(),
-      isFollowUp
-    } })
+    if (!isFollowUp && +fee === 0 ) {
+      console.log('[Error]: Please provide fee or check follow up if it is follow up !')
+    } else {
+      dispatch({ type: 'addDoctorReceipt', payload: {
+        pet: selectedPet,
+        fee: +fee === 0 ? '0' : fee,
+        appointmentDate: new Date(),
+        isFollowUp
+      } })
+    }
   }
 
   React.useEffect(() => {

@@ -62,11 +62,21 @@ const AddVisitor = () => {
     const data = {
       patientId: state.visitorsId,
       appointment: state.isDoctorVisitAdded,
-      checkUpPrice: state.doctorsReceipt.fee,
-      description: 'Order Receipt',
+      checkUpPrice: +state.doctorsReceipt.fee,
+      description: 'Order Receipt For Shopping.',
       followUp: state.doctorsReceipt.isFollowUp,
-      itemIds: state.receiptItems.filter(item => item.id !== null).map(item => item.id),
-      packageIds: state.receiptItems.filter(item => item.packageId !== null).map(item => item.packageId)
+      items: state.receiptItems.filter(item => item.id !== null).map(item => {
+        return {
+          itemId: item.id,
+          quantity: item.qty
+        }
+      }),
+      packages: state.receiptItems.filter(item => item.packageId !== null).map(item => {
+        return {
+          packageId: item.packageId,
+          quantity: item.qty
+        }
+      })
     }
 
     fetchRecord({

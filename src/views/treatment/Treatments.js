@@ -39,7 +39,8 @@ const Visitors = ({ match }) => {
   React.useEffect(() => {
     fetch({
       params: {
-        appointment: 1
+        appointment: 1,
+        checkUp: false
       }
     }).then(resp => {
       setItems(resp.data.rows.map(row => {
