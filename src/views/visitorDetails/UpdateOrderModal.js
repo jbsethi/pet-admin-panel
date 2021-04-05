@@ -1,5 +1,7 @@
-import React from 'react'
-
+import React, { useRef } from 'react'
+import { useReactToPrint } from 'react-to-print';
+import Invoice from './Invoice'
+import style from './invoice.module.css'
 import {
   CModal,
   CModalHeader,
@@ -26,6 +28,7 @@ const receiptTableFields = [
 ]
 
 const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
+  const componentRef = useRef();
   const [showAddItem, setShowAddItem] = React.useState(false)
   const [total, setTotal] = React.useState(null)
   const [items, setItems] = React.useState([])
@@ -107,10 +110,9 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
     }
   }, [order, show])
 
-
-  const printInvoice = () => {
-    alert('printing invoice')
-  }
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  })
 
   return (
     <CModal
@@ -159,13 +161,16 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
       </CModalBody>
       <CModalFooter className="d-flex justify-content-between">
         <div>
-        <CButton size="sm" color="info" onClick={printInvoice}>Print Invoice</CButton>
+        <CButton size="sm" color="info" onClick={handlePrint}>Print Invoice</CButton>
         </div>
         <div>
         <CButton className="mr-1" size="sm" color="danger" onClick={() => setShow(false)}>Cancel</CButton>
         <CButton size="sm" color="primary" onClick={() => handleAction({ type: 'updateReceipt' })}>Update</CButton>
         </div>
       </CModalFooter>
+      <div className={style.printable} ref={componentRef}>
+        <Invoice  />
+      </div>
     </CModal>
   )
 }
