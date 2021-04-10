@@ -6,7 +6,10 @@ import PetTabs from './PetTabs'
 
 import useAxios from 'axios-hooks'
 
+import { AppContext } from '../../App.js'
+
 const Treatment = ({ match }) => {
+  const { addToast } = React.useContext(AppContext)
   const history = useHistory()
   const [items, setItems] = React.useState([])
   const [{ loading }, fetch] = useAxios(
@@ -36,6 +39,10 @@ const Treatment = ({ match }) => {
 
       if (resp?.data?.rows?.length  > 0)
         history.replace(`/visitors/${match.params.id}/treatments/${resp?.data?.rows[0].id}`)
+    }).catch(err => {
+      addToast({
+        message: err.response.data.message
+      })
     })
 
   }, [fetch, match.params.id, history])

@@ -16,7 +16,10 @@ import {
 
 import useAxios from 'axios-hooks'
 
+import { AppContext } from '../../../App.js'
+
 const AddReceiptForm = ({ show, setShow, dispatch }) => {
+  const { addToast } = React.useContext(AppContext)
   const [addReceiptRecord, setAddReceiptRecord] = React.useState({
     categoryId: null,
     itemId: null,
@@ -73,7 +76,9 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
 
       setCategories(options)
     } catch (err) {
-      console.log(err)
+      addToast({
+        message: err.response.data.message
+      })
     }
   }, [fetchRecord])
 
@@ -123,7 +128,9 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
 
       setItems(options2)
     } catch (err) {
-      console.log(err)
+      addToast({
+        message: err.response.data.message
+      })
     }
   }, [fetchRecord, addReceiptRecord?.categoryId?.value])
 

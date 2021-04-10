@@ -9,6 +9,7 @@ import useAxios from 'axios-hooks'
 
 const NewPrescription = ({ match, show, setShow, details, refetch }) => {
   const [recommendations, setRecommendations] = React.useState([])
+  const [selectedRecomendation, setSelectedRecomendation] = React.useState([])
   const [treatments, setTreatments] = React.useState([])
 
   const [, fetch] = useAxios(
@@ -25,7 +26,6 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
     statement: '',
     prescription: '',
     description: '',
-    recomendation: '',
     followUp: ''
   })
 
@@ -36,6 +36,12 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
         [e.target.name]: e.target.value
       }
     })
+  }
+
+  const handleSelectChange = (option, i) => {
+    setSelectedRecomendation((oldState => {
+      return [...oldState, { idx: i, ...option }]
+    }))
   }
 
   const addNewPrescription = () => {
@@ -52,7 +58,8 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
         ...treatmentRecord,
         orderId: match.params.slug.split('-')[1],
         petId: match.params.petId,
-        followUp 
+        followUp ,
+        recomendations: selectedRecomendation.map(r => r.value)
       }
 
       fetch({
@@ -63,7 +70,6 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
           statement: '',
           prescription: '',
           description: '',
-          recomendation: '',
           followUp: ''
         })
         setShow(false)
@@ -77,9 +83,23 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
         statement: details.statement,
         prescription: details.prescription,
         description: details.description,
-        recomendation: details.recomendation,
         followUp: ''
       })
+
+      setSelectedRecomendation(() => {
+        return details.Recomendations.map((o, i) => {
+          addNewRecommendation()
+          return {
+            idx: i,
+            value: o.itemId,
+            label: o.Item.name
+          }
+        })
+      })
+    }
+
+    return () => {
+      setRecommendations([])
     }
   }, [details, show])
 
@@ -88,10 +108,14 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
       <CRow key={i} className="align-items-center px-3 py-2">
         <CCol md="1">{i+1}</CCol>
         <CCol>
-          <RSelect options={treatments} ></RSelect>
+          <RSelect disabled={details} options={treatments} value={selectedRecomendation.find(o => o.idx === i)} onChange={(option) => handleSelectChange(option, i)}></RSelect>
         </CCol>
         <CCol md="2">
-          <CButton onClick={() => removeRecommendation(i)} size="sm">Remove</CButton>
+          {
+            details ?
+            <CButton color="primary" size="sm">Add</CButton> :
+            <CButton onClick={() => removeRecommendation(i)} size="sm">Remove</CButton>
+          }
         </CCol>
       </CRow>
     )
@@ -109,6 +133,10 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
     setRecommendations((oldState) => {
       return oldState.filter((r, idx) => idx !== i)
     })
+
+    setSelectedRecomendation((oldState => {
+      return oldState.filter(op => op.idx !== i)
+    }))
   }
 
   React.useEffect(() => {
@@ -149,7 +177,10 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
       <CFormGroup className="py-3 m-0">
         <CRow className="px-3 justify-content-between align-items-center">
           <CLabel htmlFor="recomendation">Recomendation</CLabel>
-          <CButton onClick={addNewRecommendation} size="sm" color="primary">Add Recommendation</CButton>
+          {
+            !details &&
+            <CButton onClick={addNewRecommendation} size="sm" color="primary">Add Recommendation</CButton>
+          }
         </CRow>
         {
           recommendationElem.length > 0 &&

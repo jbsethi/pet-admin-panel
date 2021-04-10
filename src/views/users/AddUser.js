@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import useAxios from 'axios-hooks'
 
@@ -22,6 +22,8 @@ import {
   CButton
 } from '@coreui/react'
 
+import { AppContext } from '../../App.js'
+
 const defaultImageUrl = "https://www.kindpng.com/picc/m/72-723761_student-png-sammilani-mahavidyalaya-undergraduate-and-dummy-user.png"
 
 const formDataObj = (obj) => {
@@ -31,6 +33,7 @@ const formDataObj = (obj) => {
 }
 
 const AddUser = ({ match }) => {
+  const { addToast } = useContext(AppContext)
   const history = useHistory()
 
   const [
@@ -109,6 +112,10 @@ const AddUser = ({ match }) => {
       
       executePost({
         data: formData
+      }).catch(err => {
+        addToast({
+          message: err.response.data.message
+        })
       })
     }
   }
@@ -155,7 +162,11 @@ const AddUser = ({ match }) => {
       })
     } else {
       if (match?.params?.id) {
-        getUserDetails()
+        getUserDetails().catch(err => {
+          addToast({
+            message: err.response.data.message
+          })
+        })
       }
     }
   }, [userData, setUserRecord, getUserDetails, match])

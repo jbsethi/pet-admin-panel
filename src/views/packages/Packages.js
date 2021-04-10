@@ -65,19 +65,25 @@ const Packages = () => {
     setShow(true)
   }
 
-  const deleteItem = (id) => {
-    fetch({
-      url: `https://app.aloropivetcenter.com/api/packages/${id}`,
-      method: 'DELETE'
-    })
-  }
-
-  React.useEffect(() => {
+  const loadData = React.useCallback(() => {
     fetch()
       .then(resp => {
         setTotalPages(resp.data.totalPages)
       })
   }, [fetch])
+
+  const deleteItem = (id) => {
+    fetch({
+      url: `https://app.aloropivetcenter.com/api/packages/${id}`,
+      method: 'DELETE'
+    }).then(() => {
+      loadData()
+    })
+  }
+
+  React.useEffect(() => {
+    loadData()
+  }, [loadData])
 
   return (
     <>

@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import useAxios from 'axios-hooks'
+
+import { AppContext } from '../../App.js'
 
 import {
   CModal,
@@ -18,6 +20,7 @@ import {
 } from '@coreui/react'
 
 const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
+  const { addToast } = useContext(AppContext)
   const [services, setServices] = React.useState([])
   const [petTypes, setPetTypes] = React.useState([])
 
@@ -100,38 +103,48 @@ const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
 
       fetch(config).then(resp => {
         confirmClose()
+      }).catch(err => {
+        addToast({
+          message: err.response.data.message
+        })
       })
     }
   }
 
   const initializeRecord = React.useCallback(async () => {
-    let result = await fetch({
-      url: `https://app.aloropivetcenter.com/api/services`,
-      method: 'GET'
-    })
-
-    setServices(result?.data?.rows || [])
-
-    result = await fetch({
-      url: `https://app.aloropivetcenter.com/api/pet-types`,
-      method: 'GET'
-    })
-
-    setPetTypes(result?.data?.rows || [])
-
-    if (itemId) {
-      result = await fetch({
-        url: `https://app.aloropivetcenter.com/api/items/${itemId}`,
+    try {
+      let result = await fetch({
+        url: `https://app.aloropivetcenter.com/api/services`,
         method: 'GET'
       })
   
-      setItemRecord({
-        name: result.data.name,
-        description: result.data.description,
-        price: result.data.price,
-        petTypeId: result.data.petTypeId,
-        serviceId: result.data.serviceId,
-        active: result.data.active
+      setServices(result?.data?.rows || [])
+  
+      result = await fetch({
+        url: `https://app.aloropivetcenter.com/api/pet-types`,
+        method: 'GET'
+      })
+  
+      setPetTypes(result?.data?.rows || [])
+  
+      if (itemId) {
+        result = await fetch({
+          url: `https://app.aloropivetcenter.com/api/items/${itemId}`,
+          method: 'GET'
+        })
+    
+        setItemRecord({
+          name: result.data.name,
+          description: result.data.description,
+          price: result.data.price,
+          petTypeId: result.data.petTypeId,
+          serviceId: result.data.serviceId,
+          active: result.data.active
+        })
+      }
+    } catch (err) {
+      addToast({
+        message: err?.response?.data?.message || 'Error occured !'
       })
     }
   }, [fetch, itemId])

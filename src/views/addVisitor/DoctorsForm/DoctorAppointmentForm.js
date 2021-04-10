@@ -16,9 +16,12 @@ import useAxios from 'axios-hooks'
 
 import RSelect from 'react-select';
 
+import { AppContext } from '../../../App.js'
+
 import AddNewPetForm from './AddNewPetForm.js'
 
 const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
+  const { addToast } = React.useContext(AppContext)
   const [,
     fetchRecord
   ] = useAxios(
@@ -66,8 +69,10 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
           patientId: visitorId,
           search: keyword
         }
-      }).then(resp => {
-        console.log(resp)
+      }).catch(err => {
+        addToast({
+          message: err.response.data.message
+        })
       })
     }
   }, [keyword, fetchRecord, visitorId])
@@ -86,6 +91,10 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
           value: o
         }
       }) || [])
+    }).catch(err => {
+      addToast({
+        message: err.response.data.message
+      })
     })
   }, [fetchRecord, visitorId])
 

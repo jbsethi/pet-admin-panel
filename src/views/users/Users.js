@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
@@ -14,6 +14,8 @@ import {
   CPagination,
   CButton
 } from '@coreui/react'
+
+import { AppContext } from '../../App.js'
 
 const fields = [
   { key: 'name', _classes: 'font-weight-bold' },
@@ -36,6 +38,7 @@ const getBadge = status => {
 }
 
 const Users = () => {
+  const { addToast } = useContext(AppContext)
   const history = useHistory()
   const [totalPages, setTotalPages] = React.useState(1)
   const [currentPage, setActivePage] = React.useState(1)
@@ -60,7 +63,11 @@ const Users = () => {
   }, [data])
 
   React.useEffect(() => {
-    refetch()
+    refetch().catch(err => {
+      addToast({
+        message: err.response.data.message
+      })
+    })
   }, [refetch])
 
   return (

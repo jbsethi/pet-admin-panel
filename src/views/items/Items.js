@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
 import AddItem from './AddItem'
+
+import { AppContext } from '../../App.js'
 
 import {
   CCard,
@@ -26,6 +28,7 @@ const fields = [
   ]
 
 const Items = () => {
+  const { addToast } = useContext(AppContext)
   const [show, setShow] = React.useState(false)
 
   const [keyword, setKeyword] = React.useState('')
@@ -54,6 +57,10 @@ const Items = () => {
         params: {
           search: keyword
         }
+      }).catch(err => {
+        addToast({
+          message: err.response.data.message
+        })
       })
     } else {
       setKeyword(e.target.value)
@@ -65,19 +72,25 @@ const Items = () => {
     setShow(true)
   }
 
-  const deleteItem = (id) => {
-    fetch({
-      url: `https://app.aloropivetcenter.com/api/items/${id}`,
-      method: 'DELETE'
-    })
-  }
-
-  React.useEffect(() => {
+  const loadData = React.useCallback(() => {
     fetch()
       .then(resp => {
         setTotalPages(resp.data.totalPages)
       })
   }, [fetch])
+
+  const deleteItem = (id) => {
+    fetch({
+      url: `https://app.aloropivetcenter.com/api/items/${id}`,
+      method: 'DELETE'
+    }).then(() => {
+      loadData()
+    })
+  }
+
+  React.useEffect(() => {
+    loadData()
+  }, [loadData])
 
   return (
     <>

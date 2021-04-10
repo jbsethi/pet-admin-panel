@@ -3,7 +3,10 @@ import { CCard, CCardBody, CCardHeader, CRow, CCol } from '@coreui/react'
 import React from 'react'
 import useAxios from 'axios-hooks'
 
+import { AppContext } from '../../App.js'
+
 const VisitorsDetail = ({ id }) => {
+  const { addToast } = React.useContext(AppContext)
   const [{ data, loading }, fetch] = useAxios(
     {
       url: 'https://app.aloropivetcenter.com/api/patients',
@@ -18,9 +21,13 @@ const VisitorsDetail = ({ id }) => {
     if (id) {
       fetch({
         url: `https://app.aloropivetcenter.com/api/patients/${id}`
+      }).catch(err => {
+        addToast({
+          message: err.response?.data?.message || 'Error occured! Try again later.'
+        })
       })
     }
-  }, [id, fetch])
+  }, [id, fetch, addToast])
 
   return (
     <CRow>

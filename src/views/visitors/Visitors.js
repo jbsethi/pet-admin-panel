@@ -26,7 +26,8 @@ const fields = [
   ]
 
 const Visitors = () => {
-  const { role } = React.useContext(AppContext)
+  const { role, addToast } = React.useContext(AppContext)
+  const [keyword, setKeyword] = React.useState('')
 
   const history = useHistory()
 
@@ -43,6 +44,22 @@ const Visitors = () => {
       manual: true
     }
   )
+
+  const changeKeyword = (e) => {
+    if(e.key === 'Enter') {
+      fetch({
+        params: {
+          search: keyword
+        }
+      }).catch(err => {
+        addToast({
+          message: err.response.data.message
+        })
+      })
+    } else {
+      setKeyword(e.target.value)
+    }
+  }
 
   React.useEffect(() => {
     fetch()
@@ -67,7 +84,7 @@ const Visitors = () => {
               onRowClick={(item) => history.push(`/visitors/${item.id}/details`)}
               overTableSlot={
                 role !== 'doctor' &&
-                <TableHeader>
+                <TableHeader keyword={keyword} changeKeyword={changeKeyword}>
                   <CButton
                     color="primary"
                     variant="outline"

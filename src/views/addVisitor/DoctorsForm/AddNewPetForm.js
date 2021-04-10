@@ -14,7 +14,10 @@ import {
 
 import useAxios from 'axios-hooks'
 
+import { AppContext } from '../../../App.js'
+
 const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) => {
+  const { addToast } = React.useContext(AppContext)
   const [,
     fetchRecord
   ] = useAxios(
@@ -82,7 +85,9 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
 
       setShow(false)
     }).catch(err => {
-      console.log(err.response)
+      addToast({
+        message: err.response.data.message
+      })
     })
   }
 

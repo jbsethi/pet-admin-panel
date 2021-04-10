@@ -15,6 +15,8 @@ import AddReceiptForm from '../addVisitor/ReceiptForm/AddReceiptForm'
 
 import useAxios from 'axios-hooks'
 
+import { AppContext } from '../../App.js'
+
 const receiptTableFields = [
   {
     label: '',
@@ -28,8 +30,10 @@ const receiptTableFields = [
 ]
 
 const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
+  const { addToast } = React.useContext(AppContext)
   const componentRef = useRef();
   const [showAddItem, setShowAddItem] = React.useState(false)
+  const [checkUpPrice, setCheckUpPrice] = React.useState(null)
   const [total, setTotal] = React.useState(null)
   const [items, setItems] = React.useState([])
 
@@ -64,7 +68,6 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
       setItems((oldItems) => oldItems.filter(i => i.idx !== payload))
       setTotal((oldPrice => (oldPrice - price)))
     } else if (type === 'updateReceipt') {
-      console.log(order)
       const data = {
         patientId: order.patientId,
         appointment: +order.appointment === 1,
@@ -81,13 +84,18 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
       }).then(() => {
         refetch()
         setShow(false)
+      }).catch(err => {
+        addToast({
+          message: err.response.data.message
+        })
       })
     }
   }
 
   React.useEffect(() => {
     if (order) {
-      const items = order.Items.map((item, idx) => {
+      console.log(order)
+      const items = (order?.Items || []).map((item, idx) => {
         return {
           ...item,
           idx: `i-${idx}`,
@@ -97,15 +105,16 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
           isLocked: true
         }
       })
-      const packages = order.Packages.map((item, idx) => {
+      const packages = (order?.Packages || []).map((item, idx) => {
         return {
           ...item,
           idx: `p-${idx}`,
           isLocked: true
         }
       })
-
+      console.log(order)
       setItems([...items, ...packages])
+      setCheckUpPrice(order.appointment === '1' ? order.checkUpPrice : null)
       setTotal(order.price)
     }
   }, [order, show])
@@ -129,7 +138,10 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
           overTableSlot={
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <strong>Total Bill Amount : <span className="text-primary">{total || 0} AED</span></strong> 
+                <strong>Checkup Price: <span className="text-primary">{checkUpPrice || 0} AED</span></strong> 
+              </div>
+              <div>
+                <strong>Total Bill : <span className="text-primary">{total || 0} AED</span></strong> 
               </div>
               <div className="text-right">
                 <CButton
@@ -169,7 +181,7 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
         </div>
       </CModalFooter>
       <div className={style.printable} ref={componentRef}>
-        <Invoice  />
+        <Invoice data={order} />
       </div>
     </CModal>
   )
