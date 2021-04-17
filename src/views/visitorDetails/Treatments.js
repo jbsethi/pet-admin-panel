@@ -41,7 +41,7 @@ const Treatment = ({ match }) => {
         history.replace(`/visitors/${match.params.id}/treatments/${resp?.data?.rows[0].id}`)
     }).catch(err => {
       addToast({
-        message: err.response.data.message
+        message: err?.response?.data?.message || 'Error occured try again later !'
       })
     })
 

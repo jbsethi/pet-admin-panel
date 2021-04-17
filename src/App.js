@@ -31,6 +31,20 @@ const App = () => {
   const {role, setRole} = useRole()
   const {toasts, addToast} = useToaster()
 
+  React.useEffect(() => {
+    const tokenExpiryTime = localStorage.getItem('tokenExpiry')
+   
+
+    const currentTime = new Date().getTime()
+
+    console.log(tokenExpiryTime, currentTime.toString().slice(0, 10))
+    if (+(currentTime.toString().slice(0, 10)) > +tokenExpiryTime) {
+      console.log('did it loggout out here !')
+      setToken(null)
+      setRole(null)
+    }
+  }, [])
+
   return (
     <AppContext.Provider value={{ role, setToken, setRole, addToast }}>
       <HashRouter>

@@ -7,49 +7,49 @@ const _nav =  [
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon"/>,
-    roles: ['superman', 'admin', 'receiptionist']
+    roles: ['superman', 'admin', 'receptionist']
   },
   {
     _tag: 'CSidebarNavItem',
     name: 'Visitors',
     to: '/visitors',
     icon: 'cil-address-book',
-    roles: ['superman', 'admin', 'receiptionist', 'doctor']
+    roles: ['superman', 'admin', 'receptionist', 'doctor']
   },
   {
     _tag: 'CSidebarNavItem',
     name: 'Check up',
     to: '/check-up',
     icon: 'cil-address-book',
-    roles: ['superman', 'admin', 'receiptionist', 'doctor']
+    roles: ['superman', 'admin', 'receptionist', 'doctor']
   },
   {
     _tag: 'CSidebarNavItem',
     name: 'Pet Types',
     to: '/pet-types',
     icon: 'cil-address-book',
-    roles: ['superman', 'admin', 'receiptionist']
+    roles: ['superman', 'admin', 'receptionist']
   },
   {
     _tag: 'CSidebarNavItem',
     name: 'Services',
     to: '/services',
     icon: 'cil-address-book',
-    roles: ['superman', 'admin', 'receiptionist']
+    roles: ['superman', 'admin', 'receptionist']
   },
   {
     _tag: 'CSidebarNavItem',
     name: 'Items',
     to: '/items',
     icon: 'cil-address-book',
-    roles: ['superman', 'admin', 'receiptionist']
+    roles: ['superman', 'admin', 'receptionist']
   },
   {
     _tag: 'CSidebarNavItem',
     name: 'Packages',
     to: '/packages',
     icon: 'cil-address-book',
-    roles: ['superman', 'admin', 'receiptionist']
+    roles: ['superman', 'admin', 'receptionist']
   },
   {
     _tag: 'CSidebarNavItem',

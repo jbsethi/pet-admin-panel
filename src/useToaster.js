@@ -1,9 +1,7 @@
 import { useState } from 'react';
 
 export default function useToaster() {
-  const [toasts, setToasts] = useState([
-    { position: 'top-right', autohide: 3000, title: 'Error', message: 'Error occured' }
-  ])
+  const [toasts, setToasts] = useState([])
 
   const addToast = (toast) => {
     setToasts([

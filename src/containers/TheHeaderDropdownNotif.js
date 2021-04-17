@@ -2,6 +2,8 @@ import React from 'react'
 
 import useAxios from 'axios-hooks'
 
+import { useHistory } from 'react-router-dom'
+
 import {
   CBadge,
   CDropdown,
@@ -15,6 +17,7 @@ import CIcon from '@coreui/icons-react'
 import { AppContext } from '../App.js'
 
 const TheHeaderDropdownNotif = () => {
+  const history = useHistory()
   const { addToast } = React.useContext(AppContext)
   const [notifications, setNotifications] = React.useState([])
   const [, fetch] = useAxios(
@@ -27,21 +30,22 @@ const TheHeaderDropdownNotif = () => {
     }
   )
 
+
+  const clickNotification = (n) => {
+
+    fetch({
+      url: 'https://app.aloropivetcenter.com/api/notifications/' + n.id
+    })
+
+    history.push({
+      pathname: `/visitors/${n.patientId}/details`
+    })
+  }
+
   React.useEffect(() => {
+    loadNotifications()
     const id = setInterval(() => {
-      const date = new Date()
-      const dateFormat = `${date.getFullYear()}-${(+date.getMonth() + 1)}-${date.getDate()}`
-      fetch({
-        params: {
-          date: dateFormat
-        }
-      }).then(resp => {
-        setNotifications(resp?.data || [])
-      }).catch(err => {
-        addToast({
-          message: err?.response?.data?.message || 'Error Occured ! Try again later'
-        })
-      })
+      loadNotifications()
     }, 10000);
 
 
@@ -49,6 +53,23 @@ const TheHeaderDropdownNotif = () => {
       clearInterval(id);
     };
   }, []);
+
+  const loadNotifications = () => {
+    const date = new Date()
+    // const dateFormat = `${date.getFullYear()}-${(+date.getMonth() + 1)}-${date.getDate()}`
+    const dateFormat = `2021-04-13`
+    fetch({
+      params: {
+        date: dateFormat
+      }
+    }).then(resp => {
+      setNotifications(resp?.data || [])
+    }).catch(err => {
+      addToast({
+        message: err?.response?.data?.message || 'Error Occured ! Try again later'
+      })
+    })
+  }
 
 
   return (
@@ -58,7 +79,7 @@ const TheHeaderDropdownNotif = () => {
     >
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <CIcon name="cil-bell"/>
-        <CBadge shape="pill" color="danger">{notifications.length}</CBadge>
+        <CBadge shape="pill" color="danger">{(notifications.filter(n => n.isRead !== true)).length}</CBadge>
       </CDropdownToggle>
       <CDropdownMenu  placement="bottom-end" className="pt-0">
         <CDropdownItem
@@ -70,7 +91,7 @@ const TheHeaderDropdownNotif = () => {
           <strong>You have {notifications.length} notifications</strong>
         </CDropdownItem>
         {
-          notifications.map(n => <CDropdownItem>New user registered</CDropdownItem>)
+          notifications.map((n, i) => <CDropdownItem key={i} onClick={() => clickNotification(n)}>Follow up</CDropdownItem>)
         }
         
       </CDropdownMenu>

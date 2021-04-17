@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import useAxios from 'axios-hooks'
+
+import { withRouter } from 'react-router-dom'
 
 import {
   CCard,
@@ -10,6 +12,8 @@ import {
   CCardBody,
   CDataTable,
 } from '@coreui/react'
+
+import { AppContext } from '../../App.js'
 
 import UpdateOrderModal from './UpdateOrderModal.js'
 
@@ -29,9 +33,11 @@ const fields = [
   }
 ]
 
-const Orders = ({ id }) => {
+const Orders = ({ history, id }) => {
+  const { role, addToast } = useContext(AppContext)
   const [show, setShow] = React.useState(false)
   const [orderData, setOrderData] = React.useState(null)
+  const [patientData, setPatientData] = React.useState(null)
 
   const [{ data, loading, error }, fetch] = useAxios(
     {
@@ -43,15 +49,28 @@ const Orders = ({ id }) => {
     }
   )
 
-  const loadData = React.useCallback(() => {
-    fetch({
-      url: `https://app.aloropivetcenter.com/api/orders/patient/${id}`
-    })
+  const loadData = React.useCallback(async (orderId) => {
+    try {
+      const resp = await fetch({
+        url: `https://app.aloropivetcenter.com/api/orders/patient/${id}`
+      })
+
+      setPatientData(resp.data.Patient)
+  
+      if (orderId) {
+        toggleModal(true, resp.data.rows.find(row => row.id === orderId))
+      }
+    } catch (err) {
+      addToast({
+        message: err?.response?.data?.message || 'Something went wrong !'
+      })
+    }
   }, [fetch])
 
   React.useEffect(() => {
     if (id) {
-      loadData()
+      const orderId = history?.location?.state?.orderId || null
+      loadData(orderId)
     }
   }, [id, loadData])
 
@@ -94,9 +113,9 @@ const Orders = ({ id }) => {
           </CCardBody>
         </CCard>
       </CCol>
-      <UpdateOrderModal show={show} setShow={toggleModal} order={orderData} refetch={loadData} />
+      <UpdateOrderModal show={show} setShow={toggleModal} order={orderData} patientData={patientData} refetch={loadData} />
     </CRow>
   )
 }
 
-export default Orders
+export default withRouter(Orders)

@@ -3,12 +3,13 @@ import React, {useContext} from 'react'
 
 import RSelect from 'react-select';
 
-import { withRouter } from 'react-router-dom'
+import { withRouter, useHistory } from 'react-router-dom'
 
 import useAxios from 'axios-hooks'
 import { AppContext } from '../../App.js'
 
 const NewPrescription = ({ match, show, setShow, details, refetch }) => {
+  const history = useHistory()
   const { role, addToast } = useContext(AppContext)
   const [loadingDetails, setLoadingDetails] = React.useState(false)
   const [orderData, setOrderData] = React.useState(null)
@@ -101,8 +102,6 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
         description: details.description,
         followUp: ''
       })
-
-      console.log(resp.data, details)
 
       setSelectedRecomendation(() => {
         return details.Recomendations.map((o, i) => {
@@ -216,6 +215,12 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
       </CModalBody>
       <CModalFooter>
         <CButton color="danger" onClick={() => setShow(false)}>Cancel</CButton>
+        <CButton color="primary" onClick={() => history.replace({
+          pathname: `/visitors/${match.params.id}/orders`,
+          state: {
+            orderId: details.orderId
+          }
+        })}>View Invoice</CButton>
       </CModalFooter>
     </CModal>
   )

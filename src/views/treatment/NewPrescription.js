@@ -46,13 +46,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
 
   const addNewPrescription = () => {
     if (!details) {
-      let followUp = ''
-      if (treatmentRecord?.followUp > 0) {
-        const tempDate = new Date()
-        tempDate.setDate(tempDate.getDate() + treatmentRecord?.followUp)
-
-        followUp = `${tempDate.getFullYear()}-${('0' + (tempDate.getMonth() + 1)).slice(-2)}-${( '0' + tempDate.getDate()).slice(-2)}`
-      } 
+      let followUp = treatmentRecord?.followUp || null
 
       const data = {
         ...treatmentRecord,
@@ -100,6 +94,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
 
     return () => {
       setRecommendations([])
+      setSelectedRecomendation([])
     }
   }, [details, show])
 
@@ -112,8 +107,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
         </CCol>
         <CCol md="2">
           {
-            details ?
-            <CButton color="primary" size="sm">Add</CButton> :
+            !details &&
             <CButton onClick={() => removeRecommendation(i)} size="sm">Remove</CButton>
           }
         </CCol>
@@ -213,7 +207,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
       </CFormGroup>
       <CFormGroup>
         <CLabel htmlFor="followUp">Follow up ?</CLabel>
-        <CInput disabled={details} type="number" value={treatmentRecord.followUp} name="followUp" onChange={handleChange} id="followUp" placeholder="Enter follow Up day" />
+        <CInput disabled={details} type="date" value={treatmentRecord.followUp} name="followUp" onChange={handleChange} id="followUp" placeholder="Enter follow Up day" />
       </CFormGroup>
       </CModalBody>
       <CModalFooter>

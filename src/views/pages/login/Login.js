@@ -63,6 +63,10 @@ const Login = () => {
       const temp = data.token.split('.')[1]
       const tokenData = JSON.parse(atob(temp))
 
+      localStorage.setItem('tokenExpiry', tokenData.exp)
+
+      console.log(tokenData)
+      
       setRole(tokenData.role.name)
       setToken(data.token)
     }

@@ -192,8 +192,8 @@ const AddUser = ({ match }) => {
                     <CLabel className="text-right" sm="3" col htmlFor="input-role">Roles</CLabel>
                     <CCol sm="6">
                       <CSelect value={userRecord.role} onChange={handleChange} custom name="role" id="input-role">
-                        <option value="1">Administrator</option>
-                        <option value="2">Receiptionist</option>
+                        <option value="2">Administrator</option>
+                        <option value="4">Receiptionist</option>
                         <option value="3">Doctor</option>
                       </CSelect>
                     </CCol>

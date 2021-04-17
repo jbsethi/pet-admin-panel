@@ -38,6 +38,7 @@ const getBadge = status => {
 }
 
 const Users = () => {
+  const [keyword, setKeyword] = React.useState('')
   const { addToast } = useContext(AppContext)
   const history = useHistory()
   const [totalPages, setTotalPages] = React.useState(1)
@@ -62,13 +63,30 @@ const Users = () => {
     }
   }, [data])
 
+
   React.useEffect(() => {
     refetch().catch(err => {
       addToast({
-        message: err.response.data.message
+        message: err?.response?.data?.message || 'Error Occured try again later !'
       })
     })
   }, [refetch])
+
+  const changeKeyword = (e) => {
+    if(e.key === 'Enter') {
+      refetch({
+        params: {
+          search: keyword
+        }
+      }).catch(err => {
+        addToast({
+          message: err?.response?.data?.message || 'Error Occured try again later !'
+        })
+      })
+    } else {
+      setKeyword(e.target.value)
+    }
+  }
 
   return (
     <CRow>
@@ -87,7 +105,7 @@ const Users = () => {
             clickableRows
             onRowClick={(item) => history.push(`/users/${item.id}`)}
             overTableSlot={
-              <TableHeader>
+              <TableHeader keyword={keyword} changeKeyword={changeKeyword}>
                 <CButton
                   color="primary"
                   variant="outline"

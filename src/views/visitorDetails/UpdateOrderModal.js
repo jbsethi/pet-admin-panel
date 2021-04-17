@@ -29,7 +29,7 @@ const receiptTableFields = [
   'total',
 ]
 
-const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
+const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
   const { addToast } = React.useContext(AppContext)
   const componentRef = useRef();
   const [showAddItem, setShowAddItem] = React.useState(false)
@@ -100,6 +100,7 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
           ...item,
           idx: `i-${idx}`,
           name: item.Item.name,
+          category: item.Item.Service.name,
           qty: item.quantity,
           total: item.quantity * item.price,
           isLocked: true
@@ -112,7 +113,6 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
           isLocked: true
         }
       })
-      console.log(order)
       setItems([...items, ...packages])
       setCheckUpPrice(order.appointment === '1' ? order.checkUpPrice : null)
       setTotal(order.price)
@@ -181,7 +181,7 @@ const UpdateOrderModal = ({ show, setShow, order, refetch }) => {
         </div>
       </CModalFooter>
       <div className={style.printable} ref={componentRef}>
-        <Invoice data={order} />
+        <Invoice data={order} patientData={patientData} />
       </div>
     </CModal>
   )

@@ -9,7 +9,8 @@ import {
   CLabel,
   CButton,
   CCol,
-  CSwitch
+  CSwitch,
+  CSelect
 } from '@coreui/react'
 
 import useAxios from 'axios-hooks'
@@ -122,7 +123,18 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
         </CFormGroup>
         <CFormGroup>
           <CLabel htmlFor="gender">Sex</CLabel>
-          <CInput value={petInfo.gender} name="gender" onChange={handleChangePetInfo} id="gender" placeholder="Enter gender" />
+          <CSelect 
+            custom 
+            name="gender" 
+            id="text-pet-type"
+            value={petInfo.gender}
+            onChange={handleChangePetInfo}
+          >
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Neutered">Neutered</option>
+            <option value="Spayed">Spayed</option>
+          </CSelect>
         </CFormGroup>
       </CModalBody>
       <CFormGroup row className="align-items-center px-3">
