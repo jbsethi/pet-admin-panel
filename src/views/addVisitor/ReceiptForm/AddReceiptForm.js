@@ -77,7 +77,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
       setCategories(options)
     } catch (err) {
       addToast({
-        message: err.response.data.message
+        message: err?.response?.data?.message || 'Error Try again later !'
       })
     }
   }, [fetchRecord])
@@ -135,14 +135,20 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
   }, [fetchRecord, addReceiptRecord?.categoryId?.value])
 
   const submitRecord = () => {
-    dispatch({ type: 'addItemInReceipt', payload: addReceiptRecord })
-    setAddReceiptRecord({
-      categoryId: null,
-      itemId: null,
-      packageId: null,
-      quantity: 1
-    })
-    setShow(false)
+    if (addReceiptRecord.categoryId && (addReceiptRecord.itemId || addReceiptRecord.packageId)) {
+      dispatch({ type: 'addItemInReceipt', payload: addReceiptRecord })
+      setAddReceiptRecord({
+        categoryId: null,
+        itemId: null,
+        packageId: null,
+        quantity: 1
+      })
+      setShow(false)
+    } else {
+      addToast({
+        message: 'Please select item first !'
+      })
+    }
   }
 
   React.useEffect(() => {
