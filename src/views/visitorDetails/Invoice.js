@@ -64,6 +64,16 @@ const Invoice = ({ data, patientData }) => {
             </thead>
             <tbody>
               {
+                data.appointment === '1' &&
+                <tr>
+                  <td>{'Doctor\'s Check up'}</td>
+                  <td>{'1'}</td>
+                  <td>{'Doctor\'s Fee'}</td>
+                  <td>{data.checkUpPrice}</td>
+                  <td>{data.checkUpPrice}</td>
+                </tr>
+              }
+              {
                 (data.Items || []).map(item => {
                   return (
                     <tr>

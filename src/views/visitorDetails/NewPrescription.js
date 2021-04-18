@@ -215,12 +215,15 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
       </CModalBody>
       <CModalFooter>
         <CButton color="danger" onClick={() => setShow(false)}>Cancel</CButton>
-        <CButton color="primary" onClick={() => history.replace({
-          pathname: `/visitors/${match.params.id}/orders`,
-          state: {
-            orderId: details.orderId
-          }
-        })}>View Invoice</CButton>
+        {
+          role !== 'doctor' &&
+          <CButton color="primary" onClick={() => history.replace({
+            pathname: `/visitors/${match.params.id}/orders`,
+            state: {
+              orderId: details.orderId
+            }
+          })}>View Invoice</CButton>
+        }
       </CModalFooter>
     </CModal>
   )

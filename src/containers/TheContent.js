@@ -40,7 +40,7 @@ const TheContent = () => {
               )
             })}
             {
-              ['superman', 'admin'].includes(role) ?
+              ['superman', 'administrator'].includes(role) ?
               <Redirect from="/" to="/dashboard" /> :
               <Redirect from="/" to="/visitors" /> 
             }
