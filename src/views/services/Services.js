@@ -58,7 +58,6 @@ const Services = () => {
   React.useEffect(() => {
     fetch()
       .then(resp => {
-        console.log(resp)
         setTotalPages(resp.data.totalPages)
       })
   }, [fetch])

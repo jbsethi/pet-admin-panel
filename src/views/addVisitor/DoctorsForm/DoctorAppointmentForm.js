@@ -49,7 +49,9 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
 
   const addDoctorReceipt = () => {
     if (!isFollowUp && +fee === 0 ) {
-      console.log('[Error]: Please provide fee or check follow up if it is follow up !')
+      addToast({
+        message: 'Please provide fee or check follow up if it is follow up !'
+      })
     } else {
       dispatch({ type: 'addDoctorReceipt', payload: {
         pet: selectedPet,

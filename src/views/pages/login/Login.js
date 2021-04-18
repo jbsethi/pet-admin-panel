@@ -65,8 +65,6 @@ const Login = () => {
 
       localStorage.setItem('tokenExpiry', tokenData.exp)
 
-      console.log(tokenData)
-      
       setRole(tokenData.role.name)
       setToken(data.token)
     }

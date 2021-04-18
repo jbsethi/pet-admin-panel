@@ -72,7 +72,6 @@ const PetHistory = ({ match }) => {
         petId: match.params.petId
       }
     }).then(resp => {
-      console.log(resp)
       setItems(resp?.data?.rows || [])
 
       setPrintRecord(resp?.data?.rows || [])

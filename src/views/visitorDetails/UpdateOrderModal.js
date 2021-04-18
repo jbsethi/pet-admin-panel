@@ -16,6 +16,7 @@ import AddReceiptForm from '../addVisitor/ReceiptForm/AddReceiptForm'
 import useAxios from 'axios-hooks'
 
 import { AppContext } from '../../App.js'
+import { cibSkillshare } from '@coreui/icons';
 
 const receiptTableFields = [
   {
@@ -74,8 +75,18 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
         checkUpPrice: order.checkUpPrice,
         description: order.description,
         followUp: order.followUp,
-        itemIds: items.filter(item => item.itemId).map(item => item.itemId),
-        packageIds: items.filter(item => item.packageId).map(item => item.packageId)
+        items: items.filter(item => item.itemId).map(item => {
+          return {
+            itemId: item.itemId,
+            quantity: item.quantity || item.qty
+          }
+        }),
+        packages: items.filter(item => item.packageId).map(item => {
+          return {
+            packageId: item.packageId,
+            quantity: item.quantity || item.qty
+          }
+        })
       }
 
       fetch({
@@ -94,7 +105,6 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
 
   React.useEffect(() => {
     if (order) {
-      console.log(order)
       const items = (order?.Items || []).map((item, idx) => {
         return {
           ...item,

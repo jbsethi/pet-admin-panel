@@ -37,9 +37,7 @@ const App = () => {
 
     const currentTime = new Date().getTime()
 
-    console.log(tokenExpiryTime, currentTime.toString().slice(0, 10))
     if (+(currentTime.toString().slice(0, 10)) > +tokenExpiryTime) {
-      console.log('did it loggout out here !')
       setToken(null)
       setRole(null)
     }
