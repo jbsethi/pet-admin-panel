@@ -128,9 +128,9 @@ const AddVisitor = () => {
           search: state.keyword
         }
       }).then(resp => {
-        dispatch({ type: 'setItems', payload: (resp?.data?.rows || []).map(item => {
+        dispatch({ type: 'setItems', payload: (resp?.data?.rows || []).map((item, idx) => {
           return {
-            label: item.name,
+            label: (idx + 1) + ': ' + item.name + ' - ' + item.contact,
             value: item,
           }
         })})

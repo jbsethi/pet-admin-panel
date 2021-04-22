@@ -76,11 +76,11 @@ const Invoice = ({ data, patientData }) => {
               {
                 (data.Items || []).map((item, i) => {
                   return (
-                    <tr key={item.Item.name + '-' + i}>
-                      <td>{item.Item.name}</td>
+                    <tr key={item.Item?.name + '-' + i}>
+                      <td>{item.Item?.name}</td>
                       <td>{item.quantity}</td>
-                      <td>{item.Item.Service.name}</td>
-                      <td>{item.Item.price}</td>
+                      <td>{item.Item?.Service.name}</td>
+                      <td>{item.Item?.price}</td>
                       <td>{item.Item.price * item.quantity}</td>
                     </tr>
                   )
@@ -89,12 +89,12 @@ const Invoice = ({ data, patientData }) => {
               {
                 (data.Packages || []).map((item, i) => {
                   return (
-                    <tr key={item.Item.name + '-' + i}>
-                      <td>{item.Item.name}</td>
+                    <tr key={item.Item?.name + '-' + i}>
+                      <td>{item.Item?.name}</td>
                       <td>{item.quantity}</td>
-                      <td>{item.Item.Service.name}</td>
-                      <td>{item.Item.price}</td>
-                      <td>{item.Item.price * item.quantity}</td>
+                      <td>{item.Item?.Service.name}</td>
+                      <td>{item.Item?.price}</td>
+                      <td>{item.Item?.price * item.quantity}</td>
                     </tr>
                   )
                 })

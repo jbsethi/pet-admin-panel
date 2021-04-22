@@ -56,8 +56,8 @@ const TheHeaderDropdownNotif = () => {
 
   const loadNotifications = () => {
     const date = new Date()
-    // const dateFormat = `${date.getFullYear()}-${(+date.getMonth() + 1)}-${date.getDate()}`
-    const dateFormat = `2021-04-13`
+    const dateFormat = `${date.getFullYear()}-${(+date.getMonth() + 1)}-${date.getDate()}`
+    // const dateFormat = `2021-04-13`
     fetch({
       params: {
         date: dateFormat
@@ -79,7 +79,10 @@ const TheHeaderDropdownNotif = () => {
     >
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <CIcon name="cil-bell"/>
-        <CBadge shape="pill" color="danger">{(notifications.filter(n => n.isRead !== true)).length}</CBadge>
+        {
+          notifications.length > 0 &&
+          <CBadge shape="pill" color="danger">{(notifications.filter(n => n.isRead !== true)).length}</CBadge>
+        }
       </CDropdownToggle>
       <CDropdownMenu  placement="bottom-end" className="pt-0">
         <CDropdownItem
@@ -91,7 +94,10 @@ const TheHeaderDropdownNotif = () => {
           <strong>You have {notifications.length} notifications</strong>
         </CDropdownItem>
         {
-          notifications.map((n, i) => <CDropdownItem key={i} onClick={() => clickNotification(n)}>Follow up</CDropdownItem>)
+          notifications.length == 0 && <p className="text-center m-0 py-2"><em>No notifications !</em></p>
+        }
+        {
+          notifications.map((n, i) => <CDropdownItem key={i} onClick={() => clickNotification(n)}>{n.Patient.name} has a Follow up</CDropdownItem>)
         }
         
       </CDropdownMenu>

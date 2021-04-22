@@ -33,6 +33,7 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
     name: '',
     breed: '',
     age: '',
+    dob: '',
     color: '',
     specie: '',
     gender: '',
@@ -110,8 +111,12 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
           <CInput value={petInfo.breed} name="breed" onChange={handleChangePetInfo} id="type" placeholder="Enter breed" />
         </CFormGroup>
         <CFormGroup>
-          <CLabel htmlFor="age">Pet Age</CLabel>
+          <CLabel htmlFor="age">Pet Age ( years )</CLabel>
           <CInput value={petInfo.age} name="age" onChange={handleChangePetInfo} id="age" placeholder="Enter age" />
+        </CFormGroup>
+        <CFormGroup>
+          <CLabel htmlFor="age">Pet DOB</CLabel>
+          <CInput value={petInfo.dob} name="dob" type="date" onChange={handleChangePetInfo} id="dob" placeholder="Enter dob" />
         </CFormGroup>
         <CFormGroup>
           <CLabel htmlFor="color">Pet Color</CLabel>

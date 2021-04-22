@@ -3,6 +3,8 @@ import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
 import AddPackage from './AddPackage'
 
+import { formatDate } from '../../utils/dateUtils'
+
 import {
   CCard,
   CCardBody,
@@ -120,6 +122,12 @@ const Packages = () => {
                 ></CPagination>
               }
               scopedSlots={{
+                'createdAt':
+                  (item) => (
+                    <td>
+                      {formatDate(item.createdAt)}
+                    </td>
+                  ),
                 'actions':
                   (item) => (
                     <td>

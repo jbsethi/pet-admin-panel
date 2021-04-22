@@ -3,6 +3,8 @@ import useAxios from 'axios-hooks'
 import { useHistory } from "react-router-dom";
 import TableHeader from '../base/tableHeader/TableHeader'
 
+import { formatDate } from '../../utils/dateUtils'
+
 import {
   CCard,
   CCardBody,
@@ -82,6 +84,14 @@ const Visitors = () => {
               pagination
               loading={loading}
               onRowClick={(item) => history.push(`/visitors/${item.id}/details`)}
+              scopedSlots = {{
+                'createdAt':
+                  (item) => (
+                    <td>
+                      {formatDate(item.createdAt)}
+                    </td>
+                  )
+              }}
               overTableSlot={
                 role !== 'doctor' &&
                 <TableHeader keyword={keyword} changeKeyword={changeKeyword}>

@@ -3,6 +3,8 @@ import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
 import AddPetRecord from './AddPetRecord'
 
+import { formatDate } from '../../utils/dateUtils'
+
 import {
   CCard,
   CCardBody,
@@ -119,6 +121,12 @@ const PetTypes = () => {
                 ></CPagination>
               }
               scopedSlots={{
+                'createdAt':
+                  (item) => (
+                    <td>
+                      {formatDate(item.createdAt)}
+                    </td>
+                  ),
                 'actions':
                   (item) => (
                     <td>

@@ -2,6 +2,8 @@ import React from 'react'
 import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
 
+import { formatDate } from '../../utils/dateUtils'
+
 import {
   CCard,
   CCardBody,
@@ -88,6 +90,14 @@ const Roles = () => {
                   onActivePageChange={(i) => setActivePage(i)}
                 ></CPagination>
               }
+              scopedSlots={{
+                'createdAt':
+                  (item) => (
+                    <td>
+                      {formatDate(item.createdAt)}
+                    </td>
+                  )
+              }}
             />
             </CCardBody>
           </CCard>

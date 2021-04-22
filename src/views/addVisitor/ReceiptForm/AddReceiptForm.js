@@ -93,7 +93,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
       })
 
       const record = await fetchRecord({
-        url: 'https://app.aloropivetcenter.com/api/packages/records/all',
+        url: 'https://app.aloropivetcenter.com/api/packages/records/active',
         method: 'GET',
         params: {
           serviceId: addReceiptRecord.categoryId?.value || null
@@ -111,7 +111,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
       setPackages(options)
 
       const record2 = await fetchRecord({
-        url: 'https://app.aloropivetcenter.com/api/items/records/all',
+        url: 'https://app.aloropivetcenter.com/api/items/records/active',
         method: 'GET',
         params: {
           serviceId: addReceiptRecord.categoryId?.value || null
@@ -135,7 +135,15 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
   }, [fetchRecord, addReceiptRecord?.categoryId?.value])
 
   const submitRecord = () => {
-    if (addReceiptRecord.categoryId && (addReceiptRecord.itemId || addReceiptRecord.packageId)) {
+    if (!(addReceiptRecord.categoryId && (addReceiptRecord.itemId || addReceiptRecord.packageId))) {
+      addToast({
+        message: 'Please select item first !'
+      })
+    } else if (addReceiptRecord.quantity <= 0) {
+      addToast({
+        message: 'Quantity must not be 0 !'
+      })
+    } else {
       dispatch({ type: 'addItemInReceipt', payload: addReceiptRecord })
       setAddReceiptRecord({
         categoryId: null,
@@ -144,10 +152,6 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
         quantity: 1
       })
       setShow(false)
-    } else {
-      addToast({
-        message: 'Please select item first !'
-      })
     }
   }
 

@@ -4,6 +4,7 @@ import React from 'react'
 import useAxios from 'axios-hooks'
 
 import NewPrescription from './NewPrescription'
+import { formatDate } from '../../utils/dateUtils'
 import { AppContext } from '../../App.js'
 
 const PetHistory = ({ match }) => {
@@ -74,6 +75,14 @@ const PetHistory = ({ match }) => {
           items={items}
           onRowClick={(item) => viewDetails(item)}
           striped
+          scopedSlots={{
+            'createdAt':
+              (item) => (
+                <td>
+                  {formatDate(item.createdAt)}
+                </td>
+              )
+          }}
         ></CDataTable>
       </CCardBody>
 

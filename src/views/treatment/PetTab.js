@@ -3,6 +3,8 @@ import React from 'react'
 
 import { NavLink } from 'react-router-dom'
 
+import { formatDate } from '../../utils/dateUtils'
+
 import { withRouter } from 'react-router-dom'
 
 const PetTab = ({ match, pet }) => {
@@ -14,7 +16,7 @@ const PetTab = ({ match, pet }) => {
         <CCardBody className="p-3">
           <div className="d-flex justify-content-between align-items-center">
             <p className="m-0">{pet.name}</p>
-            <p className="m-0">{pet.createdAt}</p>
+            <p className="m-0">{formatDate(pet.createdAt)}</p>
           </div>
         </CCardBody>
       </CCard>

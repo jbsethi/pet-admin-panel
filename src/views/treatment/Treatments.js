@@ -2,6 +2,8 @@ import React from 'react'
 import useAxios from 'axios-hooks'
 import { useHistory } from "react-router-dom";
 
+import { formatDate } from '../../utils/dateUtils'
+
 import {
   CCard,
   CCardBody,
@@ -70,6 +72,14 @@ const Visitors = ({ match }) => {
               pagination
               loading={loading}
               onRowClick={(item) => history.push(`/check-up/${item.id}/treatment-${item.orderId}`)}
+              scopedSlots={{
+                'createdAt':
+                  (item) => (
+                    <td>
+                      {formatDate(item.createdAt)}
+                    </td>
+                  )
+              }}
             />
             </CCardBody>
           </CCard>

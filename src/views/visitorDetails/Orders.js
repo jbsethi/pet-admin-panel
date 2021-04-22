@@ -4,6 +4,8 @@ import useAxios from 'axios-hooks'
 
 import { withRouter } from 'react-router-dom'
 
+import { formatDate } from '../../utils/dateUtils'
+
 import {
   CCard,
   CCol,
@@ -96,6 +98,12 @@ const Orders = ({ history, id }) => {
                 <p>All Pets</p>
               }
               scopedSlots = {{
+                'createdAt':
+                  (item) => (
+                    <td>
+                      {formatDate(item.createdAt)}
+                    </td>
+                  ),
                 'checkUpPrice':
                   (item)=>(
                     <td>

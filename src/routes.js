@@ -29,7 +29,7 @@ const routes = [
   { path: '/services', exact: true, name: 'Pet Services', component: Services, roles: ['superman', 'administrator', 'receptionist']  },
   { path: '/items', exact: true, name: 'Items', component: Items, roles: ['superman', 'administrator', 'receptionist']  },
   { path: '/packages', exact: true, name: 'Packages', component: Packages, roles: ['superman', 'administrator', 'receptionist']  },
-  { path: '/roles', exact: true, name: 'Roles', component: Roles, roles: ['superman', 'administrator'] },
+  { path: '/roles', exact: true, name: 'Roles', component: Roles, roles: ['superman'] },
   { path: '/users', exact: true, name: 'Users', component: Users, roles: ['superman', 'administrator'] },
   { path: '/users/add', exact: true, name: 'Add New User', component: AddUser, roles: ['superman', 'administrator'] },
   { path: '/users/:id', exact: true, name: 'User Details', component: User, roles: ['superman', 'administrator'] },

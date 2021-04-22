@@ -1,5 +1,7 @@
 import './report.css'
 
+import { formatDate } from '../../utils/dateUtils'
+
 const Report = ({ data }) => {
   return data && (
     <div className="wrapper">
@@ -55,7 +57,7 @@ const Report = ({ data }) => {
             {
               data.data.map((r, i) => {
                 return <tr key={i}>
-                  <td>{r.createdAt}</td>
+                  <td>{formatDate(r.createdAt)}</td>
                   <td>{r.statement}</td>
                   <td>{r.prescription}</td>
                   <td>{

@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom'
 import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
 
+import { formatDate } from '../../utils/dateUtils'
+
 import {
   CBadge,
   CCard,
@@ -124,6 +126,12 @@ const Users = () => {
               ></CPagination>
             }
             scopedSlots = {{
+              'createdAt':
+                (item) => (
+                  <td>
+                    {formatDate(item.createdAt)}
+                  </td>
+                ),
               'active':
                 (item)=>(
                   <td>

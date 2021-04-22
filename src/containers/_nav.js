@@ -63,7 +63,7 @@ const _nav =  [
     name: 'Roles',
     to: '/roles',
     icon: 'cil-address-book',
-    roles: ['superman', 'administrator']
+    roles: ['superman']
   }
 ]
 

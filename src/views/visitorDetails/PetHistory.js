@@ -3,6 +3,8 @@ import React, {useContext, useRef} from 'react'
 
 import { useReactToPrint } from 'react-to-print';
 
+import { formatDate } from '../../utils/dateUtils'
+
 import useAxios from 'axios-hooks'
 
 import NewPrescription from './NewPrescription'
@@ -98,6 +100,14 @@ const PetHistory = ({ match }) => {
           items={items}
           onRowClick={(item) => viewDetails(item)}
           striped
+          scopedSlots = {{
+            'createdAt':
+              (item) => (
+                <td>
+                  {formatDate(item.createdAt)}
+                </td>
+              )
+          }}
         ></CDataTable>
       </CCardBody>
 
