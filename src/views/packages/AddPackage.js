@@ -176,10 +176,11 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
   }, [show, initializeRecord])
 
   React.useEffect(() => {
+    console.log(keyword)
     if (show) {
       fetchRecord({
         params: {
-          s: keyword
+          search: keyword
         }
       }).then(resp => {
         setItems((resp?.data?.rows || []).map(item => {

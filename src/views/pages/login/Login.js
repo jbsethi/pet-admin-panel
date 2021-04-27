@@ -16,11 +16,13 @@ import {
   CInputGroup,
   CInputGroupPrepend,
   CInputGroupText,
-  CRow
+  CRow,
+  CAlert
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
 const Login = () => {
+  const [ errMessage, setErrorMessage ] = useState('')
   const { setToken, setRole } = useContext(AppContext)
 
   const [
@@ -54,6 +56,8 @@ const Login = () => {
         data: {
           ...creds
         }
+      }).catch(err => {
+        setErrorMessage(err.response?.data?.message || 'Error occured try again later !')
       })
     }
   }
@@ -81,6 +85,10 @@ const Login = () => {
                   <CForm>
                     <h1>Login</h1>
                     <p className="text-muted">Sign In to your Aloropi account</p>
+                    {
+                      errMessage &&
+                      <CAlert color="danger">{errMessage}</CAlert>
+                    }
                     <CInputGroup className="mb-3">
                       <CInputGroupPrepend>
                         <CInputGroupText>

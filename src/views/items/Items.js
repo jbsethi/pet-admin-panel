@@ -129,6 +129,12 @@ const Items = () => {
                 ></CPagination>
               }
               scopedSlots={{
+                'price':
+                  (item) => (
+                    <td>
+                      {item.price} AED
+                    </td>
+                  ),
                 'createdAt':
                   (item) => (
                     <td>
