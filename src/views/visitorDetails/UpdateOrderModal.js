@@ -120,6 +120,10 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
         return {
           ...item,
           idx: `p-${idx}`,
+          name: item.Package.name,
+          category: item.Package.Service.name,
+          qty: item.quantity,
+          total: item.quantity * item.price,
           isLocked: true
         }
       })

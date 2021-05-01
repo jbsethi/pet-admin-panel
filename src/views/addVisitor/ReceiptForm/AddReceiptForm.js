@@ -44,9 +44,14 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
 
   const handleChange = (e) => {
     if (e.isSelect) {
+      let resetOther
+      if (['packageId', 'itemId'].includes(e.valueFor)) {
+        resetOther = e.valueFor === 'itemId' ? 'packageId' : 'itemId'
+      }
       setAddReceiptRecord(oldState => {
         return {
           ...oldState,
+          [resetOther]: null,
           [e.valueFor]: e.option
         }
       })

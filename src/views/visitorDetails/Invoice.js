@@ -89,12 +89,12 @@ const Invoice = ({ data, patientData }) => {
               {
                 (data.Packages || []).map((item, i) => {
                   return (
-                    <tr key={item.Item?.name + '-' + i}>
-                      <td>{item.Item?.name}</td>
+                    <tr key={item.Package?.name + '-' + i}>
+                      <td>{item.Package?.name}</td>
                       <td>{item.quantity}</td>
-                      <td>{item.Item?.Service.name}</td>
-                      <td>{item.Item?.price}</td>
-                      <td>{item.Item?.price * item.quantity}</td>
+                      <td>{item.Package?.Service.name}</td>
+                      <td>{item.Package?.price}</td>
+                      <td>{item.Package?.price * item.quantity}</td>
                     </tr>
                   )
                 })
