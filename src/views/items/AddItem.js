@@ -121,11 +121,13 @@ const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
       setServices(result?.data?.rows || [])
   
       result = await fetch({
-        url: `https://app.aloropivetcenter.com/api/pet-types`,
+        url: `https://app.aloropivetcenter.com/api/pet-types/records/active`,
         method: 'GET'
       })
+
+      console.log(result)
   
-      setPetTypes(result?.data?.rows || [])
+      setPetTypes(result?.data || [])
   
       if (itemId) {
         result = await fetch({

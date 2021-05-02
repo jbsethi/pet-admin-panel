@@ -44,9 +44,6 @@ const TheHeader = ({ setToken }) => {
         className="ml-3 d-md-down-none"
         onClick={toggleSidebar}
       />
-      <CHeaderBrand className="mx-auto d-lg-none" to="/">
-        <CIcon name="logo" height="48" alt="Logo"/>
-      </CHeaderBrand>
 
       <CHeaderNav className="px-3 ml-auto">
         <TheHeaderDropdownNotif/>

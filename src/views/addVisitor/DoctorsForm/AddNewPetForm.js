@@ -41,9 +41,17 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
   })
 
   const handleChangePetInfo = (e) => {
+    let dobAge = petInfo.age
+    if (e.target.name === 'dob') {
+      const currentYear = new Date().getFullYear()
+      const inYears = new Date(e.target.value).getFullYear()
+
+      dobAge = currentYear - inYears
+    }
     setPetInfo(oldState => {
       return {
         ...oldState,
+        age: dobAge,
         [e.target.name]: e.target.value
       }
     })
