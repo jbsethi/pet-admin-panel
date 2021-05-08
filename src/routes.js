@@ -17,7 +17,7 @@ const Treatments = React.lazy(() => import('./views/treatment/Treatments'));
 
 const routes = [
   { path: '/', exact: true, name: 'Home', roles: ['superman', 'administrator', 'receptionist', 'doctor'] },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard, roles: ['superman', 'administrator', 'receptionist'] },
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard, roles: ['superman', 'administrator'] },
   { path: '/visitors', exact: true, name: 'Visitors', component: Visitors, roles: ['superman', 'administrator', 'receptionist', 'doctor'] },
   { path: '/visitors/add', exact: true, name: 'Add Visitors', component: VisitorAdd, roles: ['superman', 'administrator', 'receptionist'] },
   { path: '/visitors/:id/:slug', exact: true, name: 'Visitor\'s Details', component: VisitorDetails, roles: ['superman', 'administrator', 'receptionist', 'doctor'] },

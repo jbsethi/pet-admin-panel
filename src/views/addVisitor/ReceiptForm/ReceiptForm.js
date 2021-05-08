@@ -12,6 +12,7 @@ import {
 import AddReceiptForm from './AddReceiptForm.js'
 
 const receiptTableFields = [
+  'action',
   'name',
   'category',
   'price',
@@ -22,6 +23,11 @@ const receiptTableFields = [
 const ReceiptForm = ({ receiptFormVisibility, showAddReceiptFormModal, receiptItems, dispatch }) => {
   const showAddReceiptForm = (status) => {
     dispatch({ type: 'setShowAddReceiptForm', payload: status })
+  }
+
+  const handleAction = (data) => {
+    console.log(data.payload)
+    dispatch(data)
   }
 
   return (
@@ -46,6 +52,16 @@ const ReceiptForm = ({ receiptFormVisibility, showAddReceiptFormModal, receiptIt
               items={receiptItems || []}
               footer
               hover
+              scopedSlots={{
+                'action':
+                  (item)=>(
+                    <td className="px-1 py-2">
+                    {
+                      <CButton onClick={() => handleAction({ type: 'removeItem', payload: item })} size="sm">&#10006;</CButton>
+                    }
+                    </td>
+                  )
+              }}
               overTableSlot={
                 <div className="text-right">
                   <CButton

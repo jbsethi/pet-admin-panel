@@ -7,7 +7,7 @@ const _nav =  [
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon"/>,
-    roles: ['superman', 'administrator', 'receptionist']
+    roles: ['superman', 'administrator']
   },
   {
     _tag: 'CSidebarNavItem',

@@ -54,18 +54,60 @@ const addVisitorReducer = (state, { type, payload }) => {
         isDoctorVisitAdded: payload
       }
     case 'addItemInReceipt':
-      const item = {
-        id: payload.itemId?.value || null,
-        packageId: payload.packageId?.value || null,
-        name: payload.itemId?.label || payload.packageId?.label,
-        category: payload.categoryId.label,
-        price: payload.itemId?.price || payload.packageId?.price,
-        qty: payload.quantity,
-        total: payload.quantity * (payload.itemId?.price || payload.packageId?.price)
+      let isItemId = true
+      let itemIdx = -1
+
+      if (payload.packageId?.value) isItemId = false
+
+      if (isItemId) {
+        itemIdx = state.receiptItems.findIndex(i => i.id === payload.itemId?.value)
+      } else {
+        itemIdx = state.receiptItems.findIndex(i => i.packageId === payload.packageId?.value)
       }
+
+      if (itemIdx === -1) {
+        const item = {
+          id: payload.itemId?.value || null,
+          packageId: payload.packageId?.value || null,
+          name: payload.itemId?.label || payload.packageId?.label,
+          category: payload.categoryId.label,
+          price: payload.itemId?.price || payload.packageId?.price,
+          qty: payload.quantity,
+          total: payload.quantity * (payload.itemId?.price || payload.packageId?.price)
+        }
+  
+        return {
+          ...state,
+          receiptItems: [...state.receiptItems, item]
+        }
+      } else {
+        return {
+          ...state,
+          receiptItems: state.receiptItems.map((i, idx) => {
+            if (idx === itemIdx) {
+              console.log(i, payload)
+              const qty = +i.qty + +payload.quantity
+              return {
+                ...i,
+                qty,
+                total: qty * i.price
+              }
+            }
+
+            return i
+          })
+        }
+      }
+    case 'removeItem':
       return {
         ...state,
-        receiptItems: [...state.receiptItems, item]
+        receiptItems: state.receiptItems.filter(i => {
+          if (payload.id) {
+            return i.id !== payload.id
+          } else {
+            return i.packageId !== payload.packageId
+          }
+        })
       }
     case 'addDoctorReceipt':
       const doctorsReceipt = {
