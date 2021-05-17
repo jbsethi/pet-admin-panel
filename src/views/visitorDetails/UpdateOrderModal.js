@@ -3,6 +3,8 @@ import { useReactToPrint } from 'react-to-print';
 import Invoice from './Invoice'
 import style from './invoice.module.css'
 import {
+  CLabel,
+  CSwitch,
   CModal,
   CModalHeader,
   CModalFooter,
@@ -34,6 +36,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
   const { addToast } = React.useContext(AppContext)
   const componentRef = useRef();
   const [showAddItem, setShowAddItem] = React.useState(false)
+  const [isVatIncluded, setIsVatIncluded] = React.useState(false)
   const [checkUpPrice, setCheckUpPrice] = React.useState(null)
   const [total, setTotal] = React.useState(null)
   const [items, setItems] = React.useState([])
@@ -137,6 +140,16 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
     content: () => componentRef.current,
   })
 
+  React.useEffect(() => {
+    if (order) {
+      if (isVatIncluded) {
+        setTotal(order.price + ((order.price * .05)))
+      } else {
+        setTotal(order.price)
+      }
+    }
+  }, [isVatIncluded, total, order])
+
   return (
     <CModal
       show={show}
@@ -186,8 +199,23 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
         <AddReceiptForm  show={showAddItem} setShow={setShowAddItem}  dispatch={handleAction}></AddReceiptForm>
       </CModalBody>
       <CModalFooter className="d-flex justify-content-between">
-        <div>
+        <div className="d-flex">
         <CButton size="sm" color="info" onClick={handlePrint}>Print Invoice</CButton>
+
+        <CLabel htmlFor="vat" className="ml-4">5% Vat ?</CLabel>
+        <CSwitch
+          className="pl-1 ml-1"
+          color="primary"
+          name="vat"
+          value={isVatIncluded}
+          onChange={(e) => setIsVatIncluded(e.target.checked)}
+          {
+            ...({
+              variant: 'opposite',
+              shape:'pill'
+            })
+          }
+        />
         </div>
         <div>
         <CButton className="mr-1" size="sm" color="danger" onClick={() => setShow(false)}>Cancel</CButton>
@@ -195,7 +223,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
         </div>
       </CModalFooter>
       <div className={style.printable} ref={componentRef}>
-        <Invoice data={order} patientData={patientData} />
+        <Invoice data={order} patientData={patientData} total={total} isVatIncluded={isVatIncluded}/>
       </div>
     </CModal>
   )

@@ -6,8 +6,10 @@ import RSelect from 'react-select';
 import { withRouter } from 'react-router-dom'
 
 import useAxios from 'axios-hooks'
+import { AppContext } from '../../App'
 
 const NewPrescription = ({ match, show, setShow, details, refetch }) => {
+  const { addToast } = React.useContext(AppContext)
   const [recommendations, setRecommendations] = React.useState([])
   const [selectedRecomendation, setSelectedRecomendation] = React.useState([])
   const [treatments, setTreatments] = React.useState([])
@@ -67,6 +69,10 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
           followUp: ''
         })
         setShow(false)
+      }).catch((err) => {
+        addToast({
+          message: err?.response?.data?.message || 'Error Occured ! Try again later'
+        })
       })
     }
   }

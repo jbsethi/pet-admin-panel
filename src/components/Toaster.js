@@ -21,6 +21,7 @@ const Toaster = ({ toasters }) => {
             show={true}
             autohide={toast.autohide}
             fade={toast.fade}
+            color="danger"
           >
             <CToastHeader closeButton={toast.closeButton}>
               { toast.title }

@@ -1,6 +1,6 @@
 import LogoPng from '../../assets/logo/logo.png'
 
-const Invoice = ({ data, patientData }) => {
+const Invoice = ({ data, patientData, total, isVatIncluded }) => {
   const formatDateString = (str) => {
     const date = new Date(str)
 
@@ -10,10 +10,10 @@ const Invoice = ({ data, patientData }) => {
     <div className="container">
       <div className="row">
         <div className="col-6">
-          <h3 className="">Aloropi Vet Center</h3>
-          <h6 className="">123 Madison drive, Seattle, WA 12387Q</h6>
+          <h3 className="">Aloropi Veterinary Center</h3>
+          <h6 className="">Aloropi Veterinary Center 34 Al Marija St – Al Jubail – Sharjah, UAE.</h6>
           <h6><a className="" href="mailto:clinic@gmail.com">app@aloropivetcenter.com</a></h6>
-          <h6 className="">+97 123 456 789</h6>
+          <h6 className="">+971 65744 622</h6>
         </div>
         <div className="col-6">
           <h3 className=" text-uppercase text-right font-weight-bold">Invoice</h3>
@@ -115,13 +115,16 @@ const Invoice = ({ data, patientData }) => {
                 <div className="col-8"><h6 className="text-right text-uppercase">SubTotal :</h6></div>
                 <div className="col-4"><p className="text-right mb-0 border-bottom">{data.price}</p></div>
               </div>
+              {
+                isVatIncluded &&
+                <div className="row">
+                  <div className="col-8"><h6 className="text-right text-uppercase">Vat :</h6></div>
+                  <div className="col-4"><p className="text-right mb-0 border-bottom">5%</p></div>
+                </div>
+              }
               <div className="row">
                 <div className="col-8"><h6 className="text-right text-uppercase">discount :</h6></div>
                 <div className="col-4"><p className="text-right mb-0 border-bottom">0.00</p></div>
-              </div>
-              <div className="row">
-                <div className="col-8"><h6 className="text-right text-uppercase">subtotal less discount :</h6></div>
-                <div className="col-4"><p className="text-right mb-0">{data.price}</p></div>
               </div>
             </div>
           </div>
@@ -129,7 +132,7 @@ const Invoice = ({ data, patientData }) => {
             <div className="col-7 border-bottom border-top pt-2">
               <div className="row">
                 <div className="col-8"><h6 className="text-right text-uppercase">Balance :</h6></div>
-                <div className="col-4 pl-0"><h6 className="text-right mb-0">AED {data.price}</h6></div>
+                <div className="col-4 pl-0"><h6 className="text-right mb-0">AED {total}</h6></div>
               </div>
             </div>
           </div>
