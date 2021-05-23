@@ -181,18 +181,17 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
           <CLabel htmlFor="prescription">Prescription</CLabel>
           <CInput disabled={details} value={treatmentRecord.prescription} name="prescription" onChange={handleChange} id="prescription" placeholder="Enter Prescription" />
         </CFormGroup>
-        
-        <CFormGroup className="py-3 m-0">
-          <CRow className="px-3 justify-content-between align-items-center">
-            <CLabel htmlFor="recomendation">Recomendation</CLabel>
-          </CRow>
-          {
-            recommendationElem.length > 0 &&
+        {
+          recommendationElem.length > 0 &&
+          <CFormGroup className="py-3 m-0">
+            <CRow className="px-3 justify-content-between align-items-center">
+              <CLabel htmlFor="recomendation">Recomendation</CLabel>
+            </CRow>
             <section className="py-2">
               {recommendationElem}
             </section>
-          }
-        </CFormGroup>
+          </CFormGroup>
+        }
 
         <CFormGroup>
           <CLabel htmlFor="description">Description</CLabel>
