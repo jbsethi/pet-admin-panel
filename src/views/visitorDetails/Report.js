@@ -33,19 +33,38 @@ const Report = ({ data }) => {
             <td><b>Owner Name</b></td>
             <td>{ data.patientRecord.name }</td>
             <td><b>Pet Gender</b></td>
-            <td>{ data.petRecord.gender }</td>
+            <td>{ data.petRecord?.gender || <em>Not defined</em> }</td>
           </tr>
           <tr>
             <td><b>Owner Contact</b></td>
             <td>{ data.patientRecord.contact }</td>
-            <td><b>Pet Age</b></td>
-            <td>{ data.petRecord.age } years</td>
+            {
+              data.petRecord.age ? 
+              (
+                <>
+                  <td><b>Pet Age</b></td>
+                  <td>{ data.petRecord.age } years</td>
+                </>
+              ) :
+              (
+                <>
+                  <td><b>Pet Age</b></td>
+                  <td>{ data.petRecord.dob }</td>
+                </>
+              )
+
+            }
+            
           </tr>
           <tr>
             <td><b>Owner ID</b></td>
             <td>{ data.patientRecord.emiratesId }</td>
             <td><b>Pet Color</b></td>
             <td>{ data.petRecord.color }</td>
+          </tr>
+          <tr>
+            <td><b>Pet chip (<em>if available</em>)</b></td>
+            <td>{ data.petRecord.microchipNumber || <em>Not available</em> }</td>
           </tr>
           <tr>
             <td colspan="4"><b>Pet Detail</b></td>
@@ -75,9 +94,11 @@ const Report = ({ data }) => {
                   <td>{r.statement}</td>
                   <td>{r.prescription}</td>
                   <td>{
+                    r.Recomendations.length > 0 ?
                     r.Recomendations.map((rr, ii) => {
                       return <span key={rr.itemId +  '-' + ii}> {rr.Item.name} </span>
-                    })
+                    }) :
+                    <em>None</em>
                   }</td>
                   <td>{r.description}</td>
                 </tr>
