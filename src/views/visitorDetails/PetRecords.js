@@ -126,6 +126,15 @@ const PetRecords = ({ id }) => {
                         />
                       </CCol>
                     </CFormGroup>
+                    {
+                      petRecord.microchip && petRecord.microchipNumber &&
+                      <CFormGroup row className="justify-content-left">
+                        <CLabel className="text-right" sm="3" col htmlFor="input-emirates-id">Microchip number</CLabel>
+                        <CCol sm="7">
+                          <CInput value={petRecord.microchipNumber || ''} readOnly  id="input-microchipNumber" name="microchipNumber" placeholder="" />
+                        </CCol>
+                      </CFormGroup>
+                    }
                   </CCardBody>
                 </CCard>
               </CCol>
