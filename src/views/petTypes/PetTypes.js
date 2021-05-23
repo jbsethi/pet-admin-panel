@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
 import AddPetRecord from './AddPetRecord'
@@ -16,6 +16,8 @@ import {
   CPagination
 } from '@coreui/react'
 
+import { AppContext } from '../../App.js'
+
 const fields = [
     'name',
     {
@@ -27,6 +29,7 @@ const fields = [
   ]
 
 const PetTypes = () => {
+  const { addToast, role } = useContext(AppContext)
   const [show, setShow] = React.useState(false)
 
   const [keyword, setKeyword] = React.useState('')
@@ -131,7 +134,10 @@ const PetTypes = () => {
                   (item) => (
                     <td>
                       <CButton onClick={() => editModal(item.id)} color="primary" size="sm" className="mr-1">Edit</CButton>
-                      <CButton onClick={() => deleteItem(item.id)} color="danger" size="sm">Delete</CButton>
+                      {
+                        role !== 'receptionist' &&
+                        <CButton onClick={() => deleteItem(item.id)} color="danger" size="sm">Delete</CButton>
+                      }
                     </td>
                   )
               }}

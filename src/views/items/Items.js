@@ -30,7 +30,7 @@ const fields = [
   ]
 
 const Items = () => {
-  const { addToast } = useContext(AppContext)
+  const { addToast, role } = useContext(AppContext)
   const [show, setShow] = React.useState(false)
 
   const [keyword, setKeyword] = React.useState('')
@@ -145,7 +145,10 @@ const Items = () => {
                   (item) => (
                     <td>
                       <CButton onClick={() => editModal(item.id)} color="primary" size="sm" className="mr-1">Edit</CButton>
-                      <CButton onClick={() => deleteItem(item.id)} color="danger" size="sm">Delete</CButton>
+                      {
+                        role !== 'receptionist' &&
+                        <CButton onClick={() => deleteItem(item.id)} color="danger" size="sm">Delete</CButton>
+                      }
                     </td>
                   )
               }}

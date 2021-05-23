@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
 import AddPackage from './AddPackage'
@@ -16,6 +16,8 @@ import {
   CPagination
 } from '@coreui/react'
 
+import { AppContext } from '../../App.js'
+
 const fields = [
     'name',
     'price',
@@ -28,6 +30,7 @@ const fields = [
   ]
 
 const Packages = () => {
+  const { addToast, role } = useContext(AppContext)
   const [show, setShow] = React.useState(false)
 
   const [keyword, setKeyword] = React.useState('')
@@ -132,7 +135,10 @@ const Packages = () => {
                   (item) => (
                     <td>
                       <CButton onClick={() => editModal(item.id)} color="primary" size="sm" className="mr-1">Edit</CButton>
+                      {
+                        role !== 'receptionist' &&
                       <CButton onClick={() => deleteItem(item.id)} color="danger" size="sm">Delete</CButton>
+                      }
                     </td>
                   )
               }}
