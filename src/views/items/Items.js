@@ -6,6 +6,8 @@ import AddItem from './AddItem'
 import { formatDate } from '../../utils/dateUtils'
 
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
+
 
 import {
   CCard,
@@ -42,7 +44,7 @@ const Items = () => {
 
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/items',
+      url: PUBLIC_API + '/items',
       method: 'GET',
       params: {
         pageNo: currentPage
@@ -83,7 +85,7 @@ const Items = () => {
 
   const deleteItem = (id) => {
     fetch({
-      url: `https://app.aloropivetcenter.com/api/items/${id}`,
+      url: PUBLIC_API + `/items/${id}`,
       method: 'DELETE'
     }).then(() => {
       loadData()

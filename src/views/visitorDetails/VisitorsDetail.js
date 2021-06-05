@@ -4,12 +4,13 @@ import React from 'react'
 import useAxios from 'axios-hooks'
 
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
 
 const VisitorsDetail = ({ id }) => {
   const { addToast } = React.useContext(AppContext)
   const [{ data, loading }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/patients',
+      url: PUBLIC_API + '/patients',
       method: 'GET',
     },
     {
@@ -20,7 +21,7 @@ const VisitorsDetail = ({ id }) => {
   React.useEffect(() => {
     if (id) {
       fetch({
-        url: `https://app.aloropivetcenter.com/api/patients/${id}`
+        url: PUBLIC_API + `/patients/${id}`
       }).catch(err => {
         addToast({
           message: err.response?.data?.message || 'Error occured! Try again later.'

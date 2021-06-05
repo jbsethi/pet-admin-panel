@@ -41,7 +41,7 @@ const AddUser = ({ match }) => {
     executePost
   ] = useAxios(
     {
-      url: `https://app.aloropivetcenter.com/api/users${match?.params?.id ? '/' + match?.params?.id : ''}`,
+      url: PUBLIC_API + `/users${match?.params?.id ? '/' + match?.params?.id : ''}`,
       method: match?.params?.id ? 'PUT' : 'POST'
     },
     { manual: true }

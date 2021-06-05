@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import TableHeader from '../base/tableHeader/TableHeader'
 
 import { formatDate } from '../../utils/dateUtils'
+import { PUBLIC_API } from '../../config/index'
 
 import {
   CCard,
@@ -39,7 +40,7 @@ const Visitors = () => {
 
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/patients',
+      url: PUBLIC_API + '/patients',
       method: 'GET',
     },
     {

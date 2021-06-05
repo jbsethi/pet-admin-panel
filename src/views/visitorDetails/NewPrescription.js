@@ -7,6 +7,7 @@ import { withRouter, useHistory } from 'react-router-dom'
 
 import useAxios from 'axios-hooks'
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
 
 const NewPrescription = ({ match, show, setShow, details, refetch }) => {
   const history = useHistory()
@@ -18,7 +19,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
 
   const [, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/treatments',
+      url: PUBLIC_API + '/treatments',
       method: 'POST',
     },
     {
@@ -73,7 +74,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
     }
 
     fetch({
-      url: `https://app.aloropivetcenter.com/api/orders/${details.orderId}`,
+      url: PUBLIC_API + `/orders/${details.orderId}`,
       method: 'PUT',
       data: data
     }).then(resp => {
@@ -90,7 +91,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
     if (show && details) {
       
       const resp = await fetch({
-        url: `https://app.aloropivetcenter.com/api/orders/${details.orderId}`,
+        url: PUBLIC_API + `/orders/${details.orderId}`,
         method: 'GET'
       })
 
@@ -118,7 +119,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
 
     if (show && treatments.length === 0) {
       const resp = await fetch({
-        url: 'https://app.aloropivetcenter.com/api/items/records/all?serviceId=3',
+        url: PUBLIC_API + '/items/records/all?serviceId=3',
         method: 'GET'
       })
 

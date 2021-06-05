@@ -15,6 +15,8 @@ import {
 import CIcon from '@coreui/icons-react'
 
 import { AppContext } from '../App.js'
+import { PUBLIC_API } from '../config/index'
+
 
 const TheHeaderDropdownNotif = () => {
   const history = useHistory()
@@ -22,7 +24,7 @@ const TheHeaderDropdownNotif = () => {
   const [notifications, setNotifications] = React.useState([])
   const [, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/notifications/all/records',
+      url: PUBLIC_API + '/notifications/all/records',
       method: 'GET',
     },
     {
@@ -34,7 +36,7 @@ const TheHeaderDropdownNotif = () => {
   const clickNotification = (n) => {
 
     fetch({
-      url: 'https://app.aloropivetcenter.com/api/notifications/' + n.id
+      url: PUBLIC_API + '/notifications/' + n.id
     })
 
     history.push({

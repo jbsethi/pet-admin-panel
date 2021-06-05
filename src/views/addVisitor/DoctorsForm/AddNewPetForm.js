@@ -17,6 +17,8 @@ import {
 import useAxios from 'axios-hooks'
 
 import { AppContext } from '../../../App.js'
+import { PUBLIC_API } from '../../../config/index'
+
 
 const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) => {
   const { addToast } = React.useContext(AppContext)
@@ -75,7 +77,7 @@ const AddNewPetForm = ({ show, setShow, visitorId, setItems, setSelectedPet }) =
     delete data.id;
 
     fetchRecord({
-      url: 'https://app.aloropivetcenter.com/api/pets',
+      url: PUBLIC_API + '/pets',
       method: 'POST',
       data
     }).then(resp => {

@@ -6,6 +6,7 @@ const VisitorAdd = React.lazy(() => import('./views/addVisitor/AddVisitor'));
 const VisitorDetails = React.lazy(() => import('./views/visitorDetails/VisitorDetails'));
 const PetTypes = React.lazy(() => import('./views/petTypes/PetTypes'));
 const Services = React.lazy(() => import('./views/services/Services'));
+const Orders = React.lazy(() => import('./views/orders/Orders'));
 const Items = React.lazy(() => import('./views/items/Items'));
 const Packages = React.lazy(() => import('./views/packages/Packages'));
 const Users = React.lazy(() => import('./views/users/Users'));
@@ -27,6 +28,7 @@ const routes = [
   { path: '/check-up/:id/:slug/:petId', exact: true, name: 'Details', component: Treatment, roles: ['superman', 'administrator', 'receptionist', 'doctor'] },
   { path: '/pet-types', exact: true, name: 'Pet Types', component: PetTypes, roles: ['superman', 'administrator', 'receptionist'] },
   { path: '/services', exact: true, name: 'Pet Services', component: Services, roles: ['superman', 'administrator', 'receptionist']  },
+  { path: '/orders', exact: true, name: 'Orders', component: Orders, roles: ['superman', 'administrator', 'receptionist']  },
   { path: '/items', exact: true, name: 'Items', component: Items, roles: ['superman', 'administrator', 'receptionist']  },
   { path: '/packages', exact: true, name: 'Packages', component: Packages, roles: ['superman', 'administrator', 'receptionist']  },
   { path: '/roles', exact: true, name: 'Roles', component: Roles, roles: ['superman'] },

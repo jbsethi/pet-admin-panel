@@ -6,6 +6,8 @@ import { withRouter } from 'react-router-dom'
 
 import { formatDate } from '../../utils/dateUtils'
 
+import { PUBLIC_API } from '../../config/index'
+
 import {
   CCard,
   CCol,
@@ -43,7 +45,7 @@ const Orders = ({ history, id }) => {
 
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/orders/patient',
+      url: PUBLIC_API + '/orders/patient',
       method: 'GET',
     },
     {
@@ -54,7 +56,7 @@ const Orders = ({ history, id }) => {
   const loadData = React.useCallback(async (orderId) => {
     try {
       const resp = await fetch({
-        url: `https://app.aloropivetcenter.com/api/orders/patient/${id}`
+        url: PUBLIC_API + `/orders/patient/${id}`
       })
 
       setPatientData(resp.data.Patient)

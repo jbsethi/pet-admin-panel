@@ -17,6 +17,7 @@ import {
 } from '@coreui/react'
 
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
 
 const fields = [
     'name',
@@ -42,7 +43,7 @@ const Packages = () => {
 
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/packages',
+      url: PUBLIC_API + '/packages',
       method: 'GET',
       params: {
         pageNo: currentPage
@@ -79,7 +80,7 @@ const Packages = () => {
 
   const deleteItem = (id) => {
     fetch({
-      url: `https://app.aloropivetcenter.com/api/packages/${id}`,
+      url: PUBLIC_API + `/packages/${id}`,
       method: 'DELETE'
     }).then(() => {
       loadData()

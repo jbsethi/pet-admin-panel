@@ -16,6 +16,8 @@ import {
   CRow,
 } from '@coreui/react'
 
+import { PUBLIC_API } from '../../config/index'
+
 const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
   const [petRecord, setPetRecord] = React.useState({
     name: '',
@@ -28,7 +30,7 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
     fetch
   ] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/pet-types',
+      url: PUBLIC_API + '/pet-types',
       method: 'POST'
     },
     { manual: true }
@@ -81,7 +83,7 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
       }
 
       if (petTypeId) {
-        config.url = `https://app.aloropivetcenter.com/api/pet-types/${petTypeId}`
+        config.url = `PUBLIC_API + '/pet-types/${petTypeId}`
         config.method = 'PUT'
       }
 
@@ -94,7 +96,7 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
   React.useEffect(() => {
     if (petTypeId && show) {
       fetch({
-        url: `https://app.aloropivetcenter.com/api/pet-types/${petTypeId}`,
+        url: PUBLIC_API + `/pet-types/${petTypeId}`,
         method: 'GET'
       })
         .then(resp => {

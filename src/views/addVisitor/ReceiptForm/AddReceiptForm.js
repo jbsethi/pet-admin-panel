@@ -17,6 +17,8 @@ import {
 import useAxios from 'axios-hooks'
 
 import { AppContext } from '../../../App.js'
+import { PUBLIC_API } from '../../../config/index'
+
 
 const AddReceiptForm = ({ show, setShow, dispatch }) => {
   const { addToast } = React.useContext(AppContext)
@@ -36,7 +38,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
     fetchRecord
   ] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/services',
+      url: PUBLIC_API + '/services',
       method: 'POST'
     },
     { manual: true }
@@ -68,7 +70,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
   const getCategories = React.useCallback(async () => {
     try {
       const record = await fetchRecord({
-        url: 'https://app.aloropivetcenter.com/api/services',
+        url: PUBLIC_API + '/services',
         method: 'GET'
       })
 
@@ -98,7 +100,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
       })
 
       const record = await fetchRecord({
-        url: 'https://app.aloropivetcenter.com/api/packages/records/active',
+        url: PUBLIC_API + '/packages/records/active',
         method: 'GET',
         params: {
           serviceId: addReceiptRecord.categoryId?.value || null
@@ -116,7 +118,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
       setPackages(options)
 
       const record2 = await fetchRecord({
-        url: 'https://app.aloropivetcenter.com/api/items/records/active',
+        url: PUBLIC_API + '/items/records/active',
         method: 'GET',
         params: {
           serviceId: addReceiptRecord.categoryId?.value || null

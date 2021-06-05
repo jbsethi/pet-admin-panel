@@ -3,6 +3,7 @@ import useAxios from 'axios-hooks'
 import { useHistory } from "react-router-dom";
 
 import { formatDate } from '../../utils/dateUtils'
+import { PUBLIC_API } from '../../config/index'
 
 import {
   CCard,
@@ -30,7 +31,7 @@ const Visitors = ({ match }) => {
 
   const [{ loading }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/orders',
+      url: PUBLIC_API + '/orders',
       method: 'GET',
     },
     {

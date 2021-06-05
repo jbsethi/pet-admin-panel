@@ -18,6 +18,13 @@ const _nav =  [
   },
   {
     _tag: 'CSidebarNavItem',
+    name: 'Orders',
+    to: '/orders',
+    icon: 'cil-address-book',
+    roles: ['superman', 'administrator', 'receptionist']
+  },
+  {
+    _tag: 'CSidebarNavItem',
     name: 'Check up',
     to: '/check-up',
     icon: 'cil-address-book',

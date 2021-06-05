@@ -3,6 +3,7 @@ import useAxios from 'axios-hooks'
 import TableHeader from '../base/tableHeader/TableHeader'
 
 import { formatDate } from '../../utils/dateUtils'
+import { PUBLIC_API } from '../../config/index'
 
 import {
   CCard,
@@ -34,7 +35,7 @@ const Services = () => {
 
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/services',
+      url: PUBLIC_API + '/services',
       method: 'GET',
       params: {
         pageNo: currentPage

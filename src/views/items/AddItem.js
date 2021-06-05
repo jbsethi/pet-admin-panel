@@ -2,6 +2,8 @@ import React, { useContext } from 'react'
 import useAxios from 'axios-hooks'
 
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
+
 
 import {
   CModal,
@@ -38,7 +40,7 @@ const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
     fetch
   ] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/items',
+      url: PUBLIC_API + '/items',
       method: 'POST'
     },
     { manual: true }
@@ -97,7 +99,7 @@ const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
       }
 
       if (itemId) {
-        config.url = `https://app.aloropivetcenter.com/api/items/${itemId}`
+        config.url = PUBLIC_API + `/items/${itemId}`
         config.method = 'PUT'
       }
 
@@ -114,14 +116,14 @@ const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
   const initializeRecord = React.useCallback(async () => {
     try {
       let result = await fetch({
-        url: `https://app.aloropivetcenter.com/api/services`,
+        url: PUBLIC_API + '/services',
         method: 'GET'
       })
   
       setServices(result?.data?.rows || [])
   
       result = await fetch({
-        url: `https://app.aloropivetcenter.com/api/pet-types/records/active`,
+        url: PUBLIC_API + '/pet-types/records/active',
         method: 'GET'
       })
 
@@ -131,7 +133,7 @@ const AddItem = ({ show, setShow, refetch, itemId, setEditId }) => {
   
       if (itemId) {
         result = await fetch({
-          url: `https://app.aloropivetcenter.com/api/items/${itemId}`,
+          url: PUBLIC_API + `/items/${itemId}`,
           method: 'GET'
         })
     

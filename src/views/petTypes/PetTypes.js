@@ -5,6 +5,8 @@ import AddPetRecord from './AddPetRecord'
 
 import { formatDate } from '../../utils/dateUtils'
 
+import { PUBLIC_API } from '../../config/index'
+
 import {
   CCard,
   CCardBody,
@@ -41,7 +43,7 @@ const PetTypes = () => {
 
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/pet-types',
+      url: PUBLIC_API + '/pet-types',
       method: 'GET',
       params: {
         pageNo: currentPage
@@ -78,7 +80,7 @@ const PetTypes = () => {
 
   const deleteItem = (id) => {
     fetch({
-      url: `https://app.aloropivetcenter.com/api/pet-types/${id}`,
+      url: PUBLIC_API + `/pet-types/${id}`,
       method: 'DELETE'
     }).then(() => {
       loadData()

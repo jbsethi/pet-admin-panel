@@ -10,6 +10,7 @@ import useAxios from 'axios-hooks'
 import NewPrescription from './NewPrescription'
 
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
 
 import Report from './Report'
 
@@ -27,7 +28,7 @@ const PetHistory = ({ match }) => {
 
   const [{ loading }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/treatments/all/pets',
+      url: PUBLIC_API + '/treatments/all/pets',
       method: 'POST',
     },
     {

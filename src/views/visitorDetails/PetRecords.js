@@ -3,6 +3,8 @@ import { CCard, CCardBody, CCardHeader, CRow, CCol, CDataTable, CFormGroup, CLab
 import React from 'react'
 import useAxios from 'axios-hooks'
 
+import { PUBLIC_API } from '../../config/index'
+
 const fields = [
   'id',
   'name',
@@ -14,7 +16,7 @@ const PetRecords = ({ id }) => {
   const [petRecord, setPetRecord] = React.useState(null)
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/pets/all/patients',
+      url: PUBLIC_API + '/pets/all/patients',
       method: 'POST',
     },
     {

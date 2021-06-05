@@ -10,7 +10,7 @@ import {
 
 const TableHeader = ({ keyword = '', changeKeyword = null, children }) => {
   return (
-    <CRow className="align-items-center justify-content-between">
+    <CRow className="align-items-center justify-content-between pb-2">
       <CCol sm="4">
         <CFormGroup className="mb-0">
           <CInput

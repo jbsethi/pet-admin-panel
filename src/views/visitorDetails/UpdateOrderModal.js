@@ -18,7 +18,7 @@ import AddReceiptForm from '../addVisitor/ReceiptForm/AddReceiptForm'
 import useAxios from 'axios-hooks'
 
 import { AppContext } from '../../App.js'
-import { cibSkillshare } from '@coreui/icons';
+import { PUBLIC_API } from '../../config/index'
 
 const receiptTableFields = [
   {
@@ -93,7 +93,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
       }
 
       fetch({
-        url: `https://app.aloropivetcenter.com/api/orders/${order.id}`,
+        url: PUBLIC_API + `/orders/${order.id}`,
         data
       }).then(() => {
         refetch()

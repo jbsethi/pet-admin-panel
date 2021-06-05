@@ -21,6 +21,8 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
+import { PUBLIC_API } from '../../../config/index'
+
 const Login = () => {
   const [ errMessage, setErrorMessage ] = useState('')
   const { setToken, setRole } = useContext(AppContext)
@@ -30,7 +32,7 @@ const Login = () => {
     executePost
   ] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/authentication/login',
+      url: PUBLIC_API + '/authentication/login',
       method: 'POST'
     },
     { manual: true }

@@ -14,6 +14,8 @@ import {
   CRow,
 } from '@coreui/react'
 
+import { PUBLIC_API } from '../../config/index'
+
 const ForgotPassword = ({ id, show, setShow }) => {
   const [userData, setUserData] = React.useState({
     password: '',
@@ -25,7 +27,7 @@ const ForgotPassword = ({ id, show, setShow }) => {
     executePost
   ] = useAxios(
     {
-      url: `https://app.aloropivetcenter.com/api/users/password-reset/${id}`,
+      url: PUBLIC_API + `/users/password-reset/${id}`,
       method: 'POST'
     },
     { manual: true }

@@ -18,6 +18,7 @@ import {
 } from '@coreui/react'
 
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
 
 const fields = [
   { key: 'name', _classes: 'font-weight-bold' },
@@ -48,7 +49,7 @@ const Users = () => {
 
   const [{ data, loading, error }, refetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/users',
+      url: PUBLIC_API + '/users',
       method: 'GET',
       params: {
         pageNo: currentPage

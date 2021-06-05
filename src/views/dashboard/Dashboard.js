@@ -2,12 +2,15 @@ import React, { lazy } from 'react'
 
 import useAxios from 'axios-hooks'
 
+import { PUBLIC_API } from '../../config/index'
+
+
 const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
 
 const Dashboard = () => {
   const [{ data, loading, error }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/stats/entities/count',
+      url: PUBLIC_API + '/stats/entities/count',
       method: 'GET'
     },
     {

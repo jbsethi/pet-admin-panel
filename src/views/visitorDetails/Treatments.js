@@ -7,6 +7,7 @@ import PetTabs from './PetTabs'
 import useAxios from 'axios-hooks'
 
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
 
 const Treatment = ({ match }) => {
   const { addToast } = React.useContext(AppContext)
@@ -14,7 +15,7 @@ const Treatment = ({ match }) => {
   const [items, setItems] = React.useState([])
   const [{ loading }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/pets/all/patients',
+      url: PUBLIC_API + '/pets/all/patients',
       method: 'POST',
     },
     {

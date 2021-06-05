@@ -17,6 +17,8 @@ import useAxios from 'axios-hooks'
 import RSelect from 'react-select';
 
 import { AppContext } from '../../../App.js'
+import { PUBLIC_API } from '../../../config/index'
+
 
 import AddNewPetForm from './AddNewPetForm.js'
 
@@ -65,7 +67,7 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
   React.useEffect(() => {
     if (keyword.length > 0) {
       fetchRecord({
-        url: 'https://app.aloropivetcenter.com/api/pets',
+        url: PUBLIC_API + '/pets',
         method: 'GET',
         params: {
           patientId: visitorId,
@@ -81,7 +83,7 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
 
   React.useEffect(() => {
     fetchRecord({
-      url: `https://app.aloropivetcenter.com/api/pets/all/patients`,
+      url: PUBLIC_API + '/pets/all/patients',
       method: 'POST',
       data: {
         patientId: visitorId

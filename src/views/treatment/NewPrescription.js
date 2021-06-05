@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom'
 
 import useAxios from 'axios-hooks'
 import { AppContext } from '../../App'
+import { PUBLIC_API } from '../../config/index'
 
 const NewPrescription = ({ match, show, setShow, details, refetch }) => {
   const { addToast } = React.useContext(AppContext)
@@ -16,7 +17,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
 
   const [, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/treatments',
+      url: PUBLIC_API + '/treatments',
       method: 'POST',
     },
     {
@@ -142,7 +143,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
   React.useEffect(() => {
     if (show && treatments.length === 0) {
       fetch({
-        url: 'https://app.aloropivetcenter.com/api/items/records/all?serviceId=3',
+        url: PUBLIC_API + '/items/records/all?serviceId=3',
         method: 'GET'
       }).then(resp => {
         setTreatments(resp.data.map(r => {

@@ -6,6 +6,7 @@ import useAxios from 'axios-hooks'
 import NewPrescription from './NewPrescription'
 import { formatDate } from '../../utils/dateUtils'
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
 
 const PetHistory = ({ match }) => {
   const { role } = React.useContext(AppContext)
@@ -15,7 +16,7 @@ const PetHistory = ({ match }) => {
 
   const [{ loading }, fetch] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/treatments/all/pets',
+      url: PUBLIC_API + '/treatments/all/pets',
       method: 'POST',
     },
     {

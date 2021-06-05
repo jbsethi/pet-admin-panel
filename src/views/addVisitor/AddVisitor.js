@@ -25,6 +25,7 @@ import reducer from './addVisitorReducer'
 import initialState from './addVisitorState'
 
 import { AppContext } from '../../App.js'
+import { PUBLIC_API } from '../../config/index'
 
 const AddVisitor = () => {
   const history = useHistory()
@@ -43,7 +44,7 @@ const AddVisitor = () => {
 
   const createNewVisitor = () => {
     fetchRecord({
-      url: 'https://app.aloropivetcenter.com/api/patients',
+      url: PUBLIC_API + '/patients',
       method: 'POST',
       data: {
         ...state.visitorRecord
@@ -80,7 +81,7 @@ const AddVisitor = () => {
     }
 
     fetchRecord({
-      url: 'https://app.aloropivetcenter.com/api/orders',
+      url: PUBLIC_API + '/orders',
       method: 'POST',
       data
     }).then(resp => {
@@ -123,7 +124,7 @@ const AddVisitor = () => {
   React.useEffect(() => {
     if (state.keyword.length > 0) {
       fetchRecord({
-        url: 'https://app.aloropivetcenter.com/api/patients',
+        url: PUBLIC_API + '/patients',
         params: {
           search: state.keyword
         }

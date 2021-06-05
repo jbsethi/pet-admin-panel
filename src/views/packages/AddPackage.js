@@ -19,6 +19,9 @@ import {
   CSelect,
 } from '@coreui/react'
 
+import { PUBLIC_API } from '../../config/index'
+
+
 const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
   const [keyword, setKeyword] = React.useState('')
   const [services, setServices] = React.useState([])
@@ -40,7 +43,7 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
     fetchData
   ] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/packages',
+      url: PUBLIC_API + '/packages',
       method: 'POST'
     },
     { manual: true }
@@ -51,7 +54,7 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
     fetchRecord
   ] = useAxios(
     {
-      url: 'https://app.aloropivetcenter.com/api/items',
+      url: PUBLIC_API + '/items',
       method: 'GET'
     },
     { manual: true }
@@ -117,7 +120,7 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
       delete config.data.items
 
       if (itemId) {
-        config.url = `https://app.aloropivetcenter.com/api/packages/${itemId}`
+        config.url = PUBLIC_API + `/packages/${itemId}`
         config.method = 'PUT'
       }
 
@@ -129,14 +132,14 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
 
   const initializeRecord = React.useCallback(async () => {
     let result = await fetchData({
-      url: `https://app.aloropivetcenter.com/api/services`,
+      url: PUBLIC_API + '/services',
       method: 'GET'
     })
 
     setServices(result?.data?.rows || [])
 
     result = await fetchData({
-      url: `https://app.aloropivetcenter.com/api/pet-types`,
+      url: PUBLIC_API + '/pet-types',
       method: 'GET'
     })
 
@@ -144,7 +147,7 @@ const AddPackage = ({ show, setShow, refetch, itemId, setEditId }) => {
 
     if (itemId) {
       result = await fetchData({
-        url: `https://app.aloropivetcenter.com/api/packages/${itemId}`,
+        url: PUBLIC_API + `/packages/${itemId}`,
         method: 'GET'
       })
 
