@@ -26,7 +26,8 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
     categoryId: null,
     itemId: null,
     packageId: null,
-    quantity: 1
+    quantity: 1,
+    discount: 0
   })
 
   const [categories, setCategories] = React.useState([])
@@ -156,7 +157,8 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
         categoryId: null,
         itemId: null,
         packageId: null,
-        quantity: 1
+        quantity: 1,
+        discount: 0
       })
       setShow(false)
     }
@@ -215,6 +217,14 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
           </CCol>
           <CCol xs="12">
             <CInput value={addReceiptRecord.quantity} id="text-qty" name="quantity" placeholder="Enter Quantity" type="number" onChange={handleChange} />
+          </CCol>
+        </CFormGroup>
+        <CFormGroup row>
+          <CCol>
+            <CLabel className="pt-2" htmlFor="text-qty">Discount</CLabel>
+          </CCol>
+          <CCol xs="12">
+            <CInput value={addReceiptRecord.discount} id="text-qty" name="discount" placeholder="Enter discount" type="number" onChange={handleChange} />
           </CCol>
         </CFormGroup>
       </CModalBody>

@@ -73,6 +73,7 @@ const addVisitorReducer = (state, { type, payload }) => {
           category: payload.categoryId.label,
           price: payload.itemId?.price || payload.packageId?.price,
           qty: payload.quantity,
+          discount: payload.discount || 0,
           total: payload.quantity * (payload.itemId?.price || payload.packageId?.price)
         }
   
@@ -85,7 +86,6 @@ const addVisitorReducer = (state, { type, payload }) => {
           ...state,
           receiptItems: state.receiptItems.map((i, idx) => {
             if (idx === itemIdx) {
-              console.log(i, payload)
               const qty = +i.qty + +payload.quantity
               return {
                 ...i,
@@ -114,7 +114,8 @@ const addVisitorReducer = (state, { type, payload }) => {
         pet: payload.pet,
         fee: payload.fee,
         appointmentDate: payload.appointmentDate,
-        isFollowUp: payload.isFollowUp
+        isFollowUp: payload.isFollowUp,
+        assignTo: payload.assignTo
       }
 
       return {

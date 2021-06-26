@@ -72,12 +72,14 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
       setItems((oldItems) => oldItems.filter(i => i.idx !== payload))
       setTotal((oldPrice => (oldPrice - price)))
     } else if (type === 'updateReceipt') {
+      console.log('[debug]', order)
       const data = {
         patientId: order.patientId,
         appointment: +order.appointment === 1,
         checkUpPrice: order.checkUpPrice,
         description: order.description,
         followUp: order.followUp,
+        assignTo: order.assignTo,
         items: items.filter(item => item.itemId).map(item => {
           return {
             itemId: item.itemId,

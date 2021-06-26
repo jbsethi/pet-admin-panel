@@ -39,14 +39,21 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
   
 
   const [keyword, setKeyword] = React.useState('')
+  const [doctorKeyword, setDoctorKeyword] = React.useState('')
   const [items, setItems] = React.useState([])
+  const [doctors, setDoctors] = React.useState([])
 
   const [selectedPet, setSelectedPet] = React.useState(null)
+  const [selectedDoctor, setSelectedDoctor] = React.useState(null)
   const [fee, setFee] = React.useState('')
   const [isFollowUp, setIsFollowUp] = React.useState(false)
 
   const handleChange = (option) => {
     setSelectedPet(option)
+  }
+
+  const handleDoctorChange = (option) => {
+    setSelectedDoctor(option)
   }
 
   const addDoctorReceipt = () => {
@@ -59,6 +66,7 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
         pet: selectedPet,
         fee: +fee === 0 ? '0' : fee,
         appointmentDate: new Date(),
+        assignTo: selectedDoctor.value.id,
         isFollowUp
       } })
     }
@@ -82,25 +90,45 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
   }, [keyword, fetchRecord, visitorId])
 
   React.useEffect(() => {
+    
+  }, [fetchRecord, visitorId])
+
+  React.useEffect(() => {
     fetchRecord({
-      url: PUBLIC_API + '/pets/all/patients',
-      method: 'POST',
-      data: {
-        patientId: visitorId
-      }
+      url: PUBLIC_API + '/users?role=3',
+      method: 'GET'
     }).then(resp => {
-      setItems(resp?.data?.rows.map(o => {
+      setDoctors(resp?.data?.rows.map(o => {
         return {
           label: o.name,
           value: o
         }
       }) || [])
+
+      fetchRecord({
+        url: PUBLIC_API + '/pets/all/patients',
+        method: 'POST',
+        data: {
+          patientId: visitorId
+        }
+      }).then(resp => {
+        setItems(resp?.data?.rows.map(o => {
+          return {
+            label: o.name,
+            value: o
+          }
+        }) || [])
+      }).catch(err => {
+        addToast({
+          message: err.response?.data?.message || 'Error occured try again later !'
+        })
+      })
     }).catch(err => {
       addToast({
-        message: err.response.data.message
+        message: err.response?.data?.message || 'Error occured try again later !'
       })
     })
-  }, [fetchRecord, visitorId])
+  }, [])
 
 
   return (
@@ -115,6 +143,14 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
           Create check up
         </CModalHeader>
         <CModalBody>
+          <CFormGroup row>
+            <CCol xs="12">
+              <CLabel className="pt-1" htmlFor="search">Assign Doctor</CLabel>
+            </CCol>
+            <CCol xs="12">
+              <RSelect name="search" value={selectedDoctor} options={doctors} onInputChange={(input) => setDoctorKeyword(input)} onChange={handleDoctorChange}></RSelect>
+            </CCol>
+          </CFormGroup>
           <CFormGroup row>
             <CCol xs="12">
               <CLabel className="pt-1" htmlFor="search">Select Pet</CLabel>

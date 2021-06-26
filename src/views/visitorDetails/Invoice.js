@@ -1,6 +1,6 @@
 import LogoPng from '../../assets/logo/logo.png'
 
-const Invoice = ({ data, patientData, total, isVatIncluded }) => {
+const Invoice = ({ data, patientData = {}, total, isVatIncluded }) => {
   const formatDateString = (str) => {
     const date = new Date(str)
 
@@ -26,9 +26,9 @@ const Invoice = ({ data, patientData, total, isVatIncluded }) => {
       <div className="row mt-5">
         <div className="col-4">
           <h6 className=" border-bottom">Billed To</h6>
-          <p className=" mb-0">{ patientData.address }</p>
-          <p className=" mb-0"><a className="" href={`mailto:${patientData.email}`}>{ patientData.email }</a></p>
-          <p className=" mb-0">{patientData.contact}</p>
+          <p className=" mb-0">{ patientData.address || '' }</p>
+          <p className=" mb-0"><a className="" href={`mailto:${patientData.email || ''}`}>{ patientData.email || '' }</a></p>
+          <p className=" mb-0">{patientData.contact || ''}</p>
         </div>
         <div className="col-8">
           <div className="row d-flex justify-content-end">

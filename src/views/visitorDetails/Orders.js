@@ -79,6 +79,7 @@ const Orders = ({ history, id }) => {
   }, [id, loadData])
 
   const toggleModal = (status, item = null) => {
+    console.log(item)
     setOrderData(item)
     setShow(status)
   }

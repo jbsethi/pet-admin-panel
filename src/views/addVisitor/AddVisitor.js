@@ -66,16 +66,19 @@ const AddVisitor = () => {
       checkUpPrice: +state.doctorsReceipt.fee,
       description: 'Order Receipt For Shopping.',
       followUp: state.doctorsReceipt.isFollowUp,
+      assignTo: state.doctorsReceipt.assignTo || null,
       items: state.receiptItems.filter(item => item.id !== null).map(item => {
         return {
           itemId: item.id,
-          quantity: item.qty
+          quantity: item.qty,
+          discount: item.discount || 0
         }
       }),
       packages: state.receiptItems.filter(item => item.packageId !== null).map(item => {
         return {
           packageId: item.packageId,
-          quantity: item.qty
+          quantity: item.qty,
+          discount: item.discount || 0
         }
       })
     }
