@@ -41,6 +41,7 @@ const fields = [
 const Orders = () => {
   const { role, addToast } = useContext(AppContext)
   const [keyword, setKeyword] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [show, setShow] = useState(false)
   const [orderData, setOrderData] = useState(null)
   const [patientData, setPatientData] = useState({})
@@ -66,11 +67,7 @@ const Orders = () => {
 
   const changeKeyword = (e) => {
     if(e.key === 'Enter') {
-      fetch({
-        params: {
-          search: keyword
-        }
-      })
+      setSearchQuery(keyword)
     } else {
       setKeyword(e.target.value)
     }
@@ -123,25 +120,31 @@ const Orders = () => {
   }
 
   const fetchOrders = () => {
+    const params = {
+      pageNo: currentPage,
+      fromDate: dayRange[0],
+      toDate: dayRange[1],
+    }
+
+    if (searchQuery) {
+      params.search = searchQuery
+    }
+
     fetch({
-      params: {
-        pageNo: currentPage,
-        fromDate: dayRange[0],
-        toDate: dayRange[1]
-      }
+      params
     })
       .then(res => {
         setTotalRecords(res?.data?.count || 0)
         setTotalPages(res?.data?.totalPages || 1)
+        setActivePage(res?.data?.pageNo)
       })
   }
 
   useEffect(() => {
-    console.log(dayRange)
     if (!(filterType === 2 && dayRange.length === 1)) {
       fetchOrders()
     }
-  }, [dayRange, currentPage, fetch])
+  }, [dayRange, currentPage, fetch, searchQuery])
 
   return (
     <>
@@ -209,7 +212,14 @@ const Orders = () => {
                 </div>
 
                 <div className="d-flex" style={{ gap: '30px', justifyContent: 'space-between' }}>
-                <div style={{ paddingBottom: '5px', color: '#1d273e', fontWeight: '600'}}>Total Orders: <span>{totalRecords}</span></div>
+                <div style={{ paddingBottom: '5px', color: '#1d273e', fontWeight: '600'}}>
+                 <span> Total Orders: <span>{totalRecords}</span></span>
+                 {
+                   searchQuery &&
+                  <span style={{ marginLeft: '20px' }}> Search String: <span>{searchQuery}</span></span>
+                 }
+
+                </div>
                 {
                   filterType !== 0 &&
                   dayRange.length !== 0 &&
