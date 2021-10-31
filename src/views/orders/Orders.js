@@ -46,7 +46,7 @@ const Orders = () => {
   const [patientData, setPatientData] = useState({})
   const [totalPages, setTotalPages] = useState(1)
   const [currentPage, setActivePage] = useState(1)
-  const [filterType, setFilterType] = useState(1);
+  const [filterType, setFilterType] = useState(0);
   const [totalRecords, setTotalRecords] = useState(null);
 
   const [dayRange, setDayRange] = useState([]);
@@ -92,6 +92,11 @@ const Orders = () => {
     const date = new Date(e.target.value);
     const range = `${date.getFullYear()}-${('0'+(date.getMonth()+1)).slice(-2)}-${date.getDate()}`
 
+    if (dayRange.length === 0) {
+      setDayRange([range])
+      return;
+    }
+
     if (e.target.name === 'to') {
       if (datesObj.compare(dayRange[0], range) > 0) {
         e.target.value = Date.now();
@@ -127,22 +132,15 @@ const Orders = () => {
     })
       .then(res => {
         setTotalRecords(res?.data?.count || 0)
-      })
-      .catch(err => {
-        console.log(err.response)
+        setTotalPages(res?.data?.totalPages || 1)
       })
   }
 
   useEffect(() => {
-    if (!dayRange.length) {
-      const date = new Date();
-      const fromDate = `${date.getFullYear()}-${('0'+(date.getMonth()+1)).slice(-2)}-${date.getDate()}`
-      setDayRange([fromDate, fromDate]);
+    console.log(dayRange)
+    if (!(filterType === 2 && dayRange.length === 1)) {
+      fetchOrders()
     }
-  }, [dayRange.length])
-
-  useEffect(() => {
-    fetchOrders()
   }, [dayRange, currentPage, fetch])
 
   return (
@@ -178,34 +176,45 @@ const Orders = () => {
                   <CSelect
                     custom
                     name="order"
-                    onChange={(e) => setFilterType(+e.target.value)}
+                    onChange={(e) => {
+                      setDayRange([])
+                      setFilterType(+e.target.value)
+                    }}
                   >
+                    <option value="0">No Filter</option>
                     <option value="1">Filter by Date</option>
                     <option value="2">Filter By Range</option>
                   </CSelect>
                   </div>
                   {
-                    filterType === 1 ?
+                    filterType === 1 &&
+                    <div className="d-flex align-items-center">
+                      <label className="mb-0">Filter by Date: </label>
+                      <input onChange={changeDayFilter} className="ml-2" type="date" />
+                    </div>
+                  }
+                  {
+                    filterType === 2 &&
+                    <div className="d-flex align-items-center">
                       <div className="d-flex align-items-center">
-                        <label className="mb-0">Filter by Date: </label>
-                        <input onChange={changeDayFilter} className="ml-2" type="date" />
-                      </div>:
-                      <div className="d-flex align-items-center">
-                        <div className="d-flex align-items-center">
-                          <label className="mb-0">Filter From: </label>
-                          <input onChange={changeDateRangeFilter} className="ml-2" type="date" name="from"/>
-                        </div>
-                        <div className="d-flex align-items-center ml-3">
-                          <label className="mb-0">Filter To: </label>
-                          <input onChange={changeDateRangeFilter} className="ml-2" type="date" name="to" />
-                        </div>
+                        <label className="mb-0">Filter From: </label>
+                        <input onChange={changeDateRangeFilter} className="ml-2" type="date" name="from"/>
                       </div>
+                      <div className="d-flex align-items-center ml-3">
+                        <label className="mb-0">Filter To: </label>
+                        <input onChange={changeDateRangeFilter} className="ml-2" type="date" name="to" />
+                      </div>
+                    </div>
                   }
                 </div>
 
                 <div className="d-flex" style={{ gap: '30px', justifyContent: 'space-between' }}>
                 <div style={{ paddingBottom: '5px', color: '#1d273e', fontWeight: '600'}}>Total Orders: <span>{totalRecords}</span></div>
-                <div><span style={{ paddingBottom: '5px', color: '#1d273e', fontWeight: '600' }}>Showing results for :</span> <span>{dayRange[0]}</span> { filterType == 2 && <span>: {dayRange[1]}</span>}</div>
+                {
+                  filterType !== 0 &&
+                  dayRange.length !== 0 &&
+                  <div><span style={{ paddingBottom: '5px', color: '#1d273e', fontWeight: '600' }}>Showing results for :</span> <span>{dayRange[0]}</span> { filterType == 2 && <span>: {dayRange[1]}</span>}</div>
+                }
                 </div>
                 </>
               }
