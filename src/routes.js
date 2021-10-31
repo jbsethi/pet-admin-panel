@@ -28,7 +28,7 @@ const routes = [
   { path: '/check-up/:id/:slug/:petId', exact: true, name: 'Details', component: Treatment, roles: ['superman', 'administrator', 'receptionist', 'doctor'] },
   { path: '/pet-types', exact: true, name: 'Pet Types', component: PetTypes, roles: ['superman', 'administrator', 'receptionist'] },
   { path: '/services', exact: true, name: 'Pet Services', component: Services, roles: ['superman', 'administrator', 'receptionist']  },
-  { path: '/orders', exact: true, name: 'Orders', component: Orders, roles: ['superman', 'administrator', 'receptionist']  },
+  { path: '/orders', exact: true, name: 'Orders', component: Orders, roles: ['superman', 'administrator']  },
   { path: '/items', exact: true, name: 'Items', component: Items, roles: ['superman', 'administrator', 'receptionist']  },
   { path: '/packages', exact: true, name: 'Packages', component: Packages, roles: ['superman', 'administrator', 'receptionist']  },
   { path: '/roles', exact: true, name: 'Roles', component: Roles, roles: ['superman'] },

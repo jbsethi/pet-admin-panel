@@ -84,6 +84,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
 
       setCategories(options)
     } catch (err) {
+      if (err.response)
       addToast({
         message: err?.response?.data?.message || 'Error Try again later !'
       })
@@ -137,7 +138,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
       setItems(options2)
     } catch (err) {
       addToast({
-        message: err.response.data.message
+        message: err?.response?.data?.message || 'Error occured. Please try again .'
       })
     }
   }, [fetchRecord, addReceiptRecord?.categoryId?.value])

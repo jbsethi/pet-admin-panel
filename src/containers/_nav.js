@@ -21,7 +21,7 @@ const _nav =  [
     name: 'Orders',
     to: '/orders',
     icon: 'cil-address-book',
-    roles: ['superman', 'administrator', 'receptionist']
+    roles: ['superman', 'administrator']
   },
   {
     _tag: 'CSidebarNavItem',

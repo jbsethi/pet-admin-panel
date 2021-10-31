@@ -102,7 +102,10 @@ const PetTypes = () => {
             <CCardBody>
             <CDataTable
               items={loading ? [] : (error ? [] : data?.rows || [])}
-              fields={fields}
+              fields={fields.filter(field => {
+                if ('actions' == field && role == 'receptionist') return false;
+                return true;
+              })}
               striped
               itemsPerPage={10}
               loading={loading}
@@ -135,10 +138,12 @@ const PetTypes = () => {
                 'actions':
                   (item) => (
                     <td>
-                      <CButton onClick={() => editModal(item.id)} color="primary" size="sm" className="mr-1">Edit</CButton>
                       {
                         role !== 'receptionist' &&
-                        <CButton onClick={() => deleteItem(item.id)} color="danger" size="sm">Delete</CButton>
+                        <>
+                          <CButton onClick={() => editModal(item.id)} color="primary" size="sm" className="mr-1">Edit</CButton>
+                          <CButton onClick={() => deleteItem(item.id)} color="danger" size="sm">Delete</CButton>
+                        </>
                       }
                     </td>
                   )

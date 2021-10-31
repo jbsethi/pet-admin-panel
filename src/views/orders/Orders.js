@@ -8,6 +8,7 @@ import {
   CDataTable,
   CRow,
   CPagination,
+  CSelect,
   CButton
 } from '@coreui/react'
 
@@ -46,7 +47,8 @@ const Orders = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [currentPage, setActivePage] = useState(1)
   const [filterType, setFilterType] = useState(1);
-  
+  const [totalRecords, setTotalRecords] = useState(null);
+
   const [dayRange, setDayRange] = useState([]);
 
   const [{ data, loading }, fetch] = useAxios(
@@ -87,7 +89,6 @@ const Orders = () => {
   }
 
   const changeDateRangeFilter = (e) => {
-
     const date = new Date(e.target.value);
     const range = `${date.getFullYear()}-${('0'+(date.getMonth()+1)).slice(-2)}-${date.getDate()}`
 
@@ -116,6 +117,22 @@ const Orders = () => {
     }
   }
 
+  const fetchOrders = () => {
+    fetch({
+      params: {
+        pageNo: currentPage,
+        fromDate: dayRange[0],
+        toDate: dayRange[1]
+      }
+    })
+      .then(res => {
+        setTotalRecords(res?.data?.count || 0)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+  }
+
   useEffect(() => {
     if (!dayRange.length) {
       const date = new Date();
@@ -125,16 +142,7 @@ const Orders = () => {
   }, [dayRange.length])
 
   useEffect(() => {
-    fetch({
-      params: {
-        pageNo: currentPage,
-        fromDate: dayRange[0],
-        toDate: dayRange[1]
-      }
-    })
-      .catch(err => {
-        console.log(err.response)
-      })
+    fetchOrders()
   }, [dayRange, currentPage, fetch])
 
   return (
@@ -159,8 +167,22 @@ const Orders = () => {
                 </TableHeader>
                 <div className="d-flex justify-content-between pb-3">
                   <div className="d-flex">
-                    <CButton onClick={() => setFilterType(1)} color="primary" variant="outline" size="sm">Filter by Date</CButton>
-                    <CButton onClick={() => setFilterType(2)} className="ml-2" color="info" variant="outline" size="sm">Filter by date Range</CButton>
+                  <div style={{ marginRight: '10px' }}>
+                    <CButton onClick={() => {
+                      setFilterType(1)
+                      const date = new Date();
+                      const fromDate = `${date.getFullYear()}-${('0'+(date.getMonth()+1)).slice(-2)}-${date.getDate()}`
+                      setDayRange([fromDate, fromDate]);
+                    }} style={{ border: '1px solid #d8dbe0' }} >Current</CButton>
+                  </div>
+                  <CSelect
+                    custom
+                    name="order"
+                    onChange={(e) => setFilterType(+e.target.value)}
+                  >
+                    <option value="1">Filter by Date</option>
+                    <option value="2">Filter By Range</option>
+                  </CSelect>
                   </div>
                   {
                     filterType === 1 ?
@@ -180,6 +202,11 @@ const Orders = () => {
                       </div>
                   }
                 </div>
+
+                <div className="d-flex" style={{ gap: '30px', justifyContent: 'space-between' }}>
+                <div style={{ paddingBottom: '5px', color: '#1d273e', fontWeight: '600'}}>Total Orders: <span>{totalRecords}</span></div>
+                <div><span style={{ paddingBottom: '5px', color: '#1d273e', fontWeight: '600' }}>Showing results for :</span> <span>{dayRange[0]}</span> { filterType == 2 && <span>: {dayRange[1]}</span>}</div>
+                </div>
                 </>
               }
               underTableSlot={
@@ -195,7 +222,7 @@ const Orders = () => {
         </CCol>
       </CRow>
 
-      <UpdateOrderModal show={show} setShow={toggleModal} order={orderData} patientData={patientData} />
+      <UpdateOrderModal refetch={fetchOrders} show={show} setShow={toggleModal} order={orderData} patientData={patientData} />
     </>
   )
 }

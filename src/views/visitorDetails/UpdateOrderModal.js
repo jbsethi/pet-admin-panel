@@ -62,6 +62,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
         price: payload.itemId?.price || payload.packageId?.price,
         qty: payload.quantity,
         total: payload.quantity * (payload.itemId?.price || payload.packageId?.price),
+        discount: payload.discount || 0,
         isLocked: false
       }
 
@@ -72,7 +73,6 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
       setItems((oldItems) => oldItems.filter(i => i.idx !== payload))
       setTotal((oldPrice => (oldPrice - price)))
     } else if (type === 'updateReceipt') {
-      console.log('[debug]', order)
       const data = {
         patientId: order.patientId,
         appointment: +order.appointment === 1,
@@ -83,13 +83,15 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
         items: items.filter(item => item.itemId).map(item => {
           return {
             itemId: item.itemId,
-            quantity: item.quantity || item.qty
+            quantity: item.quantity || item.qty,
+            discount: item.discount || 0
           }
         }),
         packages: items.filter(item => item.packageId).map(item => {
           return {
             packageId: item.packageId,
-            quantity: item.quantity || item.qty
+            quantity: item.quantity || item.qty,
+            discount: item.discount || 0
           }
         })
       }
@@ -102,7 +104,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
         setShow(false)
       }).catch(err => {
         addToast({
-          message: err.response.data.message
+          message: err?.response?.data?.message || 'Error occured please try again later !'
         })
       })
     }
@@ -117,7 +119,8 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
           name: item.Item.name,
           category: item.Item.Service.name,
           qty: item.quantity,
-          total: item.quantity * item.price,
+          price: item.itemPrice || item.price / item.quantity,
+          total: item.price,
           isLocked: true
         }
       })
@@ -128,7 +131,8 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
           name: item.Package.name,
           category: item.Package.Service.name,
           qty: item.quantity,
-          total: item.quantity * item.price,
+          price: item.itemPrice || item.price / item.quantity,
+          total: item.price,
           isLocked: true
         }
       })
@@ -167,10 +171,10 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
           overTableSlot={
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <strong>Checkup Price: <span className="text-primary">{checkUpPrice || 0} AED</span></strong> 
+                <strong>Checkup Price: <span className="text-primary">{checkUpPrice || 0} AED</span></strong>
               </div>
               <div>
-                <strong>Total Bill : <span className="text-primary">{total || 0} AED</span></strong> 
+                <strong>Total Bill : <span className="text-primary">{total || 0} AED</span></strong>
               </div>
               <div className="text-right">
                 <CButton
