@@ -222,7 +222,7 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
         </CFormGroup>
         <CFormGroup row>
           <CCol>
-            <CLabel className="pt-2" htmlFor="text-qty">Discount</CLabel>
+            <CLabel className="pt-2" htmlFor="text-qty">Discount ( % )</CLabel>
           </CCol>
           <CCol xs="12">
             <CInput value={addReceiptRecord.discount} id="text-qty" name="discount" placeholder="Enter discount" type="number" onChange={handleChange} />

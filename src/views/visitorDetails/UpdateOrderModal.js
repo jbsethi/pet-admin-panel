@@ -29,10 +29,11 @@ const receiptTableFields = [
   'category',
   'price',
   'qty',
+  'discount',
   'total',
 ]
 
-const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
+const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableUpdate }) => {
   const { addToast } = React.useContext(AppContext)
   const componentRef = useRef();
   const [showAddItem, setShowAddItem] = React.useState(false)
@@ -53,20 +54,38 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
 
   const handleAction = ({ type, payload }) => {
     if (type === 'addItemInReceipt') {
+      const price = (payload.itemId?.price || payload.packageId?.price);
+      const discountedPrice = price - (price * (payload.discount || 0)) / 100
+
       const item = {
         idx: `n-${items.length}`,
         itemId: payload.itemId?.value || null,
         packageId: payload.packageId?.value || null,
         name: payload.itemId?.label || payload.packageId?.label,
         category: payload.categoryId.label,
-        price: payload.itemId?.price || payload.packageId?.price,
+        price: discountedPrice,
         qty: payload.quantity,
-        total: payload.quantity * (payload.itemId?.price || payload.packageId?.price),
+        total: payload.quantity * discountedPrice,
         discount: payload.discount || 0,
         isLocked: false
       }
 
-      setItems((oldItems) => [...oldItems, item])
+      setItems((oldItems) => {
+        let isUpdate = false;
+
+        const newList = oldItems.map(oldItem => {
+          if (!oldItem.id && oldItem.itemId === item.itemId) {
+            oldItem.qty += item.qty
+            isUpdate = true;
+          }
+
+          return oldItem;
+        })
+
+        if (isUpdate) return newList
+
+        return [...oldItems, item]
+      })
       setTotal((oldPrice => (oldPrice + item.total)))
     } else if (type === 'removeItem') {
       const price = items.find(i => i.idx === payload)?.price || 0
@@ -74,20 +93,14 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
       setTotal((oldPrice => (oldPrice - price)))
     } else if (type === 'updateReceipt') {
       const data = {
-        patientId: order.patientId,
-        appointment: +order.appointment === 1,
-        checkUpPrice: order.checkUpPrice,
-        description: order.description,
-        followUp: order.followUp,
-        assignTo: order.assignTo,
-        items: items.filter(item => item.itemId).map(item => {
+        items: items.filter(item => (item.itemId && !item.id)).map(item => {
           return {
             itemId: item.itemId,
             quantity: item.quantity || item.qty,
             discount: item.discount || 0
           }
         }),
-        packages: items.filter(item => item.packageId).map(item => {
+        packages: items.filter(item => (item.packageId && !item.id)).map(item => {
           return {
             packageId: item.packageId,
             quantity: item.quantity || item.qty,
@@ -176,17 +189,20 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
               <div>
                 <strong>Total Bill : <span className="text-primary">{total || 0} AED</span></strong>
               </div>
-              <div className="text-right">
-                <CButton
-                  size="sm"
-                  color="primary"
-                  variant="outline"
-                  className="m-2 pl-3 pr-4"
-                  onClick={() => setShowAddItem(true)}
-                >
-                    <span className="ml-1">Add Item</span>
-                </CButton>
-              </div>
+              {
+                !disableUpdate &&
+                <div className="text-right">
+                  <CButton
+                    size="sm"
+                    color="primary"
+                    variant="outline"
+                    className="m-2 pl-3 pr-4"
+                    onClick={() => setShowAddItem(true)}
+                  >
+                      <span className="ml-1">Add Item</span>
+                  </CButton>
+                </div>
+              }
             </div>
           }
           scopedSlots={{
@@ -225,7 +241,10 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch }) => {
         </div>
         <div>
         <CButton className="mr-1" size="sm" color="danger" onClick={() => setShow(false)}>Cancel</CButton>
-        <CButton size="sm" color="primary" onClick={() => handleAction({ type: 'updateReceipt' })}>Update</CButton>
+        {
+          !disableUpdate &&
+          <CButton size="sm" color="primary" onClick={() => handleAction({ type: 'updateReceipt' })}>Update</CButton>
+        }
         </div>
       </CModalFooter>
       <div className={style.printable} ref={componentRef}>

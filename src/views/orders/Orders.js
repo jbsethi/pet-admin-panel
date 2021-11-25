@@ -179,6 +179,7 @@ const Orders = () => {
                   <CSelect
                     custom
                     name="order"
+                    value={filterType}
                     onChange={(e) => {
                       setDayRange([])
                       setFilterType(+e.target.value)
@@ -188,6 +189,14 @@ const Orders = () => {
                     <option value="1">Filter by Date</option>
                     <option value="2">Filter By Range</option>
                   </CSelect>
+                  <div style={{ marginLeft: '10px' }}>
+                  <CButton color="danger" onClick={() => {
+                      setFilterType(0)
+                      setKeyword('')
+                      setSearchQuery('')
+                      setDayRange([]);
+                    }} style={{ border: '1px solid #d8dbe0' }} >Clear</CButton>
+                  </div>
                   </div>
                   {
                     filterType === 1 &&
@@ -241,7 +250,7 @@ const Orders = () => {
         </CCol>
       </CRow>
 
-      <UpdateOrderModal refetch={fetchOrders} show={show} setShow={toggleModal} order={orderData} patientData={patientData} />
+      <UpdateOrderModal disableUpdate={true} refetch={fetchOrders} show={show} setShow={toggleModal} order={orderData} patientData={patientData} />
     </>
   )
 }
