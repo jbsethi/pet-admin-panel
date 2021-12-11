@@ -65,6 +65,15 @@ const Orders = () => {
     }
   )
 
+  const [_, loadOrderDetails] = useAxios(
+    {
+      method: 'GET',
+    },
+    {
+      manual: true
+    }
+  )
+
   const changeKeyword = (e) => {
     if(e.key === 'Enter') {
       setSearchQuery(keyword)
@@ -73,8 +82,17 @@ const Orders = () => {
     }
   }
 
-  const toggleModal = (status, item = null) => {
-    setOrderData(item)
+  const toggleModal = async (status, item = null) => {
+    if (!!item) {
+      const { data } = await loadOrderDetails({
+        url: PUBLIC_API + 'orders/' + item.id,
+      })
+
+      setOrderData(data)
+    } else {
+      setOrderData(null)
+    }
+
     setShow(status)
   }
 
