@@ -14,6 +14,7 @@ import {
   CDataTable,
   CRow,
   CButton,
+  CPagination,
 } from '@coreui/react'
 
 import { AppContext } from '../../App.js'
@@ -31,6 +32,8 @@ const fields = [
 const Visitors = () => {
   const { role, addToast } = React.useContext(AppContext)
   const [keyword, setKeyword] = React.useState('')
+  const [searchString, setSearchString] = React.useState(undefined)
+  const [pageNo, setPageNo] = React.useState(1)
 
   const history = useHistory()
 
@@ -48,25 +51,45 @@ const Visitors = () => {
     }
   )
 
+  const updatePageNo = (no) => {
+    setPageNo(no)
+  }
+
   const changeKeyword = (e) => {
     if(e.key === 'Enter') {
-      fetch({
-        params: {
-          search: keyword
-        }
-      }).catch(err => {
-        addToast({
-          message: err.response.data.message
-        })
-      })
+      setSearchString(keyword)
     } else {
       setKeyword(e.target.value)
     }
   }
 
   React.useEffect(() => {
-    fetch()
-  }, [fetch])
+    if (typeof searchString != 'undefined') {
+      fetch({
+        params: {
+          search: searchString,
+          pageNo: 1
+        }
+      }).catch(err => {
+        addToast({
+          message: err?.response?.data?.message
+        })
+      })
+    }
+  }, [fetch, searchString])
+
+  React.useEffect(() => {
+    fetch({
+      params: {
+        search: searchString,
+        pageNo: pageNo
+      }
+    }).catch(err => {
+      addToast({
+        message: err?.response?.data?.message
+      })
+    })
+  }, [fetch, pageNo])
 
   return (
     <>
@@ -81,7 +104,7 @@ const Visitors = () => {
               items={loading ? [] : (error ? [] : data?.rows || [])}
               fields={fields}
               striped
-              itemsPerPage={5}
+              itemsPerPage={data?.pageSize || 10}
               pagination
               loading={loading}
               onRowClick={(item) => history.push(`/visitors/${item.id}/details`)}
@@ -105,6 +128,13 @@ const Visitors = () => {
                       <span className="ml-1">Add Visit</span>
                     </CButton>
                 </TableHeader>
+              }
+              underTableSlot={
+                <CPagination
+                  activePage={data?.pageNo || 1}
+                  pages={data?.totalPages || 1}
+                  onActivePageChange={(i) => updatePageNo(i)}
+                ></CPagination>
               }
             />
             </CCardBody>
