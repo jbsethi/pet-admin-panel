@@ -68,7 +68,7 @@ const PetHistory = ({ match }) => {
       setHistoryData(null)
     }
   }
-  
+
   React.useEffect(() => {
     fetch({
       data: {
@@ -97,11 +97,17 @@ const PetHistory = ({ match }) => {
       <CCardBody className="p-0">
         <CDataTable
           loading={loading}
-          fields={['statement', 'description', 'createdAt']}
+          fields={['statement', 'description', 'doctor', 'createdAt']}
           items={items}
           onRowClick={(item) => viewDetails(item)}
           striped
           scopedSlots = {{
+            'doctor':
+              (item) => (
+                <td>
+                  { item?.Order?.AssignTo?.name || 'N/A' }
+                </td>
+              ),
             'createdAt':
               (item) => (
                 <td>

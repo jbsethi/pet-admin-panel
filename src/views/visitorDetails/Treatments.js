@@ -61,7 +61,9 @@ const Treatment = ({ match }) => {
               {
                 loading ?
                 <p className="pt-3 text-center">Loading ...</p> :
-                <PetTabs pets={items} ></PetTabs>
+                items?.length > 0 ?
+                  <PetTabs pets={items} ></PetTabs> :
+                  <p className='text-center py-5'>No Pets Found</p>
               }
             </CCardBody>
           </CCard>

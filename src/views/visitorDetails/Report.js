@@ -39,7 +39,7 @@ const Report = ({ data }) => {
             <td><b>Owner Contact</b></td>
             <td>{ data.patientRecord.contact }</td>
             {
-              data.petRecord.age ? 
+              data.petRecord.age ?
               (
                 <>
                   <td><b>Pet Age</b></td>
@@ -54,7 +54,7 @@ const Report = ({ data }) => {
               )
 
             }
-            
+
           </tr>
           <tr>
             <td><b>Owner ID</b></td>
@@ -80,6 +80,7 @@ const Report = ({ data }) => {
         <thead>
           <tr>
             <th>Date</th>
+            <th>Doctor</th>
             <th>Statement</th>
             <th>Prescription</th>
             <th>Recomendations</th>
@@ -91,6 +92,7 @@ const Report = ({ data }) => {
               data.data.map((r, i) => {
                 return <tr key={i}>
                   <td>{formatDate(r.createdAt)}</td>
+                  <td>{r?.Order?.AssignTo?.name || 'N/A'}</td>
                   <td>{r.statement}</td>
                   <td>{r.prescription}</td>
                   <td>{

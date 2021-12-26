@@ -26,12 +26,12 @@ const DoctorReceipt = ({ doctorsReceipt }) => {
       </CRow>
       <CRow className="my-2">
         <CCol md="4" className="font-weight-bold">Doctor's Name</CCol>
-        <CCol>--</CCol>
+        <CCol>{ doctorsReceipt.assignedDoctor }</CCol>
       </CRow>
       <CRow className="my-2">
         <CCol md="4" className="font-weight-bold">Is Follow Up ?</CCol>
         <CCol>{
-          doctorsReceipt.isFollowUp ? 'Yes' : 'No'  
+          doctorsReceipt.isFollowUp ? 'Yes' : 'No'
         }</CCol>
       </CRow>
       <CRow className="my-2">

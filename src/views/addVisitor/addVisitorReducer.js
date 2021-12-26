@@ -5,7 +5,7 @@ const addVisitorReducer = (state, { type, payload }) => {
         ...state,
         keyword: payload
       }
-    case 'setItems': 
+    case 'setItems':
       return {
         ...state,
         items: payload
@@ -30,7 +30,7 @@ const addVisitorReducer = (state, { type, payload }) => {
         ...state,
         visitorRecord: {
           ...state.visitorRecord,
-          [payload.target.name]: payload.target.value 
+          [payload.target.name]: payload.target.value
         }
       }
     case 'setReceiptFormVisibility':
@@ -76,7 +76,7 @@ const addVisitorReducer = (state, { type, payload }) => {
           discount: payload.discount || 0,
           total: payload.quantity * (payload.itemId?.price || payload.packageId?.price)
         }
-  
+
         return {
           ...state,
           receiptItems: [...state.receiptItems, item]
@@ -115,7 +115,8 @@ const addVisitorReducer = (state, { type, payload }) => {
         fee: payload.fee,
         appointmentDate: payload.appointmentDate,
         isFollowUp: payload.isFollowUp,
-        assignTo: payload.assignTo
+        assignTo: payload.assignTo,
+        assignedDoctor: payload.assignedDoctor,
       }
 
       return {
@@ -151,7 +152,7 @@ const addVisitorReducer = (state, { type, payload }) => {
           isFollowUp: false
         }
       }
-    default: 
+    default:
       return state
   }
 }

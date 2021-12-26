@@ -8,6 +8,8 @@ import CIcon from '@coreui/icons-react'
 
 import "react-datepicker/dist/react-datepicker.css";
 
+import { dateFormat } from 'src/utils/dateUtils'
+
 const DatePicker = lazy(() => import('react-datepicker'))
 const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
 const ReportsDropdown = lazy(() => import('../widgets/ReportsDropdown.js'))
@@ -208,9 +210,18 @@ const Dashboard = () => {
     const [startDate, endDate] = dateRange;
 
     const data = {
-      fromDate: startDate,
-      toDate: endDate ? endDate : startDate
+      fromDate: dateFormat(startDate),
+      toDate: dateFormat(endDate ? endDate : startDate)
     };
+
+    if (filterType == '1') {
+      const date = new Date(startDate)
+      const start = new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0)
+      const end = new Date(date.getFullYear(), date.getMonth() + 1, 0, 0, 0, 0)
+
+      data.fromDate = dateFormat(start)
+      data.toDate = dateFormat(end)
+    }
 
     filterReport(data)
   }, [dateRange, filterReport])

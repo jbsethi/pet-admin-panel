@@ -12,7 +12,7 @@ import {
   CButton
 } from '@coreui/react'
 
-import { datesObj } from 'src/utils/dateUtils'
+import { datesObj, formatDate } from 'src/utils/dateUtils'
 
 
 import { PUBLIC_API } from '../../config/index'
@@ -24,6 +24,10 @@ import UpdateOrderModal from '../visitorDetails/UpdateOrderModal'
 
 const fields = [
   'id',
+  {
+    key: 'visitorName',
+    label: 'Visitor\'s Name',
+  },
   {
     key: 'createdAt',
     label: 'Registered'
@@ -255,6 +259,19 @@ const Orders = () => {
                 </div>
                 </>
               }
+              scopedSlots={{
+                'createdAt': (item) => (
+                  <td>
+                    {formatDate(item.createdAt)}
+                  </td>
+                ),
+
+                'visitorName': (item) => (
+                  <td>
+                    {item?.Patient?.name || '---'}
+                  </td>
+                )
+              }}
               underTableSlot={
                 <CPagination
                   activePage={currentPage}

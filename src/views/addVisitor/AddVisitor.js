@@ -42,6 +42,26 @@ const AddVisitor = () => {
     { manual: true }
   )
 
+  const addVisit = async (e = null, patientId = null) => {
+    try {
+      if (!!e) e.preventDefault()
+
+      const visitorId = !!patientId ? patientId : state.visitorsId
+
+      await fetchRecord({
+        url : PUBLIC_API + '/patients/' + visitorId + '/visit',
+        method: 'POST'
+      })
+    } catch (_) {
+      console.log(_)
+      addToast({
+        message: 'Couldn\'t store users visit.'
+      })
+    } finally {
+      return Promise.resolve('Visits')
+    }
+  }
+
   const createNewVisitor = () => {
     fetchRecord({
       url: PUBLIC_API + '/patients',
@@ -49,7 +69,10 @@ const AddVisitor = () => {
       data: {
         ...state.visitorRecord
       }
-    }).then(resp => {
+    }).then(async (resp) => {
+
+      await addVisit(null, resp.data.id)
+
       dispatch({ type: 'setVisitorsId', payload: resp.data.id })
       dispatch({ type: 'setIsVisitorRecordAdded', payload: true })
     }).catch(err => {
@@ -142,6 +165,12 @@ const AddVisitor = () => {
     }
   }, [state.keyword, fetchRecord])
 
+  const addUserVisit = (
+    <div className='d-flex justify-content-end'>
+      <CButton onClick={(e) => addVisit(e)} color='primary'>Add A Visit</CButton>
+    </div>
+  )
+
   return (
     <>
       <CRow>
@@ -162,11 +191,15 @@ const AddVisitor = () => {
               </CFormGroup>
               <CCard>
                 <CCardBody>
-                  <NewVisitorsForm 
+                  <NewVisitorsForm
                     isVisitorRecordAdded={state.isVisitorRecordAdded}
                     visitorRecord={state.visitorRecord}
                     dispatch={dispatch}
                   />
+
+                  {
+                    state.isVisitorRecordAdded && addUserVisit
+                  }
                 </CCardBody>
               </CCard>
 

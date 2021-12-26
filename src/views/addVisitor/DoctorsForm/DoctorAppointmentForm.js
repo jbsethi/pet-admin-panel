@@ -36,7 +36,7 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
   const [showAddAppointmentModal, setShowAddAppointmentModal] = React.useState(false)
   const [showNewPetModal, setShowNewPetModal] = React.useState(false)
 
-  
+
 
   const [keyword, setKeyword] = React.useState('')
   const [doctorKeyword, setDoctorKeyword] = React.useState('')
@@ -66,7 +66,8 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
         pet: selectedPet,
         fee: +fee === 0 ? '0' : fee,
         appointmentDate: new Date(),
-        assignTo: selectedDoctor.value.id,
+        assignTo: selectedDoctor?.value?.id,
+        assignedDoctor: selectedDoctor?.value?.name,
         isFollowUp
       } })
     }
@@ -90,7 +91,7 @@ const DoctorAppointmentForm = ({ visitorId, dispatch }) => {
   }, [keyword, fetchRecord, visitorId])
 
   React.useEffect(() => {
-    
+
   }, [fetchRecord, visitorId])
 
   React.useEffect(() => {

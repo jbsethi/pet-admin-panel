@@ -177,7 +177,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
       <CModalHeader>Shopping, Grooming and others</CModalHeader>
       <CModalBody>
         <CDataTable
-          fields={receiptTableFields}
+          fields={receiptTableFields.filter(field => !disableUpdate || field.key !== 'actions')}
           items={items || []}
           footer
           hover

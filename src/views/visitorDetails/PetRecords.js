@@ -1,15 +1,20 @@
-import { CCard, CCardBody, CCardHeader, CRow, CCol, CDataTable, CFormGroup, CLabel, CInput, CSwitch } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CRow, CCol, CDataTable, CFormGroup, CLabel, CInput, CSwitch, CButton } from '@coreui/react'
 
 import React from 'react'
 import useAxios from 'axios-hooks'
 
 import { PUBLIC_API } from '../../config/index'
+import CIcon from '@coreui/icons-react'
 
 const fields = [
   'id',
   'name',
   'color',
-  'specie'
+  'specie',
+  {
+    key: 'remove',
+    label: ''
+  }
 ]
 
 const PetRecords = ({ id }) => {
@@ -24,8 +29,32 @@ const PetRecords = ({ id }) => {
     }
   )
 
+  const [deleteResponse, deletePet] = useAxios({
+    method: 'DELETE',
+  }, {
+    manual: true
+  })
+
   const showPetDetails = (pet) => {
     setPetRecord(pet)
+  }
+
+  const removePet = async (e, petId) => {
+    e.stopPropagation()
+
+    await deletePet({
+      url: PUBLIC_API + 'pets/' + petId
+    })
+
+    if (petRecord?.id == petId) showPetDetails(null)
+
+    if (id) {
+      fetch({
+        data: {
+          patientId: id
+        }
+      })
+    }
   }
 
   React.useEffect(() => {
@@ -59,6 +88,15 @@ const PetRecords = ({ id }) => {
                     pagination
                     loading={loading}
                     onRowClick={(item) => showPetDetails(item)}
+                    scopedSlots={{
+                      'remove': (item) => (
+                        <td>
+                          <CButton onClick={(e) => removePet(e, item.id)} color='danger' size='sm' style={{ color: '#fff' }}>
+                            <CIcon name="cil-trash" size="sm" />
+                          </CButton>
+                        </td>
+                      )
+                    }}
                     overTableSlot={
                       <p>All Pets</p>
                     }
@@ -140,7 +178,7 @@ const PetRecords = ({ id }) => {
                   </CCardBody>
                 </CCard>
               </CCol>
-            }   
+            }
           </CRow>
         </CCardBody>
       </CCard>

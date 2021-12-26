@@ -12,6 +12,7 @@ import {
   CCol,
   CDataTable,
   CRow,
+  CPagination,
 } from '@coreui/react'
 
 
@@ -28,8 +29,9 @@ const fields = [
 const Visitors = ({ match }) => {
   const history = useHistory()
   const [items, setItems] = React.useState([])
+  const [pageNo, setPageNo] = React.useState(1)
 
-  const [{ loading }, fetch] = useAxios(
+  const [{ data, loading }, fetch] = useAxios(
     {
       url: PUBLIC_API + '/orders',
       method: 'GET',
@@ -39,22 +41,28 @@ const Visitors = ({ match }) => {
     }
   )
 
+  const updatePageNo = (no) => {
+    setPageNo(no)
+  }
+
   React.useEffect(() => {
     fetch({
       params: {
         appointment: 1,
-        checkUp: false
+        checkUp: false,
+        pageNo: pageNo
       }
     }).then(resp => {
       setItems(resp.data.rows.map(row => {
         return {
           orderId: row.id,
+          createdAt: row.createdAt,
           ...row.Patient
         }
       }))
     })
-  }, [fetch, match.params.id])
-  
+  }, [fetch, match.params.id, pageNo])
+
 
   return (
     <>
@@ -69,18 +77,24 @@ const Visitors = ({ match }) => {
               items={loading ? [] : items}
               fields={fields}
               striped
-              itemsPerPage={5}
+              itemsPerPage={data?.pageSize || 10}
               pagination
               loading={loading}
               onRowClick={(item) => history.push(`/check-up/${item.id}/treatment-${item.orderId}`)}
               scopedSlots={{
-                'createdAt':
-                  (item) => (
-                    <td>
-                      {formatDate(item.createdAt)}
-                    </td>
-                  )
+                'createdAt': (item) => (
+                  <td>
+                    {formatDate(item.createdAt)}
+                  </td>
+                )
               }}
+              underTableSlot={
+                <CPagination
+                  activePage={data?.pageNo || 1}
+                  pages={data?.totalPages || 1}
+                  onActivePageChange={(i) => updatePageNo(i)}
+                ></CPagination>
+              }
             />
             </CCardBody>
           </CCard>
