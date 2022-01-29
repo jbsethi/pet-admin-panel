@@ -59,6 +59,7 @@ const Invoice = ({ data, patientData = {}, total, isVatIncluded }) => {
                 <th className="text-center">Quantity</th>
                 <th className="text-center">Category</th>
                 <th className="text-center">Unit Price</th>
+                <th className="text-center">Discount</th>
                 <th className="text-center">Total</th>
               </tr>
             </thead>
@@ -70,6 +71,7 @@ const Invoice = ({ data, patientData = {}, total, isVatIncluded }) => {
                   <td>{'1'}</td>
                   <td>{'Doctor\'s Fee'}</td>
                   <td>{data.checkUpPrice}</td>
+                  <td>--</td>
                   <td>{data.checkUpPrice}</td>
                 </tr>
               }
@@ -81,7 +83,8 @@ const Invoice = ({ data, patientData = {}, total, isVatIncluded }) => {
                       <td>{item.quantity}</td>
                       <td>{item.Item?.Service.name}</td>
                       <td>{item.Item?.price}</td>
-                      <td>{item.Item.price * item.quantity}</td>
+                      <td>{item?.discount ? item?.discount + '%' : '--'}</td>
+                      <td>{(item.Item.price*(100-(item?.discount || 0))/100) * item.quantity}</td>
                     </tr>
                   )
                 })
@@ -94,7 +97,8 @@ const Invoice = ({ data, patientData = {}, total, isVatIncluded }) => {
                       <td>{item.quantity}</td>
                       <td>{item.Package?.Service.name}</td>
                       <td>{item.Package?.price}</td>
-                      <td>{item.Package?.price * item.quantity}</td>
+                      <td>{item?.discount ? item?.discount + '%' : '--'}</td>
+                      <td>{(item.Package?.price*(100-(item?.discount || 0))/100) * item.quantity}</td>
                     </tr>
                   )
                 })

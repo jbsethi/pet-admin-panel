@@ -16,6 +16,8 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
   const [orderData, setOrderData] = React.useState(null)
   const [selectedRecomendation, setSelectedRecomendation] = React.useState([])
   const [treatments, setTreatments] = React.useState([])
+  const [recommendations, setRecommendations] = React.useState([])
+  const [disabled, setEditMode] = React.useState(details ? false: true);
 
   const [, fetch] = useAxios(
     {
@@ -86,10 +88,50 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
     })
   }
 
+  const editTreatment = () => {
+    if (disabled) setEditMode(false);
+    else addNewPrescription()
+  }
+
+  const addNewRecommendation = () => {
+    setRecommendations((oldState) => {
+      return [...oldState, {
+        serviceId: ''
+      }]
+    })
+  }
+
+  const addNewPrescription = () => {
+    if (!disabled) {
+      let followUp = treatmentRecord?.followUp || null
+
+      const data = {
+        ...treatmentRecord,
+        orderId: details.orderId,
+        petId: details.petId,
+        followUp ,
+        recomendations: selectedRecomendation.map(r => r.value)
+      }
+
+      fetch({
+        url: PUBLIC_API + '/treatments/' + details.id,
+        method: 'PUT',
+        data
+      }).then(resp => {
+        setShow(false)
+        refetch()
+      }).catch((err) => {
+        addToast({
+          message: err?.response?.data?.message || 'Error Occured ! Try again later'
+        })
+      })
+    }
+  }
+
   const loadInitialData = React.useCallback(async () => {
     setLoadingDetails(true)
     if (show && details) {
-      
+
       const resp = await fetch({
         url: PUBLIC_API + `/orders/${details.orderId}`,
         method: 'GET'
@@ -134,25 +176,26 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
   }, [treatments, show, details])
 
   React.useEffect(() => {
-    
+
     loadInitialData()
 
     return () => {
       setOrderData(null)
       setSelectedRecomendation([])
+      setEditMode(true);
     }
   }, [loadInitialData])
 
-  const recommendationElem = selectedRecomendation.map((r, i) => {
+  const recommendationElem = [...selectedRecomendation, ...recommendations].map((r, i) => {
     return (
       <CRow key={i} className="align-items-center px-3 py-2">
         <CCol md="1">{i+1}</CCol>
         <CCol>
-          <RSelect disabled={details} options={treatments} value={selectedRecomendation[i]} onChange={(option) => handleSelectChange(option, i)}></RSelect>
+          <RSelect disabled={disabled} options={treatments} value={selectedRecomendation[i]} onChange={(option) => handleSelectChange(option, i)}></RSelect>
         </CCol>
         <CCol md="2">
           {
-            details && !selectedRecomendation[i].isAdded && role !== 'doctor' &&
+            disabled && !selectedRecomendation[i].isAdded && role !== 'doctor' &&
             <CButton color="primary" size="sm" onClick={() => addServiceToReceipt(selectedRecomendation[i])}>Add</CButton>
           }
         </CCol>
@@ -176,17 +219,21 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
         <>
         <CFormGroup>
           <CLabel htmlFor="Statement">Statement</CLabel>
-          <CInput disabled={details} value={treatmentRecord.statement} name="statement" onChange={handleChange} id="statement" placeholder="Enter Statement" />
+          <CInput disabled={disabled} value={treatmentRecord.statement} name="statement" onChange={handleChange} id="statement" placeholder="Enter Statement" />
         </CFormGroup>
         <CFormGroup>
           <CLabel htmlFor="prescription">Prescription</CLabel>
-          <CInput disabled={details} value={treatmentRecord.prescription} name="prescription" onChange={handleChange} id="prescription" placeholder="Enter Prescription" />
+          <CInput disabled={disabled} value={treatmentRecord.prescription} name="prescription" onChange={handleChange} id="prescription" placeholder="Enter Prescription" />
         </CFormGroup>
         {
-          recommendationElem.length > 0 &&
+          (recommendationElem.length > 0 || !disabled) &&
           <CFormGroup className="py-3 m-0">
             <CRow className="px-3 justify-content-between align-items-center">
               <CLabel htmlFor="recomendation">Recomendation</CLabel>
+              {
+                !disabled &&
+                <CButton onClick={addNewRecommendation} size="sm" color="primary">Add Recommendation</CButton>
+              }
             </CRow>
             <section className="py-2">
               {recommendationElem}
@@ -196,18 +243,18 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
 
         <CFormGroup>
           <CLabel htmlFor="description">Description</CLabel>
-          <CTextarea 
-            disabled={details}
+          <CTextarea
+            disabled={disabled}
             value={treatmentRecord.description}
             onChange={handleChange}
             name="description"
-            id="description" 
+            id="description"
             placeholder="Enter Description"
           />
         </CFormGroup>
         <CFormGroup>
           <CLabel htmlFor="followUp">Follow up ?</CLabel>
-          <CInput disabled={details} type="number" value={treatmentRecord.followUp} name="followUp" onChange={handleChange} id="followUp" placeholder="Enter follow Up day" />
+          <CInput disabled={disabled} type="number" value={treatmentRecord.followUp} name="followUp" onChange={handleChange} id="followUp" placeholder="Enter follow Up day" />
         </CFormGroup>
         </>
         )
@@ -223,6 +270,14 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
               orderId: details.orderId
             }
           })}>View Invoice</CButton>
+        }
+        {
+          (role === 'admin' || role === 'superman') &&
+          <CButton
+            onClick={editTreatment}
+          >
+            Edit Treatment
+          </CButton>
         }
       </CModalFooter>
     </CModal>

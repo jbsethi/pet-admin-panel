@@ -69,7 +69,7 @@ const PetHistory = ({ match }) => {
     }
   }
 
-  React.useEffect(() => {
+  const init = React.useCallback(() => {
     fetch({
       data: {
         petId: match.params.petId
@@ -80,6 +80,10 @@ const PetHistory = ({ match }) => {
       setPrintRecord(resp?.data?.rows || [])
     })
   }, [fetch, match.params.petId])
+
+  React.useEffect(() => {
+    init()
+  }, [fetch, match.params.petId, init])
 
   return (
     <CCard>
@@ -118,7 +122,7 @@ const PetHistory = ({ match }) => {
         ></CDataTable>
       </CCardBody>
 
-      <NewPrescription  show={show} setShow={toggleModal} details={details}/>
+      <NewPrescription  show={show} setShow={toggleModal} details={details} refetch={init}/>
 
       <div className={style.printable} ref={componentRef}>
         <Report data={historyData} />

@@ -63,7 +63,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
         packageId: payload.packageId?.value || null,
         name: payload.itemId?.label || payload.packageId?.label,
         category: payload.categoryId.label,
-        price: discountedPrice,
+        price: price,
         qty: payload.quantity,
         total: payload.quantity * discountedPrice,
         discount: payload.discount || 0,
