@@ -1,6 +1,6 @@
 import LogoPng from '../../assets/logo/logo.png'
 
-const Invoice = ({ data, patientData = {}, total, isVatIncluded }) => {
+const Invoice = ({ data, patientData = {}, total, vatPercentage, isVatIncluded }) => {
   const formatDateString = (str) => {
     const date = new Date(str)
 
@@ -123,7 +123,7 @@ const Invoice = ({ data, patientData = {}, total, isVatIncluded }) => {
                 isVatIncluded &&
                 <div className="row">
                   <div className="col-8"><h6 className="text-right text-uppercase">Vat :</h6></div>
-                  <div className="col-4"><p className="text-right mb-0 border-bottom">5%</p></div>
+                  <div className="col-4"><p className="text-right mb-0 border-bottom">{vatPercentage}%</p></div>
                 </div>
               }
               <div className="row">

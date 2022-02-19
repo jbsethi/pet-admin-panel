@@ -30,7 +30,9 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
     discount: 0
   })
 
+  const [petType, setPetType] = React.useState(undefined)
   const [categories, setCategories] = React.useState([])
+  const [petTypes, setPetTypes] = React.useState([])
   const [items, setItems] = React.useState([])
   const [packages, setPackages] = React.useState([])
 
@@ -44,6 +46,29 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
     },
     { manual: true }
   )
+
+  const petTypeSet = async (e) => {
+    setPetType(e.option)
+
+    const record2 = await fetchRecord({
+      url: PUBLIC_API + '/items/records/active',
+      method: 'GET',
+      params: {
+        serviceId: addReceiptRecord.categoryId?.value || null,
+        petTypeId: e.option.value
+      }
+    })
+
+    const options2 = (record2?.data || []).map(item => {
+      return {
+        label: item.name,
+        value: item.id,
+        price: item.price
+      }
+    })
+
+    setItems(options2)
+  }
 
   const handleChange = (e) => {
     if (e.isSelect) {
@@ -118,6 +143,20 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
       })
 
       setPackages(options)
+
+      const record3 = await fetchRecord({
+        url: PUBLIC_API + '/pet-types/records/active',
+        method: 'GET'
+      })
+
+      const options3 = (record3?.data || []).map(item => {
+        return {
+          label: item.name,
+          value: item.id,
+        }
+      })
+
+      setPetTypes(options3)
 
       const record2 = await fetchRecord({
         url: PUBLIC_API + '/items/records/active',
@@ -202,6 +241,14 @@ const AddReceiptForm = ({ show, setShow, dispatch }) => {
           </CCol>
           <CCol xs="12">
             <RSelect value={addReceiptRecord.packageId} name="packageItem" options={packages} onChange={(e) => handleChange({isSelect: true, valueFor: 'packageId', option: e})}/>
+          </CCol>
+        </CFormGroup>
+        <CFormGroup row>
+          <CCol>
+            <CLabel className="pt-2" htmlFor="text-package-item">Pet Type</CLabel>
+          </CCol>
+          <CCol xs="12">
+            <RSelect value={petType} name="packageItem" options={petTypes} onChange={(e) => petTypeSet({isSelect: true, valueFor: 'petTypeId', option: e})}/>
           </CCol>
         </CFormGroup>
         <CFormGroup row>

@@ -92,8 +92,6 @@ const Orders = () => {
         url: PUBLIC_API + 'orders/' + item.id,
       })
 
-      console.log(data);
-
       setOrderData(data)
     } else {
       setOrderData(null)

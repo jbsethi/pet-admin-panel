@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { useReactToPrint } from 'react-to-print';
 import Invoice from './Invoice'
 import style from './invoice.module.css'
+import styleItems from '../items/items.module.css'
 import {
   CLabel,
   CSwitch,
@@ -28,12 +29,17 @@ const receiptTableFields = [
   'name',
   'category',
   'price',
+  {
+    key: 'vat',
+    label: 'Vat price',
+  },
   'qty',
   'discount',
   'total',
 ]
 
 const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableUpdate }) => {
+  const [vatPercentage, setVatPercentage] = React.useState('5')
   const { addToast } = React.useContext(AppContext)
   const componentRef = useRef();
   const [showAddItem, setShowAddItem] = React.useState(false)
@@ -162,15 +168,16 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
   React.useEffect(() => {
     if (order) {
       if (isVatIncluded) {
-        setTotal(order.price + ((order.price * .05)))
+        setTotal(order.price + ((order.price * (vatPercentage / 100))))
       } else {
         setTotal(order.price)
       }
     }
-  }, [isVatIncluded, total, order])
+  }, [isVatIncluded, vatPercentage, total, order])
 
   return (
     <CModal
+      size="lg"
       show={show}
       onClose={() => setShow(false)}
     >
@@ -206,6 +213,13 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
             </div>
           }
           scopedSlots={{
+            'vat': (item) => (<td>
+              {item.price * (isVatIncluded ? (vatPercentage / 100) : 0)}
+            </td>),
+            'discount': (item) => (<td>{`${item.discount} %`}</td>),
+            'total': (item) => (<td>
+              {item.total + (isVatIncluded ? (item.total * (vatPercentage / 100)) : 0)}
+            </td>),
             'actions':
                   (item)=>(
                     <td className="px-1 py-2">
@@ -224,7 +238,13 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
         <div className="d-flex">
         <CButton size="sm" color="info" onClick={handlePrint}>Print Invoice</CButton>
 
-        <CLabel htmlFor="vat" className="ml-4">5% Vat ?</CLabel>
+        <CLabel htmlFor="vat" className="ml-4">
+          Apply <span className={styleItems['inline-input-span']}>
+            <input style={{
+              width: `${15 + ((vatPercentage.length - 1)*8)}px`
+            }} className={styleItems['inline-input']} value={vatPercentage} onChange={(e) => setVatPercentage(e.target.value)}/>%
+          </span> vat on all items.
+        </CLabel>
         <CSwitch
           className="pl-1 ml-1"
           color="primary"
@@ -248,7 +268,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
         </div>
       </CModalFooter>
       <div className={style.printable} ref={componentRef}>
-        <Invoice data={order} patientData={patientData} total={total} isVatIncluded={isVatIncluded}/>
+        <Invoice data={order} patientData={patientData} total={total} vatPercentage={vatPercentage} isVatIncluded={isVatIncluded}/>
       </div>
     </CModal>
   )

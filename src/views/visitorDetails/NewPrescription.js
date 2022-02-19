@@ -53,26 +53,30 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
 
   const addServiceToReceipt = (service) => {
     const data = {
-      patientId: orderData.patientId,
-      appointment: orderData.appointment === '1' ? true : false,
-      checkUpPrice: orderData.checkUpPrice,
-      description: orderData.description,
+      ...(!disabled && ({patientId: orderData.patientId})),
+      ...(!disabled && {appointment: orderData.appointment === '1' ? true : false}),
+      ...(!disabled && {checkUpPrice: orderData.checkUpPrice}),
+      ...(!disabled && {description: orderData.description}),
+      ...(!disabled && {followUp: orderData.followUp}),
+
       items: orderData.Items.map(i => {
         return {
           itemId: i.itemId,
-          quantity: i.quantity
+          quantity: i.quantity,
+          discount: i.discount || 0,
         }
       }).concat([{
         itemId: service.value,
-        quantity: 1
+        quantity: 1,
+        discount: 0,
       }]),
       packages: orderData.Packages.map(i => {
         return {
           id: i.id,
-          quantity: i.quantity
+          quantity: i.quantity,
+          discount: i.discount || 0,
         }
       }),
-      followUp: orderData.followUp
     }
 
     fetch({
@@ -190,7 +194,9 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
     return (
       <CRow key={i} className="align-items-center px-3 py-2">
         <CCol md="1">{i+1}</CCol>
-        <CCol>
+        <CCol style={{
+            'pointerEvents': disabled ? 'none' : 'auto'
+          }}>
           <RSelect disabled={disabled} options={treatments} value={selectedRecomendation[i]} onChange={(option) => handleSelectChange(option, i)}></RSelect>
         </CCol>
         <CCol md="2">

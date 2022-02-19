@@ -8,6 +8,8 @@ import { formatDate } from '../../utils/dateUtils'
 import { AppContext } from '../../App.js'
 import { PUBLIC_API } from '../../config/index'
 
+import style from './items.module.css'
+
 
 import {
   CCard,
@@ -17,12 +19,18 @@ import {
   CDataTable,
   CRow,
   CButton,
-  CPagination
+  CPagination,
+  CInput,
 } from '@coreui/react'
 
 const fields = [
     'name',
     'price',
+    {
+      key: 'vat',
+      label: 'Vat Price'
+    },
+    'total',
     {
       key: 'createdAt',
       label: 'Registered'
@@ -32,6 +40,7 @@ const fields = [
   ]
 
 const Items = () => {
+  const [vatPercentage, setVatPercentage] = React.useState('5')
   const { addToast, role } = useContext(AppContext)
   const [show, setShow] = React.useState(false)
 
@@ -118,6 +127,7 @@ const Items = () => {
               itemsPerPage={10}
               loading={loading}
               overTableSlot={
+                <>
                 <TableHeader keyword={keyword} changeKeyword={changeKeyword}>
                   <CButton
                     color="primary"
@@ -128,6 +138,16 @@ const Items = () => {
                       <span className="ml-1">Add Item</span>
                     </CButton>
                 </TableHeader>
+                <div className='ml-1 mb-2 d-flex align-items-center'>
+                  <div className={style['vat']}>
+                    Apply <span className={style['inline-input-span']}>
+                      <input style={{
+                        width: `${15 + ((vatPercentage.length - 1)*8)}px`
+                      }} className={style['inline-input']} value={vatPercentage} onChange={(e) => setVatPercentage(e.target.value)}/>%
+                    </span> vat on all items.
+                  </div>
+                </div>
+                </>
               }
               underTableSlot={
                 <CPagination
@@ -141,6 +161,18 @@ const Items = () => {
                   (item) => (
                     <td>
                       {item.price} AED
+                    </td>
+                  ),
+                'vat':
+                  (item) => (
+                    <td>
+                      {(item.price * +vatPercentage)/100} AED
+                    </td>
+                  ),
+                'total':
+                  (item) => (
+                    <td>
+                      {item.price + ((item.price * +vatPercentage)/100)} AED
                     </td>
                   ),
                 'createdAt':

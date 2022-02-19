@@ -19,9 +19,16 @@ import {
 import { AppContext } from '../../App.js'
 import { PUBLIC_API } from '../../config/index'
 
+import style from '../items/items.module.css'
+
 const fields = [
     'name',
     'price',
+    {
+      key: 'vat',
+      label: 'Vat Price'
+    },
+    'total',
     {
       key: 'createdAt',
       label: 'Registered'
@@ -31,6 +38,7 @@ const fields = [
   ]
 
 const Packages = () => {
+  const [vatPercentage, setVatPercentage] = React.useState('5')
   const { addToast, role } = useContext(AppContext)
   const [show, setShow] = React.useState(false)
 
@@ -107,6 +115,7 @@ const Packages = () => {
               itemsPerPage={10}
               loading={loading}
               overTableSlot={
+                <>
                 <TableHeader keyword={keyword} changeKeyword={changeKeyword}>
                   <CButton
                     color="primary"
@@ -117,6 +126,16 @@ const Packages = () => {
                       <span className="ml-1">Add Package</span>
                     </CButton>
                 </TableHeader>
+                <div className='ml-1 mb-2 d-flex align-items-center'>
+                <div className={style['vat']}>
+                  Apply <span className={style['inline-input-span']}>
+                    <input style={{
+                      width: `${15 + ((vatPercentage.length - 1)*8)}px`
+                    }} className={style['inline-input']} value={vatPercentage} onChange={(e) => setVatPercentage(e.target.value)}/>%
+                  </span> vat on all items.
+                </div>
+              </div>
+              </>
               }
               underTableSlot={
                 <CPagination
@@ -126,6 +145,18 @@ const Packages = () => {
                 ></CPagination>
               }
               scopedSlots={{
+                'vat':
+                  (item) => (
+                    <td>
+                      {(item.price * +vatPercentage)/100} AED
+                    </td>
+                  ),
+                'total':
+                  (item) => (
+                    <td>
+                      {item.price + ((item.price * +vatPercentage)/100)} AED
+                    </td>
+                  ),
                 'createdAt':
                   (item) => (
                     <td>

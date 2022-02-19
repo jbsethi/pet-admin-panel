@@ -1,0 +1,28 @@
+.vat {
+  color: #1d273e;
+}
+
+.inline-input {
+  border: 0;
+  text-decoration: 'underline';
+  text-align: right;
+  color: #333;
+  font-weight: 600;
+}
+
+.inline-input:focus {
+  outline: none;
+}
+
+.inline-input-span {
+  display: inline-flex;
+  border-bottom: 1px solid #333;
+}
+
+.input,
+.textarea {
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 1px 6px;
+}
