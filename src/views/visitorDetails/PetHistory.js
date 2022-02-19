@@ -1,4 +1,4 @@
-import { CButton, CCard, CCardBody, CCardHeader, CDataTable } from '@coreui/react'
+import { CButton, CCard, CCardBody, CCardHeader, CDataTable, CInput } from '@coreui/react'
 import React, {useContext, useRef} from 'react'
 
 import { useReactToPrint } from 'react-to-print';
@@ -10,11 +10,12 @@ import useAxios from 'axios-hooks'
 import NewPrescription from './NewPrescription'
 
 import { AppContext } from '../../App.js'
-import { PUBLIC_API } from '../../config/index'
+import { PUBLIC_API, PUBLIC_PATH } from '../../config/index'
 
 import Report from './Report'
 
 import style from './report.module.css'
+import historyStyle from './pethistory.module.css'
 
 const PetHistory = ({ match }) => {
   const componentRef = useRef();
@@ -50,6 +51,43 @@ const PetHistory = ({ match }) => {
     if (!status) {
       setDetails(null)
     }
+  }
+
+  const submitFileUpload = (e, id) => {
+    const data = new FormData()
+    data.append('file', e.target.files[0])
+
+    fetch({
+      method: 'POST',
+      url: PUBLIC_API + 'uploads/file',
+      data,
+    }).then(response => {
+      fetch({
+        method: 'PATCH',
+        url: PUBLIC_API + 'treatments/' + id + '/image',
+        data: {
+          image: response.data.fileName
+        }
+      })
+      .then(() => {
+        setItems((oldItems) => {
+          return oldItems.map(item => {
+            if (item.id == id) {
+              return {
+                ...item,
+                image: response.data.fileName
+              }
+            }
+
+            return item
+          })
+        })
+      }).catch(() => {
+        throw new Error('Something went wrong')
+      })
+    }).catch(err => {
+      alert('Something went wrong upload file please try again!')
+    })
   }
 
   const setPrintRecord = (rows) => {
@@ -101,7 +139,7 @@ const PetHistory = ({ match }) => {
       <CCardBody className="p-0">
         <CDataTable
           loading={loading}
-          fields={['statement', 'description', 'doctor', 'createdAt']}
+          fields={['statement', 'description', 'doctor', 'createdAt', { key: 'action', label: '' }]}
           items={items}
           onRowClick={(item) => viewDetails(item)}
           striped
@@ -117,7 +155,19 @@ const PetHistory = ({ match }) => {
                 <td>
                   {formatDate(item.createdAt)}
                 </td>
-              )
+              ),
+            'action': (item) => (<td>
+              {
+                !item.image ? (
+                  <div onClick={e => e.stopPropagation()} className={historyStyle["upload-btn-wrapper"]}>
+                    <CButton size="sm" className={historyStyle["btn"]}>Upload</CButton>
+                    <input onChange={(e) => submitFileUpload(e, item.id)} type="file" name="myfile" />
+                  </div>
+                ) : (
+                  <a href={PUBLIC_PATH + item.image} download="download">Download</a>
+                )
+              }
+            </td>)
           }}
         ></CDataTable>
       </CCardBody>
