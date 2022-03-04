@@ -47,7 +47,6 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
   const [checkUpPrice, setCheckUpPrice] = React.useState(null)
   const [total, setTotal] = React.useState(null)
   const [items, setItems] = React.useState([])
-
   const [, fetch] = useAxios(
     {
       url: null,
@@ -64,7 +63,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
       const discountedPrice = price - (price * (payload.discount || 0)) / 100
 
       const item = {
-        idx: `n-${items.length}`,
+        idx: `dddn-${items.length}`,
         itemId: payload.itemId?.value || null,
         packageId: payload.packageId?.value || null,
         name: payload.itemId?.label || payload.packageId?.label,
@@ -177,9 +176,9 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
 
   return (
     <CModal
-      size="lg"
-      show={show}
-      onClose={() => setShow(false)}
+    size="lg"
+    show={show}
+    onClose={() => setShow(false)}
     >
       <CModalHeader>Shopping, Grooming and others</CModalHeader>
       <CModalBody>
