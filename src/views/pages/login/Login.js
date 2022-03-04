@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
-import useAxios from 'axios-hooks'
-import { AppContext } from '../../../App'
+import React, { useState, useEffect, useContext } from "react";
+import useAxios from "axios-hooks";
+import { AppContext } from "../../../App";
 
-import LogoImage from '../../../assets/logo/logo.jpg'
+import LogoImage from "../../../assets/logo/logo.jpg";
 
 import {
   CButton,
@@ -17,64 +17,68 @@ import {
   CInputGroupPrepend,
   CInputGroupText,
   CRow,
-  CAlert
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+  CAlert,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
 
-import { PUBLIC_API } from '../../../config/index'
+import { PUBLIC_API } from "../../../config/index";
 
 const Login = () => {
-  const [ errMessage, setErrorMessage ] = useState('')
-  const { setToken, setRole } = useContext(AppContext)
+  const [errMessage, setErrorMessage] = useState("");
+  const { setToken, setRole } = useContext(AppContext);
 
-  const [
-    { data, loading },
-    executePost
-  ] = useAxios(
+  const [{ data, loading }, executePost] = useAxios(
     {
-      url: PUBLIC_API + '/authentication/login',
-      method: 'POST'
+      url: PUBLIC_API + "/authentication/login",
+      method: "POST",
     },
     { manual: true }
-  )
+  );
 
   const [creds, setCreds] = useState({
-    username: '',
-    password: ''
-  })
+    username: "",
+    password: "",
+  });
 
   const updateCred = (e) => {
     setCreds((oldCreds) => {
       return {
         ...oldCreds,
-        [e.target.name]: e.target.value
-      }
-    })
-  }
+        [e.target.name]: e.target.value,
+      };
+    });
+  };
 
   const loginUser = (e) => {
     if (!loading) {
       executePost({
         data: {
-          ...creds
-        }
-      }).catch(err => {
-        setErrorMessage(err.response?.data?.message || 'Error occured try again later !')
-      })
+          ...creds,
+        },
+      }).catch((err) => {
+        setErrorMessage(
+          err.response?.data?.message || "Error occured try again later !"
+        );
+      });
     }
-  }
+  };
+
+  const handleKeyPress = (event) => {
+    if(event.key==='Enter')
+     loginUser()
+  };
 
   useEffect(() => {
     if (data && data.token) {
-      const temp = data.token.split('.')[1]
-      const tokenData = JSON.parse(atob(temp))
+      const temp = data.token.split(".")[1];
+      const tokenData = JSON.parse(atob(temp));
 
-      localStorage.setItem('tokenExpiry', tokenData.exp)
+      localStorage.setItem("tokenExpiry", tokenData.exp);
 
-      setRole(tokenData.role.name)
-      setToken(data.token)
+      setRole(tokenData.role.name);
+      setToken(data.token);
     }
-  }, [data, setRole, setToken])
+  }, [data, setRole, setToken]);
 
   return (
     <div className="c-app c-default-layout flex-row align-items-center">
@@ -86,18 +90,25 @@ const Login = () => {
                 <CCardBody>
                   <CForm>
                     <h1>Login</h1>
-                    <p className="text-muted">Sign In to your Aloropi account</p>
-                    {
-                      errMessage &&
-                      <CAlert color="danger">{errMessage}</CAlert>
-                    }
+                    <p className="text-muted">
+                      Sign In to your Aloropi account
+                    </p>
+                    {errMessage && <CAlert color="danger">{errMessage}</CAlert>}
                     <CInputGroup className="mb-3">
                       <CInputGroupPrepend>
                         <CInputGroupText>
                           <CIcon name="cil-user" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput name="username" type="text" placeholder="Username" autoComplete="username" value={creds.username} onChange={updateCred} />
+                      <CInput
+                        name="username"
+                        type="text"
+                        placeholder="Username"
+                        autoComplete="username"
+                        value={creds.username}
+                        onChange={updateCred}
+                        onKeyUp={handleKeyPress}
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupPrepend>
@@ -105,21 +116,37 @@ const Login = () => {
                           <CIcon name="cil-lock-locked" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput name="password" type="password" placeholder="Password" autoComplete="current-password"  value={creds.password} onChange={updateCred} />
+                      <CInput
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        autoComplete="current-password"
+                        value={creds.password}
+                        onChange={updateCred}
+                        onKeyUp={handleKeyPress}
+
+                      />
                     </CInputGroup>
                     <CRow>
                       <CCol xs="6">
-                        <CButton onClick={loginUser} color="primary" className="px-4">
-                          { loading ? 'Loading' : 'Login' }
+                        <CButton
+                          onClick={loginUser}
+                          color="primary"
+                          className="px-4"
+                        >
+                          {loading ? "Loading" : "Login"}
                         </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary d-md-down-none" style={{ width: '44%' }}>
+              <CCard
+                className="text-white bg-primary d-md-down-none"
+                style={{ width: "44%" }}
+              >
                 <CCardBody className="text-center">
-                  <img src={LogoImage} alt="Vet" style={{ width: '100%' }} />
+                  <img src={LogoImage} alt="Vet" style={{ width: "100%" }} />
                 </CCardBody>
               </CCard>
             </CCardGroup>
@@ -127,7 +154,7 @@ const Login = () => {
         </CRow>
       </CContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
