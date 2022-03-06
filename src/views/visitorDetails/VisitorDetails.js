@@ -20,6 +20,7 @@ const VisitorsDetail = React.lazy(() => import('./VisitorsDetail.js'));
 const PetRecords = React.lazy(() => import('./PetRecords.js'));
 const Orders = React.lazy(() => import('./Orders.js'));
 const Treatment = React.lazy(() => import('./Treatments.js'));
+const VisitorHistory = React.lazy(() => import('./VisitorVisitsHistory'));
 
 const VisitorDetails = ({ match }) => {
   const { role } = useContext(AppContext)
@@ -39,6 +40,7 @@ const VisitorDetails = ({ match }) => {
                     <CNavLink to={'/visitors/' + match.params.id + '/orders'}>Orders</CNavLink>
                   }
                   <CNavLink to={'/visitors/' + match.params.id + '/treatments'}>Doctor's Prescriptions</CNavLink>
+                  <CNavLink to={'/visitors/' + match.params.id + '/visits'}>Visit History</CNavLink>
                 </CNavbarNav>
               </CCollapse>
             </CNavbar>
@@ -65,6 +67,10 @@ const VisitorDetails = ({ match }) => {
               <Route
                 path={'/visitors/' + match.params.id + '/treatments'}
                 render={() => <Treatment id={match.params.id} match={{ params: match.params }}/>}
+              />
+              <Route
+                path={'/visitors/' + match.params.id + '/visits'}
+                render={() => <VisitorHistory id={match.params.id} match={{ params: match.params }}/>}
               />
               </Switch>
             </React.Suspense>
