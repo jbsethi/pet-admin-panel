@@ -163,7 +163,7 @@ const Visitors = () => {
                   createdAt: (item) => <td>{formatDate(item.createdAt)}</td>,
                   edit: (item, index) => {
                     return (
-                      <td className="py-2">
+                      <td className="py-2 px-1">
                         <CButton
                           color="success"
                           variant="outline"
@@ -180,7 +180,7 @@ const Visitors = () => {
                   },
                   delete: (item, index) => {
                     return (
-                      <td className="py-2">
+                      <td className="py-2 px-1">
                         <CButton
                           color="primary"
                           variant="outline"
