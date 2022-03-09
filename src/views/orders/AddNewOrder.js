@@ -4,7 +4,7 @@ import AddReceiptForm from "../addVisitor/ReceiptForm/AddReceiptForm";
 import reducer from "../addVisitor/addVisitorReducer";
 import initialState from "../addVisitor/addVisitorState";
 import { PUBLIC_API } from "../../config/index";
-
+import AddNewVisitor from "./AddNewVisitor";
 import {
   CModal,
   CModalHeader,
@@ -35,6 +35,7 @@ const AddNewOrder = ({ show, setOrderModal, fetchOrderRecord }) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const [selectedUser, setSelectedUser] = React.useState(null);
   let [totalPrice, setTotalPrice] = React.useState(0);
+  let [newVisitorModal, setNewVisitorModal] = React.useState(false);
 
   /**
    * Show add item modal
@@ -103,6 +104,7 @@ const AddNewOrder = ({ show, setOrderModal, fetchOrderRecord }) => {
       }).then((resp) => {
         setOrderModal(false);
         fetchOrderRecord();
+        state.receiptItems = [];
       });
     }
   };
@@ -139,9 +141,18 @@ const AddNewOrder = ({ show, setOrderModal, fetchOrderRecord }) => {
     totalPrice += payload.itemId.price;
     setTotalPrice(totalPrice);
   };
+  const toggleVisitorModal = (value) => {
+    setNewVisitorModal(value);
+  };
+  const terminateModal = () => {
+    setOrderModal(false);
+    state.receiptItems = [];
+    setSelectedUser(null)
+  };
+
   return (
     <>
-      <CModal show={show} onClose={() => {}}>
+      <CModal show={show} onClose={terminateModal}>
         <CModalHeader closeButton>Add Order</CModalHeader>
         <CModalBody>
           {/* Sreach User */}
@@ -155,9 +166,33 @@ const AddNewOrder = ({ show, setOrderModal, fetchOrderRecord }) => {
               <RSelect
                 name="search"
                 options={state.items}
+                value={{
+                  label:
+                    selectedUser && selectedUser.name && selectedUser.contact
+                      ? `${selectedUser.name} - ${selectedUser.contact}`
+                      : "",
+                  value: selectedUser || {},
+                }}
                 onInputChange={(input) =>
                   dispatch({ type: "setKeyword", payload: input })
                 }
+                noOptionsMessage={() => {
+                  return (
+                    <>
+                      <CButton
+                        size="sm"
+                        color="primary"
+                        variant="outline"
+                        className="m-2 pl-3 pr-4"
+                        onClick={() => toggleVisitorModal(true)}
+                      >
+                        <span className="ml-1">
+                          No Patient Found, Click to Add
+                        </span>
+                      </CButton>
+                    </>
+                  );
+                }}
                 onChange={handleUserChange}
               ></RSelect>
             </CCol>
@@ -209,12 +244,7 @@ const AddNewOrder = ({ show, setOrderModal, fetchOrderRecord }) => {
           </CCardBody>
         </CModalBody>
         <CModalFooter>
-          <CButton
-            color="secondary"
-            onClick={() => {
-              setOrderModal(false);
-            }}
-          >
+          <CButton color="secondary" onClick={terminateModal}>
             Cancel
           </CButton>
           <CButton className="ml-1" color="primary" onClick={addNewRecord}>
@@ -230,6 +260,13 @@ const AddNewOrder = ({ show, setOrderModal, fetchOrderRecord }) => {
         setShow={showAddReceiptForm}
         dispatch={dispatch}
         calculateTotalPrice={calculateTotalPrice}
+      />
+
+      {/* Add new Visitor form */}
+      <AddNewVisitor
+        show={newVisitorModal}
+        toggleVisitorModal={toggleVisitorModal}
+        emitVisitorRecord={handleUserChange}
       />
     </>
   );
