@@ -40,7 +40,7 @@ const VisitorDetails = ({ match }) => {
                     <CNavLink to={'/visitors/' + match.params.id + '/orders'}>Orders</CNavLink>
                   }
                   <CNavLink to={'/visitors/' + match.params.id + '/treatments'}>Doctor's Prescriptions</CNavLink>
-                  <CNavLink to={'/visitors/' + match.params.id + '/visits'}>Visit History</CNavLink>
+                  <CNavLink to={'/visitors/' + match.params.id + '/visits'}>Visitor History</CNavLink>
                 </CNavbarNav>
               </CCollapse>
             </CNavbar>
@@ -70,7 +70,7 @@ const VisitorDetails = ({ match }) => {
               />
               <Route
                 path={'/visitors/' + match.params.id + '/visits'}
-                render={() => <VisitorHistory id={match.params.id} match={{ params: match.params }}/>}
+                render={() => <VisitorHistory id={match.params.id}/>}
               />
               </Switch>
             </React.Suspense>
