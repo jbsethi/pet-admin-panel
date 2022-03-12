@@ -202,7 +202,6 @@ const Invoice = ({
                             (item.Item?.price * item.discount) / 100}
                         </div>
                       )}
-                      ''
                     </td>
                   </tr>
                 );
