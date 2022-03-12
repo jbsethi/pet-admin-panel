@@ -135,7 +135,7 @@ const Invoice = ({
                 <th className="text-center">S.No</th>
                 <th className="text-center">Item Name</th>
                 <th className="text-center">Unit Price</th>
-                <th className="text-center">Dis %</th>
+                <th className="text-center">disc%</th>
                 <th className="text-center">Discount Amount (AED)</th>
                 <th className="text-center">Amount (Vat Exlusive)</th>
                 <th className="text-center">Vat Rate %</th>
@@ -231,7 +231,6 @@ const Invoice = ({
 
       <div className="row mt-2">
         <div className="col-4 d-flex justify-content-center align-items-center">
-          <h6 className="">Thankyou for comming</h6>
         </div>
         <div className="col-8">
           <div className="row d-flex justify-content-end">
