@@ -1,12 +1,57 @@
-import LogoPng from '../../assets/logo/logo.png'
+import LogoPng from "../../assets/logo/logo.png";
+import React from "react";
 
-const Invoice = ({ data, patientData = {}, total, vatPercentage, isVatIncluded }) => {
+const Invoice = ({
+  data,
+  patientData = {},
+  total,
+  vatPercentage,
+  isVatIncluded,
+}) => {
+  const [totalDiscount, setTotalDiscount] = React.useState(0);
+  const [totalPriceWithoutVat, setTotalPriceWithoutVat] = React.useState(0);
+  const [totalVatAmount, setTotalVatAmount] = React.useState(0);
+  const [subTotal, setSubTotal] = React.useState(0);
   const formatDateString = (str) => {
-    const date = new Date(str)
+    const date = new Date(str);
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  };
 
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-  }
-  return !data ? '' : (
+  const calculateTotals = () => {
+    let totalDiscount = 0;
+    let totalWithoutVat = 0;
+    let totalVatAmount = 0;
+    let totalItemsPrice = 0;
+    if (data)
+      data.Items.forEach((item, i) => {
+        // Calculate total Discount
+        totalDiscount += (item.Item?.price * item.discount) / 100;
+
+        // Calculate Sub Total
+        totalItemsPrice += item.Item?.price;
+
+        // Calculate total price without vat
+        totalWithoutVat +=
+          item.Item.price - (item.Item?.price * item.discount) / 100;
+
+        // Calculate Total Vat amount
+        totalVatAmount +=
+          ((item.Item.price - (item.Item?.price * item.discount) / 100) *
+            vatPercentage) /
+          100;
+      });
+    setTotalVatAmount(totalVatAmount);
+    setTotalPriceWithoutVat(totalWithoutVat);
+    setTotalDiscount(totalDiscount);
+    setSubTotal(totalItemsPrice);
+  };
+  React.useEffect(() => {
+    calculateTotals();
+  });
+
+  return !data ? (
+    ""
+  ) : (
     <div className="container">
       <div className="row">
         <div className="col-6">
@@ -55,12 +100,15 @@ const Invoice = ({ data, patientData = {}, total, vatPercentage, isVatIncluded }
           <table className="table table-bordered table-striped table-sm ">
             <thead>
               <tr>
+                <th className="text-center">S.No</th>
                 <th className="text-center">Item Name</th>
-                <th className="text-center">Quantity</th>
-                <th className="text-center">Category</th>
                 <th className="text-center">Unit Price</th>
-                <th className="text-center">Discount</th>
-                <th className="text-center">Total</th>
+                <th className="text-center">Dis %</th>
+                <th className="text-center">Discount Amount (AED)</th>
+                <th className="text-center">Amount (Vat Exlusive)</th>
+                <th className="text-center">Vat Rate %</th>
+                <th className="text-center">Vat Amount (AED)</th>
+                <th className="text-center">Total Amount (VAT Inclusive)</th>
               </tr>
             </thead>
             <tbody>
@@ -75,34 +123,75 @@ const Invoice = ({ data, patientData = {}, total, vatPercentage, isVatIncluded }
                   <td>{data.checkUpPrice}</td>
                 </tr>
               }
-              {
-                (data.Items || []).map((item, i) => {
-                  return (
-                    <tr key={item.Item?.name + '-' + i}>
-                      <td>{item.Item?.name}</td>
-                      <td>{item.quantity}</td>
-                      <td>{item.Item?.Service.name}</td>
-                      <td>{item.Item?.price}</td>
-                      <td>{item?.discount ? item?.discount + '%' : '--'}</td>
-                      <td>{(item.Item.price*(100-(item?.discount || 0))/100) * item.quantity}</td>
-                    </tr>
-                  )
-                })
-              }
-              {
-                (data.Packages || []).map((item, i) => {
-                  return (
-                    <tr key={item.Package?.name + '-' + i}>
-                      <td>{item.Package?.name}</td>
-                      <td>{item.quantity}</td>
-                      <td>{item.Package?.Service.name}</td>
-                      <td>{item.Package?.price}</td>
-                      <td>{item?.discount ? item?.discount + '%' : '--'}</td>
-                      <td>{(item.Package?.price*(100-(item?.discount || 0))/100) * item.quantity}</td>
-                    </tr>
-                  )
-                })
-              }
+              {/*  */}
+              {(data.Items || []).map((item, i) => {
+                return (
+                  <tr key={item.Item?.name + "-" + i}>
+                    <td className="text-center">{i}</td>
+                    <td>{item.Item?.name}</td>
+                    <td className="text-center">{item.Item?.price}</td>
+                    <td className="text-center">{item.discount}</td>
+                    <td className="text-center">
+                      {item.discount > 0
+                        ? (item.Item?.price * item.discount) / 100
+                        : "--"}
+                    </td>
+                    <td className="text-center">
+                      {item.Item.price -
+                        (item.Item?.price * item.discount) / 100}
+                    </td>
+                    <td className="text-center">
+                      {isVatIncluded ? <div>{vatPercentage}</div> : "--"}
+                    </td>
+                    <td className="text-center">
+                      {isVatIncluded ? (
+                        <div>
+                          {((item.Item.price -
+                            (item.Item?.price * item.discount) / 100) *
+                            vatPercentage) /
+                            100}
+                        </div>
+                      ) : (
+                        "--"
+                      )}
+                    </td>
+                    <td className="text-center">
+                      {isVatIncluded ? (
+                        <div>
+                          {item.Item.price -
+                            (item.Item?.price * item.discount) / 100 +
+                            ((item.Item.price -
+                              (item.Item?.price * item.discount) / 100) *
+                              vatPercentage) /
+                              100}
+                        </div>
+                      ) : (
+                        <div>
+                          {item.Item.price -
+                            (item.Item?.price * item.discount) / 100}
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+              {/*  */}
+              {(data.Packages || []).map((item, i) => {
+                return (
+                  <tr key={item.Package?.name + "-" + i}>
+                    <td>{item.Package?.name}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.Package?.Service.name}</td>
+                    <td>{item.Package?.price}</td>
+                    <td>{item?.discount ? item?.discount + "%" : "--"}</td>
+                    <td>
+                      {((item.Package?.price * (100 - (item?.discount || 0))) /
+                        100) *
+                        item.quantity}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -116,27 +205,59 @@ const Invoice = ({ data, patientData = {}, total, vatPercentage, isVatIncluded }
           <div className="row d-flex justify-content-end">
             <div className="col-7">
               <div className="row">
-                <div className="col-8"><h6 className="text-right text-uppercase">SubTotal :</h6></div>
-                <div className="col-4"><p className="text-right mb-0 border-bottom">{data.price}</p></div>
+                <div className="col-8">
+                  <h6 className="text-right text-uppercase">SubTotal :</h6>
+                </div>
+                <div className="col-4">
+                  <p className="text-right mb-0 border-bottom">{subTotal}</p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-8">
+                  <h6 className="text-right text-uppercase">
+                    Discount (AED) :
+                  </h6>
+                </div>
+                <div className="col-4">
+                  <p className="text-right mb-0 border-bottom">
+                    {totalDiscount}
+                  </p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-8">
+                  <h6 className="text-right text-uppercase">Total</h6>
+                </div>
+                <div className="col-4">
+                  <p className="text-right mb-0 border-bottom">
+                    {totalPriceWithoutVat}
+                  </p>
+                </div>
               </div>
               {
                 isVatIncluded &&
                 <div className="row">
-                  <div className="col-8"><h6 className="text-right text-uppercase">Vat :</h6></div>
-                  <div className="col-4"><p className="text-right mb-0 border-bottom">{vatPercentage}%</p></div>
+                  <div className="col-8">
+                    <h6 className="text-right text-uppercase">VAT (AED)</h6>
+                  </div>
+                  <div className="col-4">
+                    <p className="text-right mb-0 border-bottom">
+                      {totalVatAmount}
+                    </p>
+                  </div>
                 </div>
               }
-              <div className="row">
-                <div className="col-8"><h6 className="text-right text-uppercase">discount :</h6></div>
-                <div className="col-4"><p className="text-right mb-0 border-bottom">0.00</p></div>
-              </div>
             </div>
           </div>
           <div className="row d-flex justify-content-end mt-4">
             <div className="col-7 border-bottom border-top pt-2">
               <div className="row">
-                <div className="col-8"><h6 className="text-right text-uppercase">Balance :</h6></div>
-                <div className="col-4 pl-0"><h6 className="text-right mb-0">AED {total}</h6></div>
+                <div className="col-8">
+                  <h6 className="text-right text-uppercase">Grand Amount :</h6>
+                </div>
+                <div className="col-4 pl-0">
+                  <h6 className="text-right mb-0">AED {total}</h6>
+                </div>
               </div>
             </div>
           </div>
