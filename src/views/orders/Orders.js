@@ -352,7 +352,6 @@ const Orders = () => {
       </CRow>
 
       <UpdateOrderModal
-        disableUpdate={true}
         refetch={fetchOrders}
         show={show}
         setShow={toggleModal}

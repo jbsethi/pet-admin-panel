@@ -26,7 +26,6 @@ const ReceiptForm = ({ receiptFormVisibility, showAddReceiptFormModal, receiptIt
   }
 
   const handleAction = (data) => {
-    console.log(data.payload)
     dispatch(data)
   }
 

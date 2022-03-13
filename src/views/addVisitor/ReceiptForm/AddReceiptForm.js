@@ -201,7 +201,6 @@ const AddReceiptForm = ({ show, setShow, dispatch,calculateTotalPrice }) => {
         discount: 0
       })
       setShow(false)
-      calculateTotalPrice(addReceiptRecord)
     }
   }
 
