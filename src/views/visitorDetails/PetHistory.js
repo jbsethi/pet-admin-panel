@@ -172,7 +172,7 @@ const PetHistory = ({ match }) => {
         ></CDataTable>
       </CCardBody>
 
-      <NewPrescription  show={show} setShow={toggleModal} details={details} refetch={init}/>
+      <NewPrescription edit={true}  show={show} setShow={toggleModal} details={details} refetch={init}/>
 
       <div className={style.printable} ref={componentRef}>
         <Report data={historyData} />

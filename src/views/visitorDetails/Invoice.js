@@ -52,7 +52,10 @@ const Invoice = ({
   return !data ? (
     ""
   ) : (
-    <div className="container">
+    <div style={{
+      width: '92%',
+      margin: 'auto',
+    }}>
       <div className="row">
         <div className="col-6">
           <h3 className="">Aloropi Veterinary Center</h3>
@@ -132,33 +135,36 @@ const Invoice = ({
           <table className="table table-bordered table-striped table-sm ">
             <thead>
               <tr>
-                <th className="text-center">S.No</th>
-                <th className="text-center">Item Name</th>
-                <th className="text-center">Unit Price</th>
-                <th className="text-center">disc%</th>
-                <th className="text-center">Discount Amount (AED)</th>
-                <th className="text-center">Amount (Vat Exlusive)</th>
-                <th className="text-center">Vat Rate %</th>
-                <th className="text-center">Vat Amount (AED)</th>
-                <th className="text-center">Total Amount (VAT Inclusive)</th>
+                <th style={{ verticalAlign: 'middle', fontSize: '14px' }} className="text-center">S.No</th>
+                <th style={{ verticalAlign: 'middle', fontSize: '14px' }} className="text-center">Title</th>
+                <th style={{ verticalAlign: 'middle', fontSize: '14px' }} className="text-center">Unit Price</th>
+                <th style={{ verticalAlign: 'middle', fontSize: '14px' }} className="text-center">Discount %</th>
+                <th style={{ verticalAlign: 'middle', fontSize: '14px' }} className="text-center">Discount Amount <br/>(AED)</th>
+                <th style={{ verticalAlign: 'middle', fontSize: '14px' }} className="text-center">Amount <br/>(Vat Exlusive)</th>
+                <th style={{ verticalAlign: 'middle', fontSize: '14px' }} className="text-center">Vat Rate %</th>
+                <th style={{ verticalAlign: 'middle', fontSize: '14px' }} className="text-center">Vat Amount <br/>(AED)</th>
+                <th style={{ verticalAlign: 'middle', fontSize: '14px' }} className="text-center">Total Amount <br/>(VAT Inclusive)</th>
               </tr>
             </thead>
             <tbody>
               {data.appointment === "1" && (
                 <tr>
-                  <td>{"Doctor's Check up"}</td>
-                  <td>{"1"}</td>
-                  <td>{"Doctor's Fee"}</td>
-                  <td>{data.checkUpPrice}</td>
-                  <td>--</td>
-                  <td>{data.checkUpPrice}</td>
+                  <td className="text-center">{"1"}</td>
+                  <td className="text-center">{"Doctor's Check up"}</td>
+                  <td className="text-center">{data.checkUpPrice}</td>
+                  <td className="text-center">--</td>
+                  <td className="text-center">--</td>
+                  <td className="text-center">--</td>
+                  <td className="text-center">--</td>
+                  <td className="text-center">--</td>
+                  <td className="text-center">{data.checkUpPrice}</td>
                 </tr>
               )}
               {/*  */}
               {(data.Items || []).map((item, i) => {
                 return (
                   <tr key={item.Item?.name + "-" + i}>
-                    <td className="text-center">{i}</td>
+                    <td className="text-center">{data.appointment === "1" ? i + 2 : i + 1}</td>
                     <td>{item.Item?.name}</td>
                     <td className="text-center">{item.Item?.price}</td>
                     <td className="text-center">{item.discount}</td>

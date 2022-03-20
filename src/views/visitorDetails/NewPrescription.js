@@ -21,7 +21,7 @@ import useAxios from "axios-hooks";
 import { AppContext } from "../../App.js";
 import { PUBLIC_API } from "../../config/index";
 
-const NewPrescription = ({ match, show, setShow, details, refetch }) => {
+const NewPrescription = ({ match, show, setShow, details, refetch, edit }) => {
   const history = useHistory();
   const { role, addToast } = useContext(AppContext);
   const [loadingDetails, setLoadingDetails] = React.useState(false);
@@ -135,7 +135,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
         orderId: details.orderId,
         petId: details.petId,
         followUp,
-        recomendations: selectedRecomendation.map((r) => r.value),
+        recomendations: [...selectedRecomendation, ...recommendations.filter(rec => !!rec.serviceId)].map((r) => r.value),
       };
 
       fetch({
@@ -218,18 +218,18 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
     };
   }, [loadInitialData]);
 
-  const recommendationElem = [...selectedRecomendation, ...recommendations].map(
+  const recommendationElem = [...selectedRecomendation, ...recommendations.filter(rec => !disabled || !!rec.serviceId)].map(
     (r, i) => {
       return (
         <CRow key={i} className="align-items-center px-3 py-2">
           <CCol md="1">{i + 1}</CCol>
           <CCol
             style={{
-              pointerEvents: disabled ? "none" : "auto",
+              pointerEvents: (disabled || edit) ? "none" : "auto",
             }}
           >
             <RSelect
-              disabled={disabled}
+              disabled={disabled || edit}
               options={treatments}
               value={selectedRecomendation[i]}
               onChange={(option) => handleSelectChange(option, i)}
@@ -237,7 +237,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
           </CCol>
           <CCol md="2">
             {disabled &&
-              !selectedRecomendation[i].isAdded &&
+              !selectedRecomendation[i]?.isAdded &&
               role !== "doctor" && (
                 <CButton
                   color="primary"
@@ -289,7 +289,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
               <CFormGroup className="py-3 m-0">
                 <CRow className="px-3 justify-content-between align-items-center">
                   <CLabel htmlFor="recomendation">Recomendation</CLabel>
-                  {!disabled && (
+                  {!disabled && !edit && (
                     <CButton
                       onClick={addNewRecommendation}
                       size="sm"
@@ -330,16 +330,18 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
         )}
       </CModalBody>
       <CModalFooter className="justify-content-between">
-        {((role === "admin" && disabled) || (role === "superman" && disabled)) && (
-          <CButton
-            color="danger"
-            variant="outline"
-            shape="square"
-            onClick={editTreatment}
-          >
-            Edit Treatment
-          </CButton>
-        )}
+        <div>
+          {((role === "admin" && disabled) || (role === "superman" && disabled)) && (
+            <CButton
+              color="danger"
+              variant="outline"
+              shape="square"
+              onClick={editTreatment}
+            >
+              Edit Treatment
+            </CButton>
+          )}
+        </div>
         <div>
           <CButton color="danger" onClick={() => setShow(false)}>
             Cancel
@@ -349,6 +351,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
             className="ml-2"
               color="primary"
               onClick={() =>
+                !disabled ? editTreatment() :
                 history.replace({
                   pathname: `/visitors/${match.params.id}/orders`,
                   state: {
@@ -357,7 +360,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch }) => {
                 })
               }
             >
-              {disabled?'View Invoice':'Update Record'}
+              {disabled ? 'View Invoice' : 'Update Record'}
             </CButton>
           )}
         </div>

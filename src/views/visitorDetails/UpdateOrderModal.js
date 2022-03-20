@@ -38,7 +38,7 @@ const receiptTableFields = [
   'total',
 ]
 
-const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableUpdate }) => {
+const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableUpdate, role }) => {
   const [vatPercentage, setVatPercentage] = React.useState('5')
   const { addToast } = React.useContext(AppContext)
   const componentRef = useRef();
@@ -98,8 +98,9 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
       setTotal((oldPrice => (oldPrice - price)))
     } else if (type === 'updateReceipt') {
       const data = {
-        items: items.filter(item => (item.itemId && !item.id)).map(item => {
+        items: items.map(item => {
           return {
+            id: item.id,
             itemId: item.itemId,
             quantity: item.quantity || item.qty,
             discount: item.discount || 0
@@ -223,7 +224,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
                   (item)=>(
                     <td className="px-1 py-2">
                     {
-                      !item.isLocked &&
+                      ((role === 'admin' || role === 'superman') || !item.isLocked) &&
                       <CButton onClick={() => handleAction({ type: 'removeItem', payload: item.idx })} size="sm">&#10006;</CButton>
                     }
                     </td>

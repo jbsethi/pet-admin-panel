@@ -93,6 +93,7 @@ const Orders = () => {
       });
 
       setOrderData(data);
+      setPatientData(data.Patient)
     } else {
       setOrderData(null);
     }
@@ -357,8 +358,9 @@ const Orders = () => {
         setShow={toggleModal}
         order={orderData}
         patientData={patientData}
+        role={role}
       />
-      <AddNewOrderModal show={orderModal} setOrderModal={setOrderModal} fetchOrderRecord={fetchOrders} />
+      <AddNewOrderModal show={orderModal} setOrderModal={setOrderModal} patientData={patientData} fetchOrderRecord={fetchOrders} />
     </>
   );
 };

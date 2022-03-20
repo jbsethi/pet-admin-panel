@@ -164,34 +164,42 @@ const Visitors = () => {
                   edit: (item, index) => {
                     return (
                       <td className="py-2 px-1">
-                        <CButton
-                          color="success"
-                          variant="outline"
-                          shape="square"
-                          size="sm"
-                          onClick={(e) => {
-                            showEditVisitorModal(e, item);
-                          }}
-                        >
-                          Edit
-                        </CButton>
+                        {
+                          (role === 'admin' || role === 'superman') && (
+                            <CButton
+                              color="success"
+                              variant="outline"
+                              shape="square"
+                              size="sm"
+                              onClick={(e) => {
+                                showEditVisitorModal(e, item);
+                              }}
+                            >
+                              Edit
+                            </CButton>
+                          )
+                        }
                       </td>
                     );
                   },
                   delete: (item, index) => {
                     return (
                       <td className="py-2 px-1">
-                        <CButton
-                          color="primary"
-                          variant="outline"
-                          shape="square"
-                          size="sm"
-                          onClick={(e) => {
-                            deleteRecord(e, item);
-                          }}
-                        >
-                          Delete
-                        </CButton>
+                        {
+                          (role == 'admin' || role == 'superman') && (
+                            <CButton
+                              color="primary"
+                              variant="outline"
+                              shape="square"
+                              size="sm"
+                              onClick={(e) => {
+                                deleteRecord(e, item);
+                              }}
+                            >
+                              Delete
+                            </CButton>
+                          )
+                        }
                       </td>
                     );
                   },
