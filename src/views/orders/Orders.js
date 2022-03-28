@@ -39,6 +39,7 @@ const fields = [
     key: "price",
     label: "Total Bill",
   },
+  "actions"
 ];
 
 const Orders = () => {
@@ -99,6 +100,20 @@ const Orders = () => {
     }
 
     setShow(status);
+  };
+
+  /**
+   * Delete Order
+   * @param {String} id order id
+   *  id order id
+   */
+  const deleteItem = (id) => {
+    fetch({
+      url: PUBLIC_API + `/orders/${id}`,
+      method: "DELETE",
+    }).then(() => {
+      fetch()
+    });
   };
 
   const changeDayFilter = (e) => {
@@ -195,7 +210,6 @@ const Orders = () => {
                 striped
                 itemsPerPage={10}
                 loading={false}
-                onRowClick={(item) => toggleModal(true, item)}
                 overTableSlot={
                   <>
                     <TableHeader
@@ -337,6 +351,29 @@ const Orders = () => {
 
                   visitorName: (item) => (
                     <td>{item?.Patient?.name || "---"}</td>
+                  ),
+                  actions: (item) => (
+                    <td>
+                      {role !== "receptionist" && (
+                        <>
+                          <CButton
+                            onClick={() => toggleModal(true, item)}
+                            color="primary"
+                            size="sm"
+                            className="mr-2"
+                          >
+                            Edit
+                          </CButton>
+                          <CButton
+                            onClick={() => deleteItem(item.id)}
+                            color="danger"
+                            size="sm"
+                          >
+                            Delete
+                          </CButton>
+                        </>
+                      )}
+                    </td>
                   ),
                 }}
                 underTableSlot={
