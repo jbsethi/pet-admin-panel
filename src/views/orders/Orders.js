@@ -354,7 +354,7 @@ const Orders = () => {
                   ),
                   actions: (item) => (
                     <td>
-                      {role !== "receptionist" && (
+                      {(role === 'admin' || role === 'superman') && (
                         <>
                           <CButton
                             onClick={() => toggleModal(true, item)}
