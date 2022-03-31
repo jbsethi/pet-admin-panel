@@ -20,6 +20,7 @@ import TableHeader from "../base/tableHeader/TableHeader";
 import { AppContext } from "../../App.js";
 import AddNewOrderModal from "./AddNewOrder";
 import UpdateOrderModal from "../visitorDetails/UpdateOrderModal";
+import AddReceiptForm from "../addVisitor/ReceiptForm/AddReceiptForm";
 
 const fields = [
   "id",
@@ -39,7 +40,7 @@ const fields = [
     key: "price",
     label: "Total Bill",
   },
-  "actions"
+  "actions",
 ];
 
 const Orders = () => {
@@ -54,6 +55,9 @@ const Orders = () => {
   const [filterType, setFilterType] = useState(0);
   const [totalRecords, setTotalRecords] = useState(null);
   const [orderModal, setOrderModal] = useState(false);
+  const [showAddItem, setShowAddItem] = React.useState(false);
+  const [existingItems, setExistingItems] = React.useState([]);
+  const [selectedOrderId, setSelectedOrderId] = React.useState(null);
 
   const [dayRange, setDayRange] = useState([]);
 
@@ -64,6 +68,15 @@ const Orders = () => {
       params: {
         pageNo: currentPage,
       },
+    },
+    {
+      manual: true,
+    }
+  );
+  const [, updateOrder] = useAxios(
+    {
+      url: null,
+      method: "PUT",
     },
     {
       manual: true,
@@ -86,7 +99,57 @@ const Orders = () => {
       setKeyword(e.target.value);
     }
   };
-
+  const showAddItemModal = async (item) => {
+    const { data } = await loadOrderDetails({
+      url: PUBLIC_API + "orders/" + item.id,
+    });
+    setExistingItems(data.Items);
+    setSelectedOrderId(item.id);
+    setShowAddItem(true);
+  };
+  const handleAction = async ({ type, payload }) => {
+    if (type === "addItemInReceipt") {
+      const price = payload.itemId?.price || payload.packageId?.price;
+      const discountedPrice = price - (price * (payload.discount || 0)) / 100;
+      const item = {
+        itemId: payload.itemId?.value || null,
+        packageId: payload.packageId?.value || null,
+        name: payload.itemId?.label || payload.packageId?.label,
+        category: payload.categoryId.label,
+        price: price,
+        qty: payload.quantity,
+        total: payload.quantity * discountedPrice,
+        discount: payload.discount || 0,
+        isLocked: false,
+      };
+      let data = [...existingItems, item];
+      const transformedData = {
+        items: data.map((item) => {
+          return {
+            id: item?.id,
+            itemId: item.itemId,
+            quantity: item.quantity || item.qty,
+            discount: item.discount || 0,
+          };
+        }),
+        packages: data
+          .filter((item) => item.packageId && !item.id)
+          .map((item) => {
+            return {
+              packageId: item.packageId,
+              quantity: item.quantity || item.qty,
+              discount: item.discount || 0,
+            };
+          }),
+      };
+      await updateOrder({
+        url: PUBLIC_API + `orders/${selectedOrderId}`,
+        data: transformedData,
+      }).then(() => {
+        fetchOrders();
+      });
+    }
+  };
   const toggleModal = async (status, item = null) => {
     if (!!item) {
       const { data } = await loadOrderDetails({
@@ -94,7 +157,7 @@ const Orders = () => {
       });
 
       setOrderData(data);
-      setPatientData(data.Patient)
+      setPatientData(data.Patient);
     } else {
       setOrderData(null);
     }
@@ -112,7 +175,7 @@ const Orders = () => {
       url: PUBLIC_API + `/orders/${id}`,
       method: "DELETE",
     }).then(() => {
-      fetch()
+      fetch();
     });
   };
 
@@ -195,7 +258,6 @@ const Orders = () => {
   const toggleOrderModal = () => {
     setOrderModal(true);
   };
-
 
   return (
     <>
@@ -354,8 +416,16 @@ const Orders = () => {
                   ),
                   actions: (item) => (
                     <td>
-                      {(role === 'admin' || role === 'superman') && (
+                      {(role === "admin" || role === "superman") && (
                         <>
+                          <CButton
+                            color="primary"
+                            size="sm"
+                            className="mr-2"
+                            onClick={() => showAddItemModal(item)}
+                          >
+                            Add Item
+                          </CButton>
                           <CButton
                             onClick={() => toggleModal(true, item)}
                             color="primary"
@@ -397,7 +467,20 @@ const Orders = () => {
         patientData={patientData}
         role={role}
       />
-      <AddNewOrderModal show={orderModal} setOrderModal={setOrderModal} patientData={patientData} fetchOrderRecord={fetchOrders} />
+      <AddNewOrderModal
+        show={orderModal}
+        setOrderModal={setOrderModal}
+        patientData={patientData}
+        fetchOrderRecord={fetchOrders}
+      />
+
+      {/* Add new Item */}
+
+      <AddReceiptForm
+        show={showAddItem}
+        setShow={setShowAddItem}
+        dispatch={handleAction}
+      ></AddReceiptForm>
     </>
   );
 };
