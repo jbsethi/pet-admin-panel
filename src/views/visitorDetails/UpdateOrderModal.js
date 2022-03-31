@@ -38,9 +38,19 @@ const receiptTableFields = [
   "total",
 ];
 
-const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableUpdate, role }) => {
-  const [vatPercentage, setVatPercentage] = React.useState('5')
-  const { addToast } = React.useContext(AppContext)
+const UpdateOrderModal = ({
+  show,
+  setShow,
+  order,
+  patientData,
+  refetch,
+  disableUpdate,
+  role,
+  addItemModal,
+  setAddItemModal
+}) => {
+  const [vatPercentage, setVatPercentage] = React.useState("5");
+  const { addToast } = React.useContext(AppContext);
   const componentRef = useRef();
   const [showAddItem, setShowAddItem] = React.useState(false);
   const [isVatIncluded, setIsVatIncluded] = React.useState(false);
@@ -98,7 +108,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
       setTotal((oldPrice) => oldPrice - price);
     } else if (type === "updateReceipt") {
       const data = {
-        items: items.map(item => {
+        items: items.map((item) => {
           return {
             id: item.id,
             itemId: item.itemId,
@@ -132,6 +142,7 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
           });
         });
     }
+    setAddItemModal(false)
   };
 
   React.useEffect(() => {
@@ -233,8 +244,9 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
             ),
             actions: (item) => (
               <td className="px-1 py-2">
-                {
-                  ((role === 'admin' || role === 'superman') || !item.isLocked) &&
+                {(role === "admin" ||
+                  role === "superman" ||
+                  !item.isLocked) && (
                   <CButton
                     onClick={() =>
                       handleAction({ type: "removeItem", payload: item.idx })
@@ -243,15 +255,15 @@ const UpdateOrderModal = ({ show, setShow, order, patientData, refetch, disableU
                   >
                     &#10006;
                   </CButton>
-                }
+                )}
               </td>
             ),
           }}
         />
 
         <AddReceiptForm
-          show={showAddItem}
-          setShow={setShowAddItem}
+          show={showAddItem || addItemModal}
+          setShow={setShowAddItem }
           dispatch={handleAction}
         ></AddReceiptForm>
       </CModalBody>

@@ -20,7 +20,6 @@ import TableHeader from "../base/tableHeader/TableHeader";
 import { AppContext } from "../../App.js";
 import AddNewOrderModal from "./AddNewOrder";
 import UpdateOrderModal from "../visitorDetails/UpdateOrderModal";
-import AddReceiptForm from "../addVisitor/ReceiptForm/AddReceiptForm";
 
 const fields = [
   "id",
@@ -55,9 +54,7 @@ const Orders = () => {
   const [filterType, setFilterType] = useState(0);
   const [totalRecords, setTotalRecords] = useState(null);
   const [orderModal, setOrderModal] = useState(false);
-  const [showAddItem, setShowAddItem] = React.useState(false);
-  const [existingItems, setExistingItems] = React.useState([]);
-  const [selectedOrderId, setSelectedOrderId] = React.useState(null);
+  const [addItemModal, setAddItemModal] = React.useState(false);
 
   const [dayRange, setDayRange] = useState([]);
 
@@ -100,57 +97,9 @@ const Orders = () => {
     }
   };
   const showAddItemModal = async (item) => {
-    const { data } = await loadOrderDetails({
-      url: PUBLIC_API + "orders/" + item.id,
-    });
-    setExistingItems(data.Items);
-    setSelectedOrderId(item.id);
-    setShowAddItem(true);
+    toggleModal(true, item, true);
   };
-  const handleAction = async ({ type, payload }) => {
-    if (type === "addItemInReceipt") {
-      const price = payload.itemId?.price || payload.packageId?.price;
-      const discountedPrice = price - (price * (payload.discount || 0)) / 100;
-      const item = {
-        itemId: payload.itemId?.value || null,
-        packageId: payload.packageId?.value || null,
-        name: payload.itemId?.label || payload.packageId?.label,
-        category: payload.categoryId.label,
-        price: price,
-        qty: payload.quantity,
-        total: payload.quantity * discountedPrice,
-        discount: payload.discount || 0,
-        isLocked: false,
-      };
-      let data = [...existingItems, item];
-      const transformedData = {
-        items: data.map((item) => {
-          return {
-            id: item?.id,
-            itemId: item.itemId,
-            quantity: item.quantity || item.qty,
-            discount: item.discount || 0,
-          };
-        }),
-        packages: data
-          .filter((item) => item.packageId && !item.id)
-          .map((item) => {
-            return {
-              packageId: item.packageId,
-              quantity: item.quantity || item.qty,
-              discount: item.discount || 0,
-            };
-          }),
-      };
-      await updateOrder({
-        url: PUBLIC_API + `orders/${selectedOrderId}`,
-        data: transformedData,
-      }).then(() => {
-        fetchOrders();
-      });
-    }
-  };
-  const toggleModal = async (status, item = null) => {
+  const toggleModal = async (status, item = null, addNew = false) => {
     if (!!item) {
       const { data } = await loadOrderDetails({
         url: PUBLIC_API + "orders/" + item.id,
@@ -163,6 +112,7 @@ const Orders = () => {
     }
 
     setShow(status);
+    if (addNew) setAddItemModal(true);
   };
 
   /**
@@ -464,6 +414,8 @@ const Orders = () => {
         show={show}
         setShow={toggleModal}
         order={orderData}
+        addItemModal={addItemModal}
+        setAddItemModal={setAddItemModal}
         patientData={patientData}
         role={role}
       />
@@ -474,13 +426,6 @@ const Orders = () => {
         fetchOrderRecord={fetchOrders}
       />
 
-      {/* Add new Item */}
-
-      <AddReceiptForm
-        show={showAddItem}
-        setShow={setShowAddItem}
-        dispatch={handleAction}
-      ></AddReceiptForm>
     </>
   );
 };
