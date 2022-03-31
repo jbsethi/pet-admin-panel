@@ -77,7 +77,12 @@ const Invoice = ({
       </div>
       {/* Invoice heading */}
       <div className="row mt-5 d-flex justify-content-end col-12 mb-5">
-        <h5 className=" text-uppercase text-right font-weight-bold">Invoice</h5>
+        <h5
+          style={{ textDecoration: "underline" }}
+          className=" text-uppercase text-right font-weight-bold"
+        >
+          Invoice
+        </h5>
       </div>
       {/* TRN */}
       <div className="row col-12">
@@ -91,11 +96,7 @@ const Invoice = ({
         <div className="col-7">
           <div className="d-flex items-center">
             <div className="col-4 p-0">Billed To: </div>
-            <div className="ml-2 col-8">
-              <a className="" href={`mailto:${patientData.email || ""}`}>
-                {patientData.email || "check"}
-              </a>
-            </div>
+            <div className="ml-2 col-8"></div>
           </div>
           <div className="d-flex items-center">
             <div className="col-4 p-0">Name: </div>
@@ -106,7 +107,7 @@ const Invoice = ({
             <div className=" ml-2 col-8">{patientData.contact || ""}</div>
           </div>
         </div>
-        <div className="col-5 pl-5">
+        <div className="col-5" style={{ paddingLeft: "200px" }}>
           <div className="d-flex items-center">
             <div className="col-4 p-0">Invoice No: </div>
             <div className="ml-2 col-8">{`#${data.id}`}</div>
@@ -284,65 +285,37 @@ const Invoice = ({
       </div>
       {/* Grand Total */}
       <div className="row mt-5">
-        <div className="col-4 d-flex justify-content-center align-items-center"></div>
-        <div className="col-8">
-          <div className="row d-flex justify-content-end">
-            <div className="col-7">
-              <div className="row">
-                <div className="col-8">
-                  <h6 className="text-right text-uppercase">SubTotal :</h6>
-                </div>
-                <div className="col-4">
-                  <p className="text-right mb-0">{subTotal}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-8">
-                  <h6 className="text-right text-uppercase">
-                    Discount (AED) :
-                  </h6>
-                </div>
-                <div className="col-4">
-                  <p className="text-right mb-0">{totalDiscount}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-8">
-                  <h6 className="text-right text-uppercase">Total</h6>
-                </div>
-                <div className="col-4">
-                  <p className="text-right mb-0">{totalPriceWithoutVat}</p>
-                </div>
-              </div>
-              {isVatIncluded && (
-                <div className="row">
-                  <div className="col-8">
-                    <h6 className="text-right text-uppercase">VAT (AED)</h6>
-                  </div>
-                  <div className="col-4">
-                    <p className="text-right mb-0 ">{totalVatAmount}</p>
-                  </div>
-                </div>
-              )}
-            </div>
+        <div className="col-7 d-flex justify-content-center align-items-center"></div>
+        <div className="col-5" style={{ paddingLeft: "200px" }}>
+          <div className="d-flex items-center">
+            <div className="col-4 p-0">SubTotal : </div>
+            <div className="ml-2 col-8">{subTotal}</div>
           </div>
-          <div className="row d-flex justify-content-end mt-4">
-            <div className="col-7  pt-2">
-              <div className="row">
-                <div className="col-8">
-                  <h6 className="text-right text-uppercase">
-                    Grand Total Amount :
-                  </h6>
-                </div>
-                <div className="col-4 pl-0">
-                  <h6 className="text-right mb-0">AED {total}</h6>
-                </div>
-              </div>
+          <div className="d-flex items-center">
+            <div className="col-4 p-0">Discount (AED) : </div>
+            <div className="ml-2 col-8">{totalDiscount}</div>
+          </div>
+          <div className="d-flex items-center">
+            <div className="col-4 p-0">Total : </div>
+            <div className="ml-2 col-8">{totalPriceWithoutVat}</div>
+          </div>
+          {isVatIncluded && (
+            <div className="d-flex items-center">
+              <div className="col-4 p-0">VAT (AED) </div>
+              <div className="ml-2 col-8">{totalVatAmount}</div>
             </div>
+          )}
+
+          <div className="d-flex items-center mt-5">
+            <div className="col-4 p-0" style={{textWrap:"noWrap"}}>Grand Total Amount:</div>
+            <div className="ml-2 col-8">AED {total}</div>
           </div>
         </div>
       </div>
-      <div className="d-flex flex-column align-items-center text-center" style={{ marginTop: "150px",marginBottom:"50px" }}>
+      <div
+        className="d-flex flex-column align-items-center text-center"
+        style={{ position: "absolute", bottom: "5%", left: "32%" }}
+      >
         <div>
           Aloropi Veterinary Center, Maliha Rd - Warehouses Lands - Al Sharjah
         </div>
