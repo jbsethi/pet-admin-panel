@@ -20,7 +20,7 @@ import { AppContext } from '../../../App.js'
 import { PUBLIC_API } from '../../../config/index'
 
 
-const AddReceiptForm = ({ show, setShow, dispatch }) => {
+const AddReceiptForm = ({ show, setShow, dispatch,calculateTotalPrice }) => {
   const { addToast } = React.useContext(AppContext)
   const [addReceiptRecord, setAddReceiptRecord] = React.useState({
     categoryId: null,

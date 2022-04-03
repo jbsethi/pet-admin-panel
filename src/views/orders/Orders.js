@@ -1,5 +1,5 @@
-import {useState, useEffect, useContext} from 'react'
-import useAxios from 'axios-hooks'
+import React, { useState, useEffect, useContext } from "react";
+import useAxios from "axios-hooks";
 import {
   CCard,
   CCardBody,
@@ -9,285 +9,425 @@ import {
   CRow,
   CPagination,
   CSelect,
-  CButton
-} from '@coreui/react'
+  CButton,
+} from "@coreui/react";
 
-import { datesObj, formatDate } from 'src/utils/dateUtils'
+import { datesObj, formatDate } from "src/utils/dateUtils";
 
+import { PUBLIC_API } from "../../config/index";
+import TableHeader from "../base/tableHeader/TableHeader";
 
-import { PUBLIC_API } from '../../config/index'
-import TableHeader from '../base/tableHeader/TableHeader'
-
-import { AppContext } from '../../App.js'
-
-import UpdateOrderModal from '../visitorDetails/UpdateOrderModal'
+import { AppContext } from "../../App.js";
+import AddNewOrderModal from "./AddNewOrder";
+import UpdateOrderModal from "../visitorDetails/UpdateOrderModal";
 
 const fields = [
-  'id',
+  "id",
   {
-    key: 'visitorName',
-    label: 'Visitor\'s Name',
+    key: "visitorName",
+    label: "Visitor's Name",
   },
   {
-    key: 'createdAt',
-    label: 'Registered'
+    key: "createdAt",
+    label: "Registered",
   },
   {
-    key: 'checkUpPrice',
-    label: 'Doctor\'s Fee'
+    key: "checkUpPrice",
+    label: "Doctor's Fee",
   },
   {
-    key: 'price',
-    label: 'Total Bill'
-  }
-]
+    key: "price",
+    label: "Total Bill",
+  },
+  "actions",
+];
 
 const Orders = () => {
-  const { role, addToast } = useContext(AppContext)
-  const [keyword, setKeyword] = useState('')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [show, setShow] = useState(false)
-  const [orderData, setOrderData] = useState(null)
-  const [patientData, setPatientData] = useState({})
-  const [totalPages, setTotalPages] = useState(1)
-  const [currentPage, setActivePage] = useState(1)
+  const { role, addToast } = useContext(AppContext);
+  const [keyword, setKeyword] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [show, setShow] = useState(false);
+  const [orderData, setOrderData] = useState(null);
+  const [patientData, setPatientData] = useState({});
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setActivePage] = useState(1);
   const [filterType, setFilterType] = useState(0);
   const [totalRecords, setTotalRecords] = useState(null);
+  const [orderModal, setOrderModal] = useState(false);
+  const [addItemModal, setAddItemModal] = React.useState(false);
 
   const [dayRange, setDayRange] = useState([]);
 
   const [{ data, loading }, fetch] = useAxios(
     {
-      url: PUBLIC_API + 'orders',
-      method: 'GET',
+      url: PUBLIC_API + "orders",
+      method: "GET",
       params: {
-        pageNo: currentPage
-      }
+        pageNo: currentPage,
+      },
     },
     {
-      manual: true
+      manual: true,
     }
-  )
+  );
+  const [, updateOrder] = useAxios(
+    {
+      url: null,
+      method: "PUT",
+    },
+    {
+      manual: true,
+    }
+  );
 
   const [_, loadOrderDetails] = useAxios(
     {
-      method: 'GET',
+      method: "GET",
     },
     {
-      manual: true
+      manual: true,
     }
-  )
+  );
 
   const changeKeyword = (e) => {
-    if(e.key === 'Enter') {
-      setSearchQuery(keyword)
+    if (e.key === "Enter") {
+      setSearchQuery(keyword);
     } else {
-      setKeyword(e.target.value)
+      setKeyword(e.target.value);
     }
-  }
-
-  const toggleModal = async (status, item = null) => {
+  };
+  const showAddItemModal = async (item) => {
+    toggleModal(true, item, true);
+  };
+  const toggleModal = async (status, item = null, addNew = false) => {
     if (!!item) {
       const { data } = await loadOrderDetails({
-        url: PUBLIC_API + 'orders/' + item.id,
-      })
+        url: PUBLIC_API + "orders/" + item.id,
+      });
 
-      setOrderData(data)
+      setOrderData(data);
+      setPatientData(data.Patient);
     } else {
-      setOrderData(null)
+      setOrderData(null);
     }
 
-    setShow(status)
-  }
+    setShow(status);
+    if (addNew) setAddItemModal(true);
+  };
+
+  /**
+   * Delete Order
+   * @param {String} id order id
+   *  id order id
+   */
+  const deleteItem = (id) => {
+    fetch({
+      url: PUBLIC_API + `/orders/${id}`,
+      method: "DELETE",
+    }).then(() => {
+      fetch();
+    });
+  };
 
   const changeDayFilter = (e) => {
     const date = new Date(e.target.value);
-    const fromDate = `${date.getFullYear()}-${('0'+(date.getMonth()+1)).slice(-2)}-${date.getDate()}`
+    const fromDate = `${date.getFullYear()}-${(
+      "0" +
+      (date.getMonth() + 1)
+    ).slice(-2)}-${date.getDate()}`;
 
     setDayRange([fromDate, fromDate]);
-  }
+  };
 
   const changeDateRangeFilter = (e) => {
     const date = new Date(e.target.value);
-    const range = `${date.getFullYear()}-${('0'+(date.getMonth()+1)).slice(-2)}-${date.getDate()}`
+    const range = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(
+      -2
+    )}-${date.getDate()}`;
 
     if (dayRange.length === 0) {
-      setDayRange([range])
+      setDayRange([range]);
       return;
     }
 
-    if (e.target.name === 'to') {
+    if (e.target.name === "to") {
       if (datesObj.compare(dayRange[0], range) > 0) {
         e.target.value = Date.now();
         addToast({
-          message: 'To date should be greater than from date !'
-        })
+          message: "To date should be greater than from date !",
+        });
       } else {
-        setDayRange(ranges => {
-          return [ ranges[0], range ]
+        setDayRange((ranges) => {
+          return [ranges[0], range];
         });
       }
     } else {
       if (datesObj.compare(range, dayRange[1]) > 0) {
         e.target.value = Date.now();
         addToast({
-          message: 'To date should be greater than from date !'
-        })
+          message: "To date should be greater than from date !",
+        });
       } else {
-        setDayRange(ranges => {
-          return [ range, ranges[1] ]
+        setDayRange((ranges) => {
+          return [range, ranges[1]];
         });
       }
     }
-  }
+  };
 
   const fetchOrders = () => {
     const params = {
       pageNo: currentPage,
       fromDate: dayRange[0],
       toDate: dayRange[1],
-    }
+    };
 
     if (searchQuery) {
-      params.search = searchQuery
+      params.search = searchQuery;
     }
 
     fetch({
-      params
-    })
-      .then(res => {
-        setTotalRecords(res?.data?.count || 0)
-        setTotalPages(res?.data?.totalPages || 1)
-        setActivePage(res?.data?.pageNo)
-      })
-  }
+      params,
+    }).then((res) => {
+      setTotalRecords(res?.data?.count || 0);
+      setTotalPages(res?.data?.totalPages || 1);
+      setActivePage(res?.data?.pageNo);
+    });
+  };
 
   useEffect(() => {
     if (!(filterType === 2 && dayRange.length === 1)) {
-      fetchOrders()
+      fetchOrders();
     }
-  }, [dayRange, currentPage, fetch, searchQuery])
+  }, [dayRange, currentPage, fetch, searchQuery]);
+
+  /**
+   * Toggle Order Modal
+   */
+
+  const toggleOrderModal = () => {
+    setOrderModal(true);
+  };
 
   return (
     <>
       <CRow>
         <CCol xs="12" lg="12">
           <CCard>
-            <CCardHeader>
-              Orders
-            </CCardHeader>
+            <CCardHeader>Orders</CCardHeader>
             <CCardBody>
-            <CDataTable
-              items={loading ? [] : data?.rows || []}
-              fields={fields}
-              striped
-              itemsPerPage={10}
-              loading={false}
-              onRowClick={(item) => toggleModal(true, item)}
-              overTableSlot={
-                <>
-                <TableHeader keyword={keyword} changeKeyword={changeKeyword}>
-                </TableHeader>
-                <div className="d-flex justify-content-between pb-3">
-                  <div className="d-flex">
-                  <div style={{ marginRight: '10px' }}>
-                    <CButton onClick={() => {
-                      setFilterType(1)
-                      const date = new Date();
-                      const fromDate = `${date.getFullYear()}-${('0'+(date.getMonth()+1)).slice(-2)}-${date.getDate()}`
-                      setDayRange([fromDate, fromDate]);
-                    }} style={{ border: '1px solid #d8dbe0' }} >Current</CButton>
-                  </div>
-                  <CSelect
-                    custom
-                    name="order"
-                    value={filterType}
-                    onChange={(e) => {
-                      setDayRange([])
-                      setFilterType(+e.target.value)
-                    }}
-                  >
-                    <option value="0">No Filter</option>
-                    <option value="1">Filter by Date</option>
-                    <option value="2">Filter By Range</option>
-                  </CSelect>
-                  <div style={{ marginLeft: '10px' }}>
-                  <CButton color="danger" onClick={() => {
-                      setFilterType(0)
-                      setKeyword('')
-                      setSearchQuery('')
-                      setDayRange([]);
-                    }} style={{ border: '1px solid #d8dbe0' }} >Clear</CButton>
-                  </div>
-                  </div>
-                  {
-                    filterType === 1 &&
-                    <div className="d-flex align-items-center">
-                      <label className="mb-0">Filter by Date: </label>
-                      <input onChange={changeDayFilter} className="ml-2" type="date" />
-                    </div>
-                  }
-                  {
-                    filterType === 2 &&
-                    <div className="d-flex align-items-center">
-                      <div className="d-flex align-items-center">
-                        <label className="mb-0">Filter From: </label>
-                        <input onChange={changeDateRangeFilter} className="ml-2" type="date" name="from"/>
+              <CDataTable
+                items={loading ? [] : data?.rows || []}
+                fields={fields}
+                striped
+                itemsPerPage={10}
+                loading={false}
+                overTableSlot={
+                  <>
+                    <TableHeader
+                      keyword={keyword}
+                      changeKeyword={changeKeyword}
+                    ></TableHeader>
+                    <div className="d-flex justify-content-between pb-3">
+                      <div className="d-flex">
+                        <div style={{ marginRight: "10px" }}>
+                          <CButton
+                            onClick={() => {
+                              setFilterType(1);
+                              const date = new Date();
+                              const fromDate = `${date.getFullYear()}-${(
+                                "0" +
+                                (date.getMonth() + 1)
+                              ).slice(-2)}-${date.getDate()}`;
+                              setDayRange([fromDate, fromDate]);
+                            }}
+                            style={{ border: "1px solid #d8dbe0" }}
+                          >
+                            Current
+                          </CButton>
+                        </div>
+                        <CSelect
+                          custom
+                          name="order"
+                          value={filterType}
+                          onChange={(e) => {
+                            setDayRange([]);
+                            setFilterType(+e.target.value);
+                          }}
+                        >
+                          <option value="0">No Filter</option>
+                          <option value="1">Filter by Date</option>
+                          <option value="2">Filter By Range</option>
+                        </CSelect>
+                        <div style={{ marginLeft: "10px" }}>
+                          <CButton
+                            color="danger"
+                            onClick={() => {
+                              setFilterType(0);
+                              setKeyword("");
+                              setSearchQuery("");
+                              setDayRange([]);
+                            }}
+                            style={{ border: "1px solid #d8dbe0" }}
+                          >
+                            Clear
+                          </CButton>
+                        </div>
                       </div>
-                      <div className="d-flex align-items-center ml-3">
-                        <label className="mb-0">Filter To: </label>
-                        <input onChange={changeDateRangeFilter} className="ml-2" type="date" name="to" />
+                      {filterType === 1 && (
+                        <div className="d-flex align-items-center">
+                          <label className="mb-0">Filter by Date: </label>
+                          <input
+                            onChange={changeDayFilter}
+                            className="ml-2"
+                            type="date"
+                          />
+                        </div>
+                      )}
+                      {filterType === 2 && (
+                        <div className="d-flex align-items-center">
+                          <div className="d-flex align-items-center">
+                            <label className="mb-0">Filter From: </label>
+                            <input
+                              onChange={changeDateRangeFilter}
+                              className="ml-2"
+                              type="date"
+                              name="from"
+                            />
+                          </div>
+                          <div className="d-flex align-items-center ml-3">
+                            <label className="mb-0">Filter To: </label>
+                            <input
+                              onChange={changeDateRangeFilter}
+                              className="ml-2"
+                              type="date"
+                              name="to"
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <div>
+                        <CButton
+                          color="primary"
+                          variant="outline"
+                          className="m-2 pl-3 pr-4"
+                          onClick={toggleOrderModal}
+                        >
+                          <span className="ml-1">Add Order</span>
+                        </CButton>
                       </div>
                     </div>
-                  }
-                </div>
 
-                <div className="d-flex" style={{ gap: '30px', justifyContent: 'space-between' }}>
-                <div style={{ paddingBottom: '5px', color: '#1d273e', fontWeight: '600'}}>
-                 <span> Total Orders: <span>{totalRecords}</span></span>
-                 {
-                   searchQuery &&
-                  <span style={{ marginLeft: '20px' }}> Search String: <span>{searchQuery}</span></span>
-                 }
-
-                </div>
-                {
-                  filterType !== 0 &&
-                  dayRange.length !== 0 &&
-                  <div><span style={{ paddingBottom: '5px', color: '#1d273e', fontWeight: '600' }}>Showing results for :</span> <span>{dayRange[0]}</span> { filterType == 2 && <span>: {dayRange[1]}</span>}</div>
+                    <div
+                      className="d-flex"
+                      style={{ gap: "30px", justifyContent: "space-between" }}
+                    >
+                      <div
+                        style={{
+                          paddingBottom: "5px",
+                          color: "#1d273e",
+                          fontWeight: "600",
+                        }}
+                      >
+                        <span>
+                          {" "}
+                          Total Orders: <span>{totalRecords}</span>
+                        </span>
+                        {searchQuery && (
+                          <span style={{ marginLeft: "20px" }}>
+                            {" "}
+                            Search String: <span>{searchQuery}</span>
+                          </span>
+                        )}
+                      </div>
+                      {filterType !== 0 && dayRange.length !== 0 && (
+                        <div>
+                          <span
+                            style={{
+                              paddingBottom: "5px",
+                              color: "#1d273e",
+                              fontWeight: "600",
+                            }}
+                          >
+                            Showing results for :
+                          </span>{" "}
+                          <span>{dayRange[0]}</span>{" "}
+                          {filterType == 2 && <span>: {dayRange[1]}</span>}
+                        </div>
+                      )}
+                    </div>
+                  </>
                 }
-                </div>
-                </>
-              }
-              scopedSlots={{
-                'createdAt': (item) => (
-                  <td>
-                    {formatDate(item.createdAt)}
-                  </td>
-                ),
+                scopedSlots={{
+                  createdAt: (item) => <td>{formatDate(item.createdAt)}</td>,
 
-                'visitorName': (item) => (
-                  <td>
-                    {item?.Patient?.name || '---'}
-                  </td>
-                )
-              }}
-              underTableSlot={
-                <CPagination
-                  activePage={currentPage}
-                  pages={totalPages}
-                  onActivePageChange={(i) => setActivePage(i)}
-                ></CPagination>
-              }
-            />
+                  visitorName: (item) => (
+                    <td>{item?.Patient?.name || "---"}</td>
+                  ),
+                  actions: (item) => (
+                    <td>
+                      {(role === "admin" || role === "superman") && (
+                        <>
+                          <CButton
+                            color="primary"
+                            size="sm"
+                            className="mr-2"
+                            onClick={() => showAddItemModal(item)}
+                          >
+                            Add Item
+                          </CButton>
+                          <CButton
+                            onClick={() => toggleModal(true, item)}
+                            color="primary"
+                            size="sm"
+                            className="mr-2"
+                          >
+                            Edit
+                          </CButton>
+                          <CButton
+                            onClick={() => deleteItem(item.id)}
+                            color="danger"
+                            size="sm"
+                          >
+                            Delete
+                          </CButton>
+                        </>
+                      )}
+                    </td>
+                  ),
+                }}
+                underTableSlot={
+                  <CPagination
+                    activePage={currentPage}
+                    pages={totalPages}
+                    onActivePageChange={(i) => setActivePage(i)}
+                  ></CPagination>
+                }
+              />
             </CCardBody>
           </CCard>
         </CCol>
       </CRow>
 
-      <UpdateOrderModal disableUpdate={true} refetch={fetchOrders} show={show} setShow={toggleModal} order={orderData} patientData={patientData} />
-    </>
-  )
-}
+      <UpdateOrderModal
+        refetch={fetchOrders}
+        show={show}
+        setShow={toggleModal}
+        order={orderData}
+        addItemModal={addItemModal}
+        setAddItemModal={setAddItemModal}
+        patientData={patientData}
+        role={role}
+      />
+      <AddNewOrderModal
+        show={orderModal}
+        setOrderModal={setOrderModal}
+        patientData={patientData}
+        fetchOrderRecord={fetchOrders}
+      />
 
-export default Orders
+    </>
+  );
+};
+
+export default Orders;
