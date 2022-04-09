@@ -98,6 +98,8 @@ const Visitors = () => {
   };
   const deleteRecord = (e, item) => {
     e.stopPropagation();
+    let confirmDelete = window.confirm('Are you sure to delete')
+    if(confirmDelete)
     fetch({
       url: `${PUBLIC_API}patients/${item.id}`,
       method: "Delete",
@@ -169,7 +171,6 @@ const Visitors = () => {
                             <CButton
                               color="success"
                               variant="outline"
-                              shape="square"
                               size="sm"
                               onClick={(e) => {
                                 showEditVisitorModal(e, item);
@@ -186,11 +187,10 @@ const Visitors = () => {
                     return (
                       <td className="py-2 px-1">
                         {
-                          (role == 'administrator' || role == 'superman') && (
+                          (role === 'administrator' || role === 'superman') && (
                             <CButton
                               color="primary"
                               variant="outline"
-                              shape="square"
                               size="sm"
                               onClick={(e) => {
                                 deleteRecord(e, item);

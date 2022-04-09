@@ -96,7 +96,8 @@ const Orders = () => {
       setKeyword(e.target.value);
     }
   };
-  const showAddItemModal = async (item) => {
+  const showAddItemModal = async (e, item) => {
+    e.stopPropagation();
     toggleModal(true, item, true);
   };
   const toggleModal = async (status, item = null, addNew = false) => {
@@ -120,7 +121,10 @@ const Orders = () => {
    * @param {String} id order id
    *  id order id
    */
-  const deleteItem = (id) => {
+  const deleteItem = (e,id) => {
+    e.stopPropagation();
+    let confirmDelete = window.confirm('Are you sure to delete')
+    if(confirmDelete)
     fetch({
       url: PUBLIC_API + `/orders/${id}`,
       method: "DELETE",
@@ -222,6 +226,7 @@ const Orders = () => {
                 striped
                 itemsPerPage={10}
                 loading={false}
+                onRowClick={(item) => toggleModal(true, item)}
                 overTableSlot={
                   <>
                     <TableHeader
@@ -366,18 +371,18 @@ const Orders = () => {
                   ),
                   actions: (item) => (
                     <td>
-                      {(role === "admin" || role === "superman") && (
+                      {(role === "administrator" || role === "superman") && (
                         <>
                           <CButton
                             color="primary"
                             size="sm"
                             className="mr-2"
-                            onClick={() => showAddItemModal(item)}
+                            onClick={(e) => showAddItemModal(e, item)}
                           >
                             Add Item
                           </CButton>
                           <CButton
-                            onClick={() => toggleModal(true, item)}
+                            onClick={(e) => toggleModal(e,true, item)}
                             color="primary"
                             size="sm"
                             className="mr-2"
@@ -385,7 +390,7 @@ const Orders = () => {
                             Edit
                           </CButton>
                           <CButton
-                            onClick={() => deleteItem(item.id)}
+                            onClick={(e) => deleteItem(e,item.id)}
                             color="danger"
                             size="sm"
                           >
@@ -425,7 +430,6 @@ const Orders = () => {
         patientData={patientData}
         fetchOrderRecord={fetchOrders}
       />
-
     </>
   );
 };

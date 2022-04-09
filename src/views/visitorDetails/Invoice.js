@@ -16,7 +16,6 @@ const Invoice = ({
     const date = new Date(str);
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   };
-
   const calculateTotals = () => {
     let totalDiscount = 0;
     let totalWithoutVat = 0;
@@ -25,18 +24,18 @@ const Invoice = ({
     if (data)
       data.Items.forEach((item, i) => {
         // Calculate total Discount
-        totalDiscount += (item.Item?.price * item.discount) / 100;
+        totalDiscount += (item.Item?.price*item?.quantity * item.discount) / 100;
 
         // Calculate Sub Total
-        totalItemsPrice += item.Item?.price;
+        totalItemsPrice += item.Item?.price*item?.quantity;
 
         // Calculate total price without vat
         totalWithoutVat +=
-          item.Item.price - (item.Item?.price * item.discount) / 100;
+          item.Item.price*item?.quantity - (item.Item?.price*item?.quantity * item.discount) / 100;
 
         // Calculate Total Vat amount
         totalVatAmount +=
-          ((item.Item.price - (item.Item?.price * item.discount) / 100) *
+          ((item.Item.price*item?.quantity - (item.Item?.price*item?.quantity * item.discount) / 100) *
             vatPercentage) /
           100;
       });
@@ -153,6 +152,12 @@ const Invoice = ({
                   style={{ verticalAlign: "middle", fontSize: "14px" }}
                   className="text-center"
                 >
+                  Qty
+                </th>
+                <th
+                  style={{ verticalAlign: "middle", fontSize: "14px" }}
+                  className="text-center"
+                >
                   Discount %
                 </th>
                 <th
@@ -214,15 +219,16 @@ const Invoice = ({
                     </td>
                     <td>{item.Item?.name}</td>
                     <td className="text-center">{item.Item?.price}</td>
+                    <td className="text-center">{item?.quantity}</td>
                     <td className="text-center">{item.discount}</td>
                     <td className="text-center">
                       {item.discount > 0
-                        ? (item.Item?.price * item.discount) / 100
+                        ? (item.Item?.price * item?.quantity * item.discount) / 100
                         : "--"}
                     </td>
                     <td className="text-center">
-                      {item.Item.price -
-                        (item.Item?.price * item.discount) / 100}
+                      {item.Item.price *item?.quantity-
+                        (item.Item?.price * item?.quantity * item.discount) / 100}
                     </td>
                     <td className="text-center">
                       {isVatIncluded ? <div>{vatPercentage}</div> : "--"}
@@ -230,8 +236,8 @@ const Invoice = ({
                     <td className="text-center">
                       {isVatIncluded ? (
                         <div>
-                          {((item.Item.price -
-                            (item.Item?.price * item.discount) / 100) *
+                          {((item.Item.price*item?.quantity -
+                            (item.Item?.price*item?.quantity * item.discount) / 100) *
                             vatPercentage) /
                             100}
                         </div>
@@ -242,17 +248,17 @@ const Invoice = ({
                     <td className="text-center">
                       {isVatIncluded ? (
                         <div>
-                          {item.Item.price -
-                            (item.Item?.price * item.discount) / 100 +
-                            ((item.Item.price -
-                              (item.Item?.price * item.discount) / 100) *
+                          {item.Item.price*item?.quantity -
+                            (item.Item?.price*item?.quantity * item.discount) / 100 +
+                            ((item.Item.price*item?.quantity -
+                              (item.Item?.price*item?.quantity * item.discount) / 100) *
                               vatPercentage) /
                               100}
                         </div>
                       ) : (
                         <div>
-                          {item.Item.price -
-                            (item.Item?.price * item.discount) / 100}
+                          {item.Item.price*item?.quantity -
+                            (item.Item?.price*item?.quantity * item.discount) / 100}
                         </div>
                       )}
                     </td>

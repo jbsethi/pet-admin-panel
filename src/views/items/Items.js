@@ -68,10 +68,17 @@ const Items = () => {
 
   const changeKeyword = (e) => {
     if (e.key === "Enter") {
+      let params = {
+        search: keyword,
+      };
+      if (selectedPetId && selectedPetId !== "0") {
+        params.petTypeId = selectedPetId;
+        params.pageNo = currentPage;
+      }
       fetch({
-        params: {
-          search: keyword,
-        },
+        params: params,
+      }).then((resp)=>{
+        setTotalPages(resp.data.totalPages)
       }).catch((err) => {
         addToast({
           message: err.response.data.message,
@@ -119,15 +126,18 @@ const Items = () => {
       fetch().then((res) => {
         setRecords(res.data, res.data.totalPages);
       });
-    else
+    else {
+      let params = {
+        petTypeId: e.target.value,
+        pageNo: currentPage,
+      };
+      if (keyword) params.search = keyword;
       fetch({
-        params: {
-          petTypeId: e.target.value,
-          pageNo: currentPage,
-        },
+        params: params,
       }).then((res) => {
         setRecords(res.data, res.data.totalPages);
       });
+    }
   };
 
   React.useEffect(() => {

@@ -47,7 +47,7 @@ const UpdateOrderModal = ({
   disableUpdate,
   role,
   addItemModal,
-  setAddItemModal
+  setAddItemModal,
 }) => {
   const [vatPercentage, setVatPercentage] = React.useState("5");
   const { addToast } = React.useContext(AppContext);
@@ -142,9 +142,13 @@ const UpdateOrderModal = ({
           });
         });
     }
-    setAddItemModal(false)
+    setAddItemModal(false);
   };
-
+  
+  const toggleAddItemModal = (payload) => {
+    setShowAddItem(payload);
+    setAddItemModal(payload);
+  };
   React.useEffect(() => {
     if (order) {
       const items = (order?.Items || []).map((item, idx) => {
@@ -263,7 +267,7 @@ const UpdateOrderModal = ({
 
         <AddReceiptForm
           show={showAddItem || addItemModal}
-          setShow={setShowAddItem }
+          setShow={toggleAddItemModal}
           dispatch={handleAction}
         ></AddReceiptForm>
       </CModalBody>

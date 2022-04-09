@@ -28,6 +28,10 @@ const fields = [
     key: "time",
     label: "Time",
   },
+  {
+    key: "price",
+    label: "Bill",
+  },
 ];
 
 const VisitorHistory = ({ history, id }) => {
