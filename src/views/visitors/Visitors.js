@@ -165,7 +165,7 @@ const Visitors = () => {
                     return (
                       <td className="py-2 px-1">
                         {
-                          (role === 'admin' || role === 'superman') && (
+                          (role === 'administrator' || role === 'superman') && (
                             <CButton
                               color="success"
                               variant="outline"
@@ -186,7 +186,7 @@ const Visitors = () => {
                     return (
                       <td className="py-2 px-1">
                         {
-                          (role == 'admin' || role == 'superman') && (
+                          (role == 'administrator' || role == 'superman') && (
                             <CButton
                               color="primary"
                               variant="outline"

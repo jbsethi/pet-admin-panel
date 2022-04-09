@@ -59,11 +59,11 @@ const AddUser = ({ match }) => {
   })
 
 
-  
+
   const [previewImg, setPreviewImg] = React.useState(null)
   const [userRecord, setUserRecord] = React.useState({
     emiratesId: '',
-    role: 1,
+    role: 2,
     name: '',
     email: '',
     contact: '',
@@ -75,6 +75,8 @@ const AddUser = ({ match }) => {
   })
 
   const handleChange = (e) => {
+    console.log(e.target.name, e.target.value)
+
     setUserRecord(oldState => {
       return {
         ...oldState,
@@ -109,7 +111,7 @@ const AddUser = ({ match }) => {
         delete storeInfo.confirm_password
       }
       const formData = formDataObj(storeInfo)
-      
+
       executePost({
         data: formData
       }).catch(err => {
@@ -124,7 +126,7 @@ const AddUser = ({ match }) => {
     setUserRecord(() => {
       return {
         emiratesId: '',
-        role: 1,
+        role: 2,
         name: '',
         email: '',
         contact: '',
@@ -237,7 +239,7 @@ const AddUser = ({ match }) => {
                           <CInput value={userRecord.confirm_password} onChange={handleChange} id="input-confirm-password" name="confirm_password" placeholder="Password" type="password" />
                         </CCol>
                       </CFormGroup>
-                    </> 
+                    </>
                   }
                   <CFormGroup row className="justify-content-center">
                     <CLabel className="text-right" sm="3" col htmlFor="input-active">Active</CLabel>

@@ -244,7 +244,7 @@ const UpdateOrderModal = ({
             ),
             actions: (item) => (
               <td className="px-1 py-2">
-                {(role === "admin" ||
+                {(role === "administrator" ||
                   role === "superman" ||
                   !item.isLocked) && (
                   <CButton

@@ -93,19 +93,16 @@ const Invoice = ({
       </div>
       {/* Billed TO  */}
       <div className="row mt-5">
-        <div className="col-7">
-          <div className="d-flex items-center">
-            <div className="col-4 p-0">Billed To: </div>
-            <div className="ml-2 col-8"></div>
-          </div>
-          <div className="d-flex items-center">
-            <div className="col-4 p-0">Name: </div>
-            <div className=" ml-2 col-8">{patientData.name || ""}</div>
-          </div>
-          <div className="d-flex items-center">
-            <div className="col-4 p-0">Mobile Number: </div>
-            <div className=" ml-2 col-8">{patientData.contact || ""}</div>
-          </div>
+        <div className="col-4">
+          <h6 className=" border-bottom">Billed To</h6>
+          <p className=" mb-0">{patientData.name || ""}</p>
+          <p className=" mb-0">{patientData.address || ""}</p>
+          <p className=" mb-0">
+            <a className="" href={`mailto:${patientData.email || ""}`}>
+              {patientData.email || ""}
+            </a>
+          </p>
+          <p className=" mb-0">{patientData.contact || ""}</p>
         </div>
         <div className="col-5" style={{ paddingLeft: "200px" }}>
           <div className="d-flex items-center">
@@ -317,7 +314,7 @@ const Invoice = ({
         style={{ position: "absolute", bottom: "5%", left: "32%" }}
       >
         <div>
-          Aloropi Veterinary Center, Maliha Rd - Warehouses Lands - Al Sharjah
+          Aloropi Veterinary Center, Al Meena St. 79977 Sharjah, United Arab Emirates
         </div>
         <div className="mt-1">PO Box No: 79977</div>
         <div className="d-flex">
@@ -327,7 +324,7 @@ const Invoice = ({
           </a>
         </div>
         <div className="mt-1">
-          <h6 className="">+971 6 5200968 | +971 508987738</h6>
+          <h6 className="">+971 6 574 4622 | +971 50 248 4825</h6>
         </div>
       </div>
     </div>

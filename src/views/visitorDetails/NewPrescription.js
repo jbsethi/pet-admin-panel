@@ -331,7 +331,7 @@ const NewPrescription = ({ match, show, setShow, details, refetch, edit }) => {
       </CModalBody>
       <CModalFooter className="justify-content-between">
         <div>
-          {((role === "admin" && disabled) || (role === "superman" && disabled)) && (
+          {((role === "administrator" && disabled) || (role === "superman" && disabled)) && (
             <CButton
               color="danger"
               variant="outline"
