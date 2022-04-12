@@ -220,18 +220,18 @@ const Invoice = ({
                     <td>{item.Item?.name}</td>
                     <td className="text-center">{item.Item?.price}</td>
                     <td className="text-center">{item?.quantity}</td>
-                    <td className="text-center">{item.discount}</td>
+                    <td className="text-center">{item.discount}%</td>
                     <td className="text-center">
                       {item.discount > 0
                         ? (item.Item?.price * item?.quantity * item.discount) / 100
-                        : "--"}
+                        : "--"} 
                     </td>
                     <td className="text-center">
                       {item.Item.price *item?.quantity-
                         (item.Item?.price * item?.quantity * item.discount) / 100}
                     </td>
                     <td className="text-center">
-                      {isVatIncluded ? <div>{vatPercentage}</div> : "--"}
+                      {isVatIncluded ? <div>{vatPercentage}%</div> : "--"}
                     </td>
                     <td className="text-center">
                       {isVatIncluded ? (

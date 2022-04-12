@@ -79,6 +79,8 @@ const PetTypes = () => {
   }, [fetch])
 
   const deleteItem = (id) => {
+    let confirmDelete = window.confirm('Are you sure to delete')
+    if(confirmDelete)
     fetch({
       url: PUBLIC_API + `/pet-types/${id}`,
       method: 'DELETE'

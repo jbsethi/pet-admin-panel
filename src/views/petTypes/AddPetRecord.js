@@ -83,7 +83,7 @@ const AddPetRecord = ({ show, setShow, refetch, petTypeId, setEditId }) => {
       }
 
       if (petTypeId) {
-        config.url = `PUBLIC_API + '/pet-types/${petTypeId}`
+        config.url = PUBLIC_API + `/pet-types/${petTypeId}`
         config.method = 'PUT'
       }
 
